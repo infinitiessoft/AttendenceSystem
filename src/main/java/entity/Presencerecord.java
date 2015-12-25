@@ -12,14 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * In this example we will use Employee as entity.Id, firstname, lastname,
- * birthdate, cellphone, jobtitle, username, createddate, email, password and
- * gender are the attributes of this entity. It contains default constructor,
- * setter and getter methods of those attributes.
- * 
- */
-
 @Entity
 @Table(name = "presencerecord")
 
