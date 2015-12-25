@@ -13,8 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "job")
-
-public class Job implements Serializable {
+public class Job extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -33,14 +32,14 @@ public class Job implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "job_type")
-	private Job_type job_type;
+	private JobType job_type;
 
 	public Job() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Job(Long id, String name, Long department_id, Long job_type_id, Job_type job_type) {
+	public Job(Long id, String name, Long department_id, Long job_type_id,
+			JobType job_type) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -81,11 +80,11 @@ public class Job implements Serializable {
 		this.job_type_id = job_type_id;
 	}
 
-	public Job_type getJob_type() {
+	public JobType getJob_type() {
 		return job_type;
 	}
 
-	public void setJob_type(Job_type job_type) {
+	public void setJob_type(JobType job_type) {
 		this.job_type = job_type;
 	}
 
@@ -93,11 +92,7 @@ public class Job implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((department_id == null) ? 0 : department_id.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((job_type == null) ? 0 : job_type.hashCode());
-		result = prime * result + ((job_type_id == null) ? 0 : job_type_id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -110,30 +105,10 @@ public class Job implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Job other = (Job) obj;
-		if (department_id == null) {
-			if (other.department_id != null)
-				return false;
-		} else if (!department_id.equals(other.department_id))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;
-		if (job_type == null) {
-			if (other.job_type != null)
-				return false;
-		} else if (!job_type.equals(other.job_type))
-			return false;
-		if (job_type_id == null) {
-			if (other.job_type_id != null)
-				return false;
-		} else if (!job_type_id.equals(other.job_type_id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}

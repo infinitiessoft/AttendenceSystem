@@ -19,8 +19,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "leavesetting")
-
-public class Leavesetting implements Serializable {
+public class Leavesetting extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -97,8 +96,10 @@ public class Leavesetting implements Serializable {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((official == null) ? 0 : official.hashCode());
-		result = prime * result + ((personal == null) ? 0 : personal.hashCode());
+		result = prime * result
+				+ ((official == null) ? 0 : official.hashCode());
+		result = prime * result
+				+ ((personal == null) ? 0 : personal.hashCode());
 		result = prime * result + ((sick == null) ? 0 : sick.hashCode());
 		result = prime * result + ((special == null) ? 0 : special.hashCode());
 		return result;
@@ -146,7 +147,8 @@ public class Leavesetting implements Serializable {
 		return true;
 	}
 
-	public Leavesetting(Long id, String name, Long official, Long personal, Long sick, Long special) {
+	public Leavesetting(Long id, String name, Long official, Long personal,
+			Long sick, Long special) {
 		super();
 		this.id = id;
 		this.name = name;

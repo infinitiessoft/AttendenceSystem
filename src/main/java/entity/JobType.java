@@ -19,8 +19,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "job_type")
-
-public class Job_type implements Serializable {
+public class JobType extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -47,12 +46,21 @@ public class Job_type implements Serializable {
 		this.name = name;
 	}
 
+	public JobType(Long id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
+	public JobType() {
+		super();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -64,29 +72,13 @@ public class Job_type implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Job_type other = (Job_type) obj;
+		JobType other = (JobType) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
 		return true;
-	}
-
-	public Job_type(Long id, String name) {
-		super();
-		this.id = id;
-		this.name = name;
-	}
-
-	public Job_type() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

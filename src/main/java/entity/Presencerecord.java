@@ -14,8 +14,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "presencerecord")
-
-public class Presencerecord implements Serializable {
+public class Presencerecord extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -113,9 +112,12 @@ public class Presencerecord implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((book_person_id == null) ? 0 : book_person_id.hashCode());
-		result = prime * result + ((employee == null) ? 0 : employee.hashCode());
-		result = prime * result + ((employee_id == null) ? 0 : employee_id.hashCode());
+		result = prime * result
+				+ ((book_person_id == null) ? 0 : book_person_id.hashCode());
+		result = prime * result
+				+ ((employee == null) ? 0 : employee.hashCode());
+		result = prime * result
+				+ ((employee_id == null) ? 0 : employee_id.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
@@ -164,8 +166,9 @@ public class Presencerecord implements Serializable {
 		return true;
 	}
 
-	public Presencerecord(Long id, Date attenddate, Date bookdate, String name, String status, Long book_person_id,
-			Long employee_id, Employee employee) {
+	public Presencerecord(Long id, Date attenddate, Date bookdate, String name,
+			String status, Long book_person_id, Long employee_id,
+			Employee employee) {
 		super();
 		this.id = id;
 		this.attenddate = attenddate;
