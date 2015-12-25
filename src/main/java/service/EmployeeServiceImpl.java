@@ -37,17 +37,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public void delete(long id) {
-		employeeDao.delete(id);
+		try {
+			employeeDao.delete(id);
+		} catch (NullPointerException e) {
+			throw new EmployeeNotFoundException(id);
+		}
 	}
 
 	@Override
 	public EmployeeTransfer save(Employee employee) {
+		employee.setId(null);
 		return toEmployeeTransfer(employeeDao.save(employee));
 	}
 
 	@Override
-	public EmployeeTransfer update(long id, Employee employee) {
-		return toEmployeeTransfer(employeeDao.save(employee));
+	public EmployeeTransfer update(long id, Employee updated) {
+		Employee employee = employeeDao.find(id);
+		if (employee == null) {
+			throw new EmployeeNotFoundException(id);
+		}
+		updated.setId(employee.getId());
+		return toEmployeeTransfer(employeeDao.save(updated));
 	}
 
 	@Override

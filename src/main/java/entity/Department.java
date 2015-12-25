@@ -98,14 +98,7 @@ public class Department extends AbstractEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((departments == null) ? 0 : departments.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result
-				+ ((manager_id == null) ? 0 : manager_id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((responseto == null) ? 0 : responseto.hashCode());
 		return result;
 	}
 
@@ -118,31 +111,12 @@ public class Department extends AbstractEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		Department other = (Department) obj;
-		if (departments == null) {
-			if (other.departments != null)
-				return false;
-		} else if (!departments.equals(other.departments))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (manager_id == null) {
-			if (other.manager_id != null)
-				return false;
-		} else if (!manager_id.equals(other.manager_id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (responseto == null) {
-			if (other.responseto != null)
-				return false;
-		} else if (!responseto.equals(other.responseto))
-			return false;
 		return true;
 	}
+
 }

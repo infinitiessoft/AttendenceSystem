@@ -1,7 +1,6 @@
 package resources;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.Date;
@@ -48,6 +47,14 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
+	public void testDeleteEmployeeWithNotFoundException() {
+		Response response = target("employee").path("2")
+				.register(JacksonFeature.class).request().delete();
+		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+		assertEquals("true", response.getHeaderString("safe"));
+	}
+
+	@Test
 	public void testUpdateEmployee() {
 		Employee admin = new Employee();
 		admin.setDateofbirth(new Date());
@@ -56,13 +63,30 @@ public class EmployeesResourceTest extends ResourceTest {
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
-		Response response = target("employee").path("1").register(JacksonFeature.class)
-				.request().put(Entity.json(admin));
+		Response response = target("employee").path("1")
+				.register(JacksonFeature.class).request()
+				.put(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
 		assertEquals(2l, transfer.getId());
 		assertEquals(admin.getUsername(), transfer.getName());
 		assertEquals(0, transfer.getRoles().size());
+	}
+
+	@Test
+	public void testUpdateEmployeeWithNotFoundException() {
+		Employee admin = new Employee();
+		admin.setDateofbirth(new Date());
+		admin.setDateofjoined(new Date());
+		admin.setEmail("admin@gmail.com");
+		admin.setName("administrator");
+		admin.setPassword("secret");
+		admin.setUsername("admin");
+		Response response = target("employee").path("2")
+				.register(JacksonFeature.class).request()
+				.put(Entity.json(admin));
+		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+		assertEquals("true", response.getHeaderString("safe"));
 	}
 
 	@Test
@@ -81,6 +105,20 @@ public class EmployeesResourceTest extends ResourceTest {
 		assertEquals(2l, transfer.getId());
 		assertEquals(admin.getUsername(), transfer.getName());
 		assertEquals(0, transfer.getRoles().size());
+	}
+
+	@Test
+	public void testSaveEmployeeWithDuplicateName() {
+		Employee admin = new Employee();
+		admin.setDateofbirth(new Date());
+		admin.setDateofjoined(new Date());
+		admin.setEmail("admin@gmail.com");
+		admin.setName("administrator");
+		admin.setPassword("secret");
+		admin.setUsername("pohsun");
+		Response response = target("employee").register(JacksonFeature.class)
+				.request().post(Entity.json(admin));
+		assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 	}
 
 	@Test
