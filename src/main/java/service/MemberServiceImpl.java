@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.MemberTransfer;
 import dao.MemberDao;
 import entity.Member;
-import transfer.MemberTransfer;
 
 public class MemberServiceImpl implements MemberService {
 
@@ -54,8 +54,4 @@ public class MemberServiceImpl implements MemberService {
 		return ret;
 	}
 
-	@Override
-	public MemberTransfer findByUsername(String username) {
-		return toMemberTransfer(memberDao.findByName(username));
-	}
 }

@@ -3,12 +3,11 @@ package service;
 import java.util.Collection;
 
 import transfer.AttendRecordTransfer;
+import entity.AttendRecord;
 
 public interface AttendRecordService {
 
 	public AttendRecordTransfer retrieve(long id);
-
-	public AttendRecordTransfer findByUsername(String username);
 
 	public void delete(long id);
 

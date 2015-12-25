@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.LeavesettingTransfer;
 import dao.LeavesettingDao;
 import entity.Leavesetting;
-import transfer.LeavesettingTransfer;
 
 public class LeavesettingServiceImpl implements LeavesettingService {
 
@@ -46,7 +46,8 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 		return rets;
 	}
 
-	private LeavesettingTransfer toLeavesettingTransfer(Leavesetting leavesetting) {
+	private LeavesettingTransfer toLeavesettingTransfer(
+			Leavesetting leavesetting) {
 		LeavesettingTransfer ret = new LeavesettingTransfer();
 		ret.setId(leavesetting.getId());
 		ret.setName(leavesetting.getName());
@@ -54,8 +55,4 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 		return ret;
 	}
 
-	@Override
-	public LeavesettingTransfer findByName(String name) {
-		return toLeavesettingTransfer(leavesettingDao.findByName(name));
-	}
 }

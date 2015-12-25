@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.RoleTransfer;
 import dao.RoleDao;
 import entity.Role;
-import transfer.RoleTransfer;
 
 public class RoleServiceImpl implements RoleService {
 
@@ -54,8 +54,4 @@ public class RoleServiceImpl implements RoleService {
 		return ret;
 	}
 
-	@Override
-	public RoleTransfer findByName(String name) {
-		return toRoleTransfer(roleDao.findByName(name));
-	}
 }

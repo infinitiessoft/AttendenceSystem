@@ -2,14 +2,12 @@ package service;
 
 import java.util.Collection;
 
-import entity.JobType;
 import transfer.JobTypeTransfer;
+import entity.JobType;
 
 public interface JobTypeService {
 
 	public JobTypeTransfer retrieve(long id);
-
-	public JobTypeTransfer findByName(String name);
 
 	public void delete(long id);
 

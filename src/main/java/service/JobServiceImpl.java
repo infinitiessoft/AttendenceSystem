@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.JobTransfer;
 import dao.JobDao;
 import entity.Job;
-import transfer.JobTransfer;
 
 public class JobServiceImpl implements JobService {
 
@@ -54,8 +54,4 @@ public class JobServiceImpl implements JobService {
 		return ret;
 	}
 
-	@Override
-	public JobTransfer findByname(String name) {
-		return toJobTransfer(jobDao.findByName(name));
-	}
 }

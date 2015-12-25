@@ -1,4 +1,3 @@
-
 package service;
 
 import java.util.Collection;
@@ -9,8 +8,6 @@ import transfer.JobTransfer;
 public interface JobService {
 
 	public JobTransfer retrieve(long id);
-
-	public JobTransfer findByname(String name);
 
 	public void delete(long id);
 

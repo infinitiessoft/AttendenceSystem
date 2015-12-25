@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import dao.AttendRecordDao;
 import transfer.AttendRecordTransfer;
+import dao.AttendRecordDao;
+import entity.AttendRecord;
 
 public class AttendRecordServiceImpl implements AttendRecordService {
 
@@ -38,15 +39,10 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 	@Override
 	public Collection<AttendRecordTransfer> findAll() {
 		List<AttendRecordTransfer> rets = new ArrayList<AttendRecordTransfer>();
-
 		for (AttendRecord attendrecord : attendrecordDao.findAll()) {
 			rets.add(toAttendRecordTransfer(attendrecord));
 		}
 		return rets;
 	}
 
-	@Override
-	public AttendRecordTransfer findByUsername(String username) {
-		return toAttendRecordTransfer(attendrecordDao.findByName(username));
-	}
 }
