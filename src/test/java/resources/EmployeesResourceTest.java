@@ -1,65 +1,108 @@
 package resources;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import javax.ws.rs.core.Application;
+import java.util.Collection;
+import java.util.Date;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.spring.SpringLifecycleListener;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.web.filter.RequestContextFilter;
 
-public class EmployeesResourceTest extends JerseyTest {
+import transfer.EmployeeTransfer;
+import entity.Employee;
 
-	@Override
-	protected Application configure() {
-		ResourceConfig rc = new ResourceConfig(EmployeesResource.class);
-		rc.register(GenericExceptionMapper.class);
-		rc.register(SpringLifecycleListener.class);
-		rc.register(RequestContextFilter.class);
-		rc.register(JacksonFeature.class);
-
-		rc.property("contextConfigLocation",
-				"file:src/test/resource/test_context.xml");
-		return rc;
-	}
+public class EmployeesResourceTest extends ResourceTest {
 
 	@Test
 	public void testGetEmployee() {
-		// Response response = target("employee").path("1")
-		// .register(JacksonFeature.class).request().get();
-		// // .header("X-Auth-Token", TOKEN).get();
-		// Assert.assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		Response response = target("employee").path("1")
+				.register(JacksonFeature.class).request().get();
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
+		assertEquals(1l, transfer.getId());
+		assertEquals("pohsun", transfer.getName());
+		assertEquals(2, transfer.getRoles().size());
+		assertEquals(true, transfer.getRoles().get("admin"));
+		assertEquals(true, transfer.getRoles().get("user"));
+	}
+
+	@Test
+	public void testGetEmployeeWithNotFoundException() {
 		Response response = target("employee").path("2")
 				.register(JacksonFeature.class).request().get();
-		System.err.println(response.readEntity(String.class));
-		Assert.assertEquals(Status.NOT_FOUND.getStatusCode(),
-				response.getStatus());
+		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
+		assertEquals("true", response.getHeaderString("safe"));
 	}
 
 	@Test
 	public void testDeleteEmployee() {
-		fail("Not yet implemented");
+		Response response = target("employee").path("1")
+				.register(JacksonFeature.class).request().delete();
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
 
 	@Test
 	public void testUpdateEmployee() {
-		fail("Not yet implemented");
+		Employee admin = new Employee();
+		admin.setDateofbirth(new Date());
+		admin.setDateofjoined(new Date());
+		admin.setEmail("admin@gmail.com");
+		admin.setName("administrator");
+		admin.setPassword("secret");
+		admin.setUsername("admin");
+		Response response = target("employee").path("1").register(JacksonFeature.class)
+				.request().put(Entity.json(admin));
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
+		assertEquals(2l, transfer.getId());
+		assertEquals(admin.getUsername(), transfer.getName());
+		assertEquals(0, transfer.getRoles().size());
 	}
 
 	@Test
 	public void testSaveEmployee() {
-		fail("Not yet implemented");
+		Employee admin = new Employee();
+		admin.setDateofbirth(new Date());
+		admin.setDateofjoined(new Date());
+		admin.setEmail("admin@gmail.com");
+		admin.setName("administrator");
+		admin.setPassword("secret");
+		admin.setUsername("admin");
+		Response response = target("employee").register(JacksonFeature.class)
+				.request().post(Entity.json(admin));
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
+		assertEquals(2l, transfer.getId());
+		assertEquals(admin.getUsername(), transfer.getName());
+		assertEquals(0, transfer.getRoles().size());
 	}
 
 	@Test
 	public void testFindallEmployee() {
-		fail("Not yet implemented");
+		Response response = target("employee").register(JacksonFeature.class)
+				.request().get();
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		Collection<EmployeeTransfer> rets = response
+				.readEntity(new GenericType<Collection<EmployeeTransfer>>() {
+				});
+		assertEquals(1, rets.size());
+		EmployeeTransfer transfer = rets.iterator().next();
+		assertEquals(1l, transfer.getId());
+		assertEquals("pohsun", transfer.getName());
+		assertEquals(2, transfer.getRoles().size());
+		assertEquals(true, transfer.getRoles().get("admin"));
+		assertEquals(true, transfer.getRoles().get("user"));
+	}
+
+	@Override
+	Class<?> getResource() {
+		return EmployeesResource.class;
 	}
 
 }
