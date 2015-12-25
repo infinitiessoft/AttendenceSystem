@@ -25,7 +25,7 @@ import entity.JobType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/jobtype")
-public class JobTypeResource {
+public class JobTypesResource {
 
 	@Autowired
 	private JobTypeService jobTypeService;
