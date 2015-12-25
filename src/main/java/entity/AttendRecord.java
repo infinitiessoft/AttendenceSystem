@@ -1,7 +1,6 @@
 package entity;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,10 +25,10 @@ public class AttendRecord extends AbstractEntity {
 	private Long id;
 
 	@Column(name = "end_date", nullable = false)
-	private Timestamp end_date;
+	private Date end_date;
 
 	@Column(name = "duration", nullable = false)
-	private Timestamp duration;
+	private Date duration;
 
 	@Column(name = "reason", nullable = false)
 	private String reason;
@@ -41,19 +40,19 @@ public class AttendRecord extends AbstractEntity {
 	private Long employee_id;
 
 	@Column(name = "modify_date", nullable = false)
-	private Timestamp modify_date;
+	private Date modify_date;
 
 	@Column(name = "modify_start_date", nullable = false)
-	private Timestamp modify_start_date;
+	private Date modify_start_date;
 
 	@Column(name = "modify_end_date", nullable = false)
-	private Timestamp modify_end_date;
+	private Date modify_end_date;
 
 	@Column(name = "book_date", nullable = false)
-	private Timestamp book_date;
+	private Date book_date;
 
 	@Column(name = "start_date", nullable = false)
-	private Timestamp start_date;
+	private Date start_date;
 
 	@Column(name = "permic_person_id", nullable = false)
 	private Long permic_person_id;
@@ -88,11 +87,10 @@ public class AttendRecord extends AbstractEntity {
 	@Column(name = "permic_person_id2", nullable = false)
 	private Long permic_person_id2;
 
-	public AttendRecord(Long id, Timestamp end_date, Timestamp duration,
-			String reason, String permit, Long employee_id,
-			Timestamp modify_date, Timestamp modify_start_date,
-			Timestamp modify_end_date, Timestamp book_date,
-			Timestamp start_date, Long permic_person_id, Date dateinterval,
+	public AttendRecord(Long id, Date end_date, Date duration, String reason,
+			String permit, Long employee_id, Date modify_date,
+			Date modify_start_date, Date modify_end_date, Date book_date,
+			Date start_date, Long permic_person_id, Date dateinterval,
 			Date endperiod, Date modifyendperiod, Date modifystartperiod,
 			String modifypermit, Date period, Date startperiod,
 			Date modifydateinterval, String permit2, Long permic_person_id2,
@@ -135,19 +133,19 @@ public class AttendRecord extends AbstractEntity {
 		this.id = id;
 	}
 
-	public Timestamp getEnd_date() {
+	public Date getEnd_date() {
 		return end_date;
 	}
 
-	public void setEnd_date(Timestamp end_date) {
+	public void setEnd_date(Date end_date) {
 		this.end_date = end_date;
 	}
 
-	public Timestamp getDuration() {
+	public Date getDuration() {
 		return duration;
 	}
 
-	public void setDuration(Timestamp duration) {
+	public void setDuration(Date duration) {
 		this.duration = duration;
 	}
 
@@ -175,43 +173,43 @@ public class AttendRecord extends AbstractEntity {
 		this.employee_id = employee_id;
 	}
 
-	public Timestamp getModify_date() {
+	public Date getModify_date() {
 		return modify_date;
 	}
 
-	public void setModify_date(Timestamp modify_date) {
+	public void setModify_date(Date modify_date) {
 		this.modify_date = modify_date;
 	}
 
-	public Timestamp getModify_start_date() {
+	public Date getModify_start_date() {
 		return modify_start_date;
 	}
 
-	public void setModify_start_date(Timestamp modify_start_date) {
+	public void setModify_start_date(Date modify_start_date) {
 		this.modify_start_date = modify_start_date;
 	}
 
-	public Timestamp getModify_end_date() {
+	public Date getModify_end_date() {
 		return modify_end_date;
 	}
 
-	public void setModify_end_date(Timestamp modify_end_date) {
+	public void setModify_end_date(Date modify_end_date) {
 		this.modify_end_date = modify_end_date;
 	}
 
-	public Timestamp getBook_date() {
+	public Date getBook_date() {
 		return book_date;
 	}
 
-	public void setBook_date(Timestamp book_date) {
+	public void setBook_date(Date book_date) {
 		this.book_date = book_date;
 	}
 
-	public Timestamp getStart_date() {
+	public Date getStart_date() {
 		return start_date;
 	}
 
-	public void setStart_date(Timestamp start_date) {
+	public void setStart_date(Date start_date) {
 		this.start_date = start_date;
 	}
 

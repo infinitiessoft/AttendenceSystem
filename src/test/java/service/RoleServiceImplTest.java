@@ -16,9 +16,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import transfer.RoleTransfer;
 import dao.RoleDao;
 import entity.Role;
-import transfer.RoleTransfer;
 
 public class RoleServiceImplTest {
 
@@ -86,7 +86,8 @@ public class RoleServiceImplTest {
 				will(new CustomAction("save  role") {
 
 					@Override
-					public Object invoke(Invocation invocation) throws Throwable {
+					public Object invoke(Invocation invocation)
+							throws Throwable {
 						Role e = (Role) invocation.getParameter(0);
 						e.setId(2L);
 						return e;
@@ -135,18 +136,4 @@ public class RoleServiceImplTest {
 
 	}
 
-	@Test
-	public void testFindByName() {
-		context.checking(new Expectations() {
-
-			{
-				exactly(1).of(roleDao).findByName("demo");
-				will(returnValue(role));
-			}
-		});
-		RoleTransfer ret = roleService.findByName("demo");
-		assertEquals("1", ret.getId());
-		assertEquals("demo", ret.getName());
-
-	}
 }

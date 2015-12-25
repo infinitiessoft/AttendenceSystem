@@ -16,9 +16,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import transfer.JobTypeTransfer;
 import dao.JobTypeDao;
 import entity.JobType;
-import transfer.JobTypeTransfer;
 
 public class JobTypeServiceImplTest {
 
@@ -86,7 +86,8 @@ public class JobTypeServiceImplTest {
 				will(new CustomAction("save jobtype") {
 
 					@Override
-					public Object invoke(Invocation invocation) throws Throwable {
+					public Object invoke(Invocation invocation)
+							throws Throwable {
 						JobType e = (JobType) invocation.getParameter(0);
 						e.setId(2L);
 						return e;
@@ -130,21 +131,6 @@ public class JobTypeServiceImplTest {
 		Collection<JobTypeTransfer> rets = jobtypeService.findAll();
 		assertEquals(1, rets.size());
 		JobTypeTransfer ret = rets.iterator().next();
-		assertEquals("1", ret.getId());
-		assertEquals("demo", ret.getName());
-
-	}
-
-	@Test
-	public void testFindByName() {
-		context.checking(new Expectations() {
-
-			{
-				exactly(1).of(jobtypeDao).findByName("demo");
-				will(returnValue(jobtype));
-			}
-		});
-		JobTypeTransfer ret = jobtypeService.findByName("demo");
 		assertEquals("1", ret.getId());
 		assertEquals("demo", ret.getName());
 

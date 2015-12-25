@@ -16,9 +16,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import transfer.PresencerecordTransfer;
 import dao.PresencerecordDao;
 import entity.Presencerecord;
-import transfer.PresencerecordTransfer;
 
 public class PresencerecordServiceImplTest {
 
@@ -90,8 +90,10 @@ public class PresencerecordServiceImplTest {
 				will(new CustomAction("save presencerecord") {
 
 					@Override
-					public Object invoke(Invocation invocation) throws Throwable {
-						Presencerecord e = (Presencerecord) invocation.getParameter(0);
+					public Object invoke(Invocation invocation)
+							throws Throwable {
+						Presencerecord e = (Presencerecord) invocation
+								.getParameter(0);
 						e.setId(2L);
 						return e;
 					}
@@ -118,7 +120,8 @@ public class PresencerecordServiceImplTest {
 				will(returnValue(presencerecord));
 			}
 		});
-		PresencerecordTransfer ret = presencerecordService.update(1l, presencerecord);
+		PresencerecordTransfer ret = presencerecordService.update(1l,
+				presencerecord);
 		assertEquals("1", ret.getId());
 		assertEquals("name", ret.getName());
 		assertEquals("2015-01-01", ret.getAttenddate());
@@ -139,7 +142,8 @@ public class PresencerecordServiceImplTest {
 				will(returnValue(presencerecords));
 			}
 		});
-		Collection<PresencerecordTransfer> rets = presencerecordService.findAll();
+		Collection<PresencerecordTransfer> rets = presencerecordService
+				.findAll();
 		assertEquals(1, rets.size());
 		PresencerecordTransfer ret = rets.iterator().next();
 		assertEquals("1", ret.getId());
@@ -151,22 +155,4 @@ public class PresencerecordServiceImplTest {
 
 	}
 
-	@Test
-	public void testFindByName() {
-		context.checking(new Expectations() {
-
-			{
-				exactly(1).of(presencerecordDao).findByName("demo");
-				will(returnValue(presencerecord));
-			}
-		});
-		PresencerecordTransfer ret = presencerecordService.findByName("demo");
-		assertEquals("1", ret.getId());
-		assertEquals("demo", ret.getName());
-		assertEquals("2015-01-01", ret.getAttenddate());
-		assertEquals("2015-01-01", ret.getBookdate());
-		assertEquals("11", ret.getBook_person_id());
-		assertEquals("111", ret.getEmployee_id());
-
-	}
 }

@@ -16,9 +16,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import transfer.DepartmentTransfer;
 import dao.DepartmentDao;
 import entity.Department;
-import transfer.DepartmentTransfer;
 
 public class DepartmentServiceImplTest {
 
@@ -41,8 +41,8 @@ public class DepartmentServiceImplTest {
 		department = new Department();
 		department.setId(1L);
 		department.setName("demo");
-		department.setManager_id("1");
-		department.setResponseto("2");
+		department.setManager_id(1L);
+		department.setResponseto(1L);
 
 	}
 
@@ -90,7 +90,8 @@ public class DepartmentServiceImplTest {
 				will(new CustomAction("save department") {
 
 					@Override
-					public Object invoke(Invocation invocation) throws Throwable {
+					public Object invoke(Invocation invocation)
+							throws Throwable {
 						Department e = (Department) invocation.getParameter(0);
 						e.setId(2L);
 						return e;
@@ -112,7 +113,7 @@ public class DepartmentServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(departmenteDao).save(department);
+				exactly(1).of(departmentDao).save(department);
 				will(returnValue(department));
 			}
 		});
@@ -143,21 +144,5 @@ public class DepartmentServiceImplTest {
 		assertEquals("1", ret.getManager_id());
 		assertEquals("2", ret.getResponseto());
 
-	}
-
-	@Test
-	public void testFindByName() {
-		context.checking(new Expectations() {
-
-			{
-				exactly(1).of(departmentDao).findByName("Ddemo");
-				will(returnValue(department));
-			}
-		});
-		DepartmentTransfer ret = departmentService.findByName("Ddemo");
-		assertEquals(1l, ret.getId());
-		assertEquals("Ddemo", ret.getName());
-		assertEquals("1", ret.getManager_id());
-		assertEquals("2", ret.getResponseto());
 	}
 }

@@ -2,10 +2,11 @@ package transfer;
 
 public class DepartmentTransfer {
 
-	private Long id;
+	private long id;
 	private String name;
-	private Long manager_id;
-	private Long responseto;
+	private long manager_id;
+	private long responseto;
+
 	// private List<String, Boolean> departments;
 
 	public DepartmentTransfer() {
@@ -13,7 +14,8 @@ public class DepartmentTransfer {
 
 	}
 
-	public DepartmentTransfer(Long id, String name, Long manager_id, Long responseto) {
+	public DepartmentTransfer(long id, String name, long manager_id,
+			long responseto) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -21,11 +23,11 @@ public class DepartmentTransfer {
 		this.responseto = responseto;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -37,19 +39,19 @@ public class DepartmentTransfer {
 		this.name = name;
 	}
 
-	public Long getManager_id() {
+	public long getManager_id() {
 		return manager_id;
 	}
 
-	public void setManager_id(Long manager_id) {
+	public void setManager_id(long manager_id) {
 		this.manager_id = manager_id;
 	}
 
-	public Long getResponseto() {
+	public long getResponseto() {
 		return responseto;
 	}
 
-	public void setResponseto(Long responseto) {
+	public void setResponseto(long responseto) {
 		this.responseto = responseto;
 	}
 
