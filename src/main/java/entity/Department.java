@@ -37,8 +37,8 @@ public class Department extends AbstractEntity {
 	@Column(name = "responseto", nullable = false)
 	private Long responseto;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-	private Set<Department> departments = new HashSet<Department>(0);
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.REMOVE)
+	private Set<Employee> employees = new HashSet<Employee>(0);
 
 	public Long getId() {
 		return id;
@@ -72,12 +72,12 @@ public class Department extends AbstractEntity {
 		this.responseto = responseto;
 	}
 
-	public Set<Department> getDepartments() {
-		return departments;
+	public Set<Employee> getEmployees() {
+		return employees;
 	}
 
-	public void setDepartments(Set<Department> departments) {
-		this.departments = departments;
+	public void setEmployees(Set<Employee> employees) {
+		this.employees = employees;
 	}
 
 	public Department() {

@@ -45,9 +45,9 @@ public class Employee extends AbstractEntity implements UserDetails {
 	// @ManyToOne(fetch = FetchType.LAZY)
 	// @JoinColumn(name = "job_id", nullable = false)
 	// private JobType jobType;
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "department_id", nullable = false)
-	// private Department department;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "department_id", nullable = false)
+	private Department department;
 	@Column(name = "name", nullable = false, length = 20)
 	private String name;
 	@Temporal(TemporalType.DATE)
