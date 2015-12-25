@@ -1,4 +1,4 @@
-package dao;
+package dao.jpa;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+import dao.EmployeeDao;
 import entity.Employee;
 
 public class JpaEmployeeDao extends JpaDao<Employee, Long> implements

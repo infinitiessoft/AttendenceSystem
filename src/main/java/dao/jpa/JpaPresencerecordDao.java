@@ -1,5 +1,6 @@
-package dao;
+package dao.jpa;
 
+import dao.PresencerecordDao;
 import entity.Presencerecord;
 
 public class JpaPresencerecordDao extends JpaDao<Presencerecord, Long>
