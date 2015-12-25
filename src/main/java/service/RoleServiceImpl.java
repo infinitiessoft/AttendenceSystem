@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.RoleTransfer;
 import dao.RoleDao;
 import entity.Role;
-import transfer.RoleTransfer;
+import exceptions.RoleNotFoundException;
 
 public class RoleServiceImpl implements RoleService {
 
@@ -18,22 +19,36 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleTransfer retrieve(long id) {
-		return toRoleTransfer(roleDao.find(id));
+		Role role = roleDao.find(id);
+		if (role == null) {
+			throw new RoleNotFoundException(id);
+		}
+		return toRoleTransfer(role);
 	}
 
 	@Override
 	public void delete(long id) {
-		roleDao.delete(id);
+		try {
+			roleDao.delete(id);
+		} catch (NullPointerException e) {
+			throw new RoleNotFoundException(id);
+		}
 	}
 
 	@Override
 	public RoleTransfer save(Role role) {
+		role.setId(null);
 		return toRoleTransfer(roleDao.save(role));
 	}
 
 	@Override
-	public RoleTransfer update(long id, Role role) {
-		return toRoleTransfer(roleDao.save(role));
+	public RoleTransfer update(long id, Role updated) {
+		Role role = roleDao.find(id);
+		if (role == null) {
+			throw new RoleNotFoundException(id);
+		}
+		updated.setId(role.getId());
+		return toRoleTransfer(roleDao.save(updated));
 	}
 
 	@Override
@@ -54,8 +69,4 @@ public class RoleServiceImpl implements RoleService {
 		return ret;
 	}
 
-	@Override
-	public RoleTransfer findByName(String name) {
-		return toRoleTransfer(roleDao.findByName(name));
-	}
 }

@@ -20,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -111,6 +113,8 @@ public class Employee extends AbstractEntity implements UserDetails {
 	private Date lastLogin;
 
 	@Override
+	@Transient
+	@XmlTransient
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<Role> roles = this.getRoles();
 		if (roles == null) {
@@ -127,7 +131,6 @@ public class Employee extends AbstractEntity implements UserDetails {
 
 	@Override
 	public String getPassword() {
-
 		return password;
 	}
 
@@ -137,21 +140,29 @@ public class Employee extends AbstractEntity implements UserDetails {
 	}
 
 	@Override
+	@Transient
+	@XmlTransient
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
 	@Override
+	@Transient
+	@XmlTransient
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	@Override
+	@Transient
+	@XmlTransient
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
 	@Override
+	@Transient
+	@XmlTransient
 	public boolean isEnabled() {
 		return true;
 	}

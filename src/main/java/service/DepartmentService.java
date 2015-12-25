@@ -1,14 +1,13 @@
 package service;
 
-import java.util.Collection;import entity.D
+import java.util.Collection;
 
+import entity.Department;
 import transfer.DepartmentTransfer;
 
 public interface DepartmentService {
 
 	public DepartmentTransfer retrieve(long id);
-
-	public DepartmentTransfer findByName(String name);
 
 	public void delete(long id);
 

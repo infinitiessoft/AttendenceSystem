@@ -2,14 +2,12 @@ package service;
 
 import java.util.Collection;
 
-import entity.Presencerecord;
 import transfer.PresencerecordTransfer;
+import entity.Presencerecord;
 
 public interface PresencerecordService {
 
 	public PresencerecordTransfer retrieve(long id);
-
-	public PresencerecordTransfer findByName(String name);
 
 	public void delete(long id);
 

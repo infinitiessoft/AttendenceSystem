@@ -1,6 +1,5 @@
 package entity;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -20,8 +19,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "member")
-
-public class Member implements Serializable {
+public class Member extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -87,9 +85,12 @@ public class Member implements Serializable {
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((lastlogin == null) ? 0 : lastlogin.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result
+				+ ((lastlogin == null) ? 0 : lastlogin.hashCode());
+		result = prime * result
+				+ ((password == null) ? 0 : password.hashCode());
+		result = prime * result
+				+ ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -130,7 +131,8 @@ public class Member implements Serializable {
 		return true;
 	}
 
-	public Member(Long id, String username, String password, String email, Timestamp lastlogin) {
+	public Member(Long id, String username, String password, String email,
+			Timestamp lastlogin) {
 		super();
 		this.id = id;
 		this.username = username;

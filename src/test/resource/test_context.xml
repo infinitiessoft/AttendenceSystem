@@ -31,7 +31,8 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="persistenceUnitName" value="attendancePU" />
-		<property name="persistenceXmlLocation" value="file:src/test/resource/META-INF/persistence.xml"></property>
+		<property name="persistenceXmlLocation"
+			value="file:src/main/resource/META-INF/persistence.xml"></property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="generateDdl" value="true" />
@@ -44,15 +45,34 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<bean id="employeeDao" class="dao.JpaEmployeeDao">
-	</bean>
-
-	<bean id="roleDao" class="dao.JpaRoleDao">
+	<bean id="employeeDao" class="dao.jpa.JpaEmployeeDao">
 	</bean>
 
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
 	</bean>
+
+	<bean id="departmentDao" class="dao.jpa.JpaDepartmentDao">
+	</bean>
+
+	<bean id="departmentService" class="service.DepartmentServiceImpl">
+		<constructor-arg ref="departmentDao" />
+	</bean>
+
+	<bean id="jobTypeDao" class="dao.jpa.JpaJobTypeDao">
+	</bean>
+
+	<bean id="jobTypeService" class="service.JobTypeServiceImpl">
+		<constructor-arg ref="jobTypeDao" />
+	</bean>
+
+	<bean id="roleDao" class="dao.jpa.JpaRoleDao">
+	</bean>
+
+	<bean id="roleService" class="service.RoleServiceImpl">
+		<constructor-arg ref="roleDao" />
+	</bean>
+
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
@@ -73,13 +93,6 @@
 	<bean id="csrfTokenRepository"
 		class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository">
 		<property name="headerName" value="X-XSRF-TOKEN" />
-	</bean>
-
-	<bean id="dataBaseInitializer" class="dao.DataBaseInitializer"
-		init-method="initDataBase">
-		<constructor-arg ref="employeeDao" />
-		<constructor-arg ref="roleDao" />
-		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">

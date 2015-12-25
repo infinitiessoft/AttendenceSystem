@@ -4,43 +4,58 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.JobTypeTransfer;
 import dao.JobTypeDao;
 import entity.JobType;
-import transfer.JobTypeTransfer;
+import exceptions.JobTypeNotFoundException;
 
 public class JobTypeServiceImpl implements JobTypeService {
 
-	private JobTypeDao jobtypeDao;
+	private JobTypeDao jobTypeDao;
 
-	public JobTypeServiceImpl(JobTypeDao jobtypeDao) {
-		this.jobtypeDao = jobtypeDao;
+	public JobTypeServiceImpl(JobTypeDao jobTypeDao) {
+		this.jobTypeDao = jobTypeDao;
 	}
 
 	@Override
 	public JobTypeTransfer retrieve(long id) {
-		return toJobTypeTransfer(jobtypeDao.find(id));
+		JobType jobType = jobTypeDao.find(id);
+		if (jobType == null) {
+			throw new JobTypeNotFoundException(id);
+		}
+		return toJobTypeTransfer(jobType);
 	}
 
 	@Override
 	public void delete(long id) {
-		jobtypeDao.delete(id);
+		try {
+			jobTypeDao.delete(id);
+		} catch (NullPointerException e) {
+			throw new JobTypeNotFoundException(id);
+		}
 	}
 
 	@Override
-	public JobTypeTransfer save(JobType jobtype) {
-		return toJobTypeTransfer(jobtypeDao.save(jobtype));
+	public JobTypeTransfer save(JobType jobType) {
+		jobType.setId(null);
+		return toJobTypeTransfer(jobTypeDao.save(jobType));
 	}
 
 	@Override
-	public JobTypeTransfer update(long id, JobType jobtype) {
-		return toJobTypeTransfer(jobtypeDao.save(jobtype));
+	public JobTypeTransfer update(long id, JobType updated) {
+		JobType jobType = jobTypeDao.find(id);
+		if (jobType == null) {
+			throw new JobTypeNotFoundException(id);
+		}
+		updated.setId(jobType.getId());
+		return toJobTypeTransfer(jobTypeDao.save(updated));
 	}
 
 	@Override
 	public Collection<JobTypeTransfer> findAll() {
 		List<JobTypeTransfer> rets = new ArrayList<JobTypeTransfer>();
 
-		for (JobType jobtype : jobtypeDao.findAll()) {
+		for (JobType jobtype : jobTypeDao.findAll()) {
 			rets.add(toJobTypeTransfer(jobtype));
 		}
 		return rets;
@@ -54,8 +69,4 @@ public class JobTypeServiceImpl implements JobTypeService {
 		return ret;
 	}
 
-	@Override
-	public JobTypeTransfer findByName(String name) {
-		return toJobTypeTransfer(jobtypeDao.findByName(name));
-	}
 }

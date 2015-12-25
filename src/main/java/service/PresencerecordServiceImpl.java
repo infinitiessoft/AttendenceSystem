@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.PresencerecordTransfer;
 import dao.PresencerecordDao;
 import entity.Presencerecord;
-import transfer.PresencerecordTransfer;
 
 public class PresencerecordServiceImpl implements PresencerecordService {
 
@@ -46,7 +46,8 @@ public class PresencerecordServiceImpl implements PresencerecordService {
 		return rets;
 	}
 
-	private PresencerecordTransfer toPresencerecordTransfer(Presencerecord presencerecord) {
+	private PresencerecordTransfer toPresencerecordTransfer(
+			Presencerecord presencerecord) {
 		PresencerecordTransfer ret = new PresencerecordTransfer();
 		ret.setId(presencerecord.getId());
 		ret.setName(presencerecord.getName());
@@ -54,8 +55,4 @@ public class PresencerecordServiceImpl implements PresencerecordService {
 		return ret;
 	}
 
-	@Override
-	public PresencerecordTransfer findByName(String name) {
-		return toPresencerecordTransfer(presencerecordDao.findByName(name));
-	}
 }

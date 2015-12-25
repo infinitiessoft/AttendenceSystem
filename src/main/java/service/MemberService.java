@@ -2,14 +2,12 @@ package service;
 
 import java.util.Collection;
 
-import entity.Member;
 import transfer.MemberTransfer;
+import entity.Member;
 
 public interface MemberService {
 
 	public MemberTransfer retrieve(long id);
-
-	public MemberTransfer findByUsername(String username);
 
 	public void delete(long id);
 

@@ -22,11 +22,6 @@ public class DataBaseInitializer {
 	}
 
 	public void initDataBase() {
-		// Employee Employee = new Employee("user",
-		// this.passwordEncoder.encode("user"));
-		// user.addRole("user");
-		// this.userDao.save(user);
-
 		Employee admin = new Employee();
 		admin.setDateofbirth(new Date());
 		admin.setDateofjoined(new Date());

@@ -9,8 +9,6 @@ public interface MemberRoleService {
 
 	public MemberRoleTransfer retrieve(long id);
 
-	// public MemberRoleTransfer findByUsername(String username);
-
 	public void delete(long id);
 
 	public MemberRoleTransfer save(MemberRole memberrole);

@@ -1,4 +1,4 @@
-package dao;
+package dao.jpa;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import dao.Dao;
 import entity.AbstractEntity;
 
 public class JpaDao<T extends AbstractEntity, I> implements Dao<T, I> {
@@ -61,7 +62,7 @@ public class JpaDao<T extends AbstractEntity, I> implements Dao<T, I> {
 		}
 		T entity = this.find(id);
 		if (entity == null) {
-			return;
+			throw new NullPointerException("resource not found");
 		}
 		this.getEntityManager().remove(entity);
 	}

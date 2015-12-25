@@ -2,14 +2,12 @@ package service;
 
 import java.util.Collection;
 
-import entity.Role;
 import transfer.RoleTransfer;
+import entity.Role;
 
 public interface RoleService {
 
 	public RoleTransfer retrieve(long id);
-
-	public RoleTransfer findByName(String name);
 
 	public void delete(long id);
 

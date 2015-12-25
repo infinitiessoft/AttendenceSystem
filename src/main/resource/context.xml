@@ -44,14 +44,32 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<bean id="employeeDao" class="dao.JpaEmployeeDao">
-	</bean>
-
-	<bean id="roleDao" class="dao.JpaRoleDao">
+	<bean id="employeeDao" class="dao.jpa.JpaEmployeeDao">
 	</bean>
 
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
+	</bean>
+
+	<bean id="departmentDao" class="dao.jpa.JpaDepartmentDao">
+	</bean>
+
+	<bean id="departmentService" class="service.DepartmentServiceImpl">
+		<constructor-arg ref="departmentDao" />
+	</bean>
+
+	<bean id="jobTypeDao" class="dao.jpa.JpaJobTypeDao">
+	</bean>
+
+	<bean id="jobTypeService" class="service.JobTypeServiceImpl">
+		<constructor-arg ref="jobTypeDao" />
+	</bean>
+
+	<bean id="roleDao" class="dao.jpa.JpaRoleDao">
+	</bean>
+
+	<bean id="roleService" class="service.RoleServiceImpl">
+		<constructor-arg ref="roleDao" />
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
