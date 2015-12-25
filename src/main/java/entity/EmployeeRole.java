@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "employee_role")
 
-public class Employee_Role implements Serializable {
+public class EmployeeRole implements Serializable {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -29,14 +29,14 @@ public class Employee_Role implements Serializable {
 	@JoinColumn(name = "role")
 	private RoleEntity role;
 
-	public Employee_Role(Long employee_id, Long role_id, RoleEntity role) {
+	public EmployeeRole(Long employee_id, Long role_id, RoleEntity role) {
 		super();
 		this.employee_id = employee_id;
 		this.role_id = role_id;
 		this.role = role;
 	}
 
-	public Employee_Role() {
+	public EmployeeRole() {
 		super();
 
 	}
@@ -59,7 +59,7 @@ public class Employee_Role implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Employee_Role other = (Employee_Role) obj;
+		EmployeeRole other = (EmployeeRole) obj;
 		if (employee_id == null) {
 			if (other.employee_id != null)
 				return false;
@@ -76,5 +76,29 @@ public class Employee_Role implements Serializable {
 		} else if (!role_id.equals(other.role_id))
 			return false;
 		return true;
+	}
+
+	public Long getEmployee_id() {
+		return employee_id;
+	}
+
+	public void setEmployee_id(Long employee_id) {
+		this.employee_id = employee_id;
+	}
+
+	public Long getRole_id() {
+		return role_id;
+	}
+
+	public void setRole_id(Long role_id) {
+		this.role_id = role_id;
+	}
+
+	public RoleEntity getRole() {
+		return role;
+	}
+
+	public void setRole(RoleEntity role) {
+		this.role = role;
 	}
 }

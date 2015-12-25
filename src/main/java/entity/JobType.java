@@ -9,18 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * In this example we will use Employee as entity.Id, firstname, lastname,
- * birthdate, cellphone, jobtitle, username, createddate, email, password and
- * gender are the attributes of this entity. It contains default constructor,
- * setter and getter methods of those attributes.
- * 
- */
-
 @Entity
-@Table(name = "job_type")
+@Table(name = "JobType")
 
-public class Job_type implements Serializable {
+public class JobType implements Serializable {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -64,7 +56,7 @@ public class Job_type implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Job_type other = (Job_type) obj;
+		JobType other = (JobType) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -78,13 +70,13 @@ public class Job_type implements Serializable {
 		return true;
 	}
 
-	public Job_type(Long id, String name) {
+	public JobType(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
 
-	public Job_type() {
+	public JobType() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

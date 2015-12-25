@@ -33,14 +33,14 @@ public class Job implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "job_type")
-	private Job_type job_type;
+	private JobType job_type;
 
 	public Job() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Job(Long id, String name, Long department_id, Long job_type_id, Job_type job_type) {
+	public Job(Long id, String name, Long department_id, Long job_type_id, JobType job_type) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -81,11 +81,11 @@ public class Job implements Serializable {
 		this.job_type_id = job_type_id;
 	}
 
-	public Job_type getJob_type() {
+	public JobType getJob_type() {
 		return job_type;
 	}
 
-	public void setJob_type(Job_type job_type) {
+	public void setJob_type(JobType job_type) {
 		this.job_type = job_type;
 	}
 

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import dao.DepartmentDao;
+import entity.Department;
 import transfer.DepartmentTransfer;
 
 public class DepartmentServiceImpl implements DepartmentService {
@@ -48,13 +49,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 	private DepartmentTransfer toDepartmentTransfer(Department department) {
 		DepartmentTransfer ret = new DepartmentTransfer();
 		ret.setId(department.getId());
-		ret.setName(department.getname());
+		ret.setName(department.getName());
 		// ret.setRoles(this.createRoleMap(department));
 		return ret;
 	}
 
 	@Override
-	public DepartmentTransfer findByname(String name) {
-		return toDepartmentTransfer(departmentDao.findByname(name));
+	public DepartmentTransfer findByName(String name) {
+		return toDepartmentTransfer(departmentDao.findByName(name));
 	}
 }

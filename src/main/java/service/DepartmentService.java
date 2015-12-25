@@ -8,7 +8,7 @@ public interface DepartmentService {
 
 	public DepartmentTransfer retrieve(long id);
 
-	public DepartmentTransfer findByname(String name);
+	public DepartmentTransfer findByName(String name);
 
 	public void delete(long id);
 

@@ -10,7 +10,7 @@ public interface JobService {
 
 	public JobTransfer retrieve(long id);
 
-	public JobTransfer findByname(String name);
+	public JobTransfer findByName(String name);
 
 	public void delete(long id);
 

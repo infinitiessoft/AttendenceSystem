@@ -55,7 +55,7 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public JobTransfer findByname(String name) {
+	public JobTransfer findByName(String name) {
 		return toJobTransfer(jobDao.findByName(name));
 	}
 }

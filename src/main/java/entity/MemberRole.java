@@ -20,9 +20,9 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "member_role")
+@Table(name = "MemberRole")
 
-public class Member_role implements Serializable {
+public class MemberRole implements Serializable {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id
@@ -73,7 +73,7 @@ public class Member_role implements Serializable {
 		this.member = member;
 	}
 
-	public Member_role(Long member_id, Long role_id, RoleEntity role, Member member) {
+	public MemberRole(Long member_id, Long role_id, RoleEntity role, Member member) {
 		super();
 		this.member_id = member_id;
 		this.role_id = role_id;
@@ -81,7 +81,7 @@ public class Member_role implements Serializable {
 		this.member = member;
 	}
 
-	public Member_role() {
+	public MemberRole() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -105,7 +105,7 @@ public class Member_role implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Member_role other = (Member_role) obj;
+		MemberRole other = (MemberRole) obj;
 		if (member == null) {
 			if (other.member != null)
 				return false;
