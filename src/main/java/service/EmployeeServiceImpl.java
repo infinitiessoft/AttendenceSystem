@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import transfer.EmployeeTransfer;
 import dao.EmployeeDao;
 import entity.Employee;
+import exceptions.EmployeeNotFoundException;
 
 /**
  * One implementation of the interface for Employee Service
@@ -27,7 +28,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public EmployeeTransfer retrieve(long id) {
-		return toEmployeeTransfer(employeeDao.find(id));
+		Employee employee = employeeDao.find(id);
+		if (employee == null) {
+			throw new EmployeeNotFoundException(id);
+		}
+		return toEmployeeTransfer(employee);
 	}
 
 	@Override

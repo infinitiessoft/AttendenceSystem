@@ -10,7 +10,7 @@ public interface Dao<T extends AbstractEntity, I> {
 
 	T find(I id);
 
-	T save(T newsEntry);
+	T save(T newEntry);
 
 	void delete(I id);
 

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:context="http://www.springframework.org/schema/context"
@@ -32,6 +31,7 @@
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="persistenceUnitName" value="attendancePU" />
+		<property name="persistenceXmlLocation" value="file:src/test/resource/META-INF/persistence.xml"></property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="generateDdl" value="true" />
@@ -89,28 +89,5 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<security:http realm="Protected API" use-expressions="true"
-		auto-config="false" create-session="stateless" entry-point-ref="unauthorizedEntryPoint"
-		authentication-manager-ref="authenticationManager">
-		<security:custom-filter ref="authenticationTokenProcessingFilter"
-			position="FORM_LOGIN_FILTER" />
-		<security:intercept-url pattern="/rest/auth/authenticate"
-			access="permitAll" />
-		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
-			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
-			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 
-			/> <security:intercept-url method="DELETE" pattern="/rest/news/**" access="hasRole('admin')" 
-			/> -->
-		<security:csrf token-repository-ref="csrfTokenRepository" />
-		<security:custom-filter ref="csrfHeaderFilter"
-			after="CSRF_FILTER" />
-	</security:http>
-
-
-	<bean id="unauthorizedEntryPoint" class="security.UnauthorizedEntryPoint" />
-
-	<bean class="security.AuthenticationTokenProcessingFilter" id="authenticationTokenProcessingFilter">
-		<constructor-arg ref="employeeDao" />
-	</bean>
 
 </beans>
