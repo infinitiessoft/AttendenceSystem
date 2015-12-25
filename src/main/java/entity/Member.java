@@ -1,6 +1,5 @@
 package entity;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;

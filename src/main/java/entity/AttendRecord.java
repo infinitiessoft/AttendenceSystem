@@ -1,6 +1,5 @@
 package entity;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -89,41 +88,43 @@ public class AttendRecord extends AbstractEntity {
 	@Column(name = "permic_person_id2", nullable = false)
 	private Long permic_person_id2;
 
-	public AttendRecord(Long id, Timestamp modify_end_date,
-			Timestamp modify_start_date, Timestamp modify_date,
-			Long employee_id, String permit, String reason, Timestamp duration,
-			Timestamp end_date, Timestamp book_date, Timestamp start_date,
-			Long permic_person_id, Date dateinterval, Date endperiod,
-			Date modifyendperiod, Date modifystartperiod, String modifypermit,
-			Date startperiod, Date period, String permit2,
+	public AttendRecord(Long id, Timestamp end_date, Timestamp duration,
+			String reason, String permit, Long employee_id,
+			Timestamp modify_date, Timestamp modify_start_date,
+			Timestamp modify_end_date, Timestamp book_date,
+			Timestamp start_date, Long permic_person_id, Date dateinterval,
+			Date endperiod, Date modifyendperiod, Date modifystartperiod,
+			String modifypermit, Date period, Date startperiod,
+			Date modifydateinterval, String permit2, Long permic_person_id2,
 			String modifypermit2, String modifyreason, String modifytype,
-			Long permic_person_id2) {
+			Set<AttendRecord> records) {
 		super();
 		this.id = id;
-		this.book_date = book_date;
-		this.dateinterval = dateinterval;
-		this.duration = duration;
-		this.employee_id = employee_id;
 		this.end_date = end_date;
-		this.endperiod = endperiod;
+		this.duration = duration;
+		this.reason = reason;
+		this.permit = permit;
+		this.employee_id = employee_id;
 		this.modify_date = modify_date;
-		this.modify_end_date = modify_end_date;
 		this.modify_start_date = modify_start_date;
-		this.modifydateinterval = modifydateinterval;
+		this.modify_end_date = modify_end_date;
+		this.book_date = book_date;
+		this.start_date = start_date;
+		this.permic_person_id = permic_person_id;
+		this.dateinterval = dateinterval;
+		this.endperiod = endperiod;
 		this.modifyendperiod = modifyendperiod;
+		this.modifystartperiod = modifystartperiod;
 		this.modifypermit = modifypermit;
+		this.period = period;
+		this.startperiod = startperiod;
+		this.modifydateinterval = modifydateinterval;
+		this.permit2 = permit2;
+		this.permic_person_id2 = permic_person_id2;
 		this.modifypermit2 = modifypermit2;
 		this.modifyreason = modifyreason;
-		this.modifystartperiod = modifystartperiod;
 		this.modifytype = modifytype;
-		this.period = period;
-		this.permic_person_id = permic_person_id;
-		this.permit = permit;
-		this.permit2 = permit2;
-		this.reason = reason;
-		this.start_date = start_date;
-		this.startperiod = startperiod;
-
+		this.records = records;
 	}
 
 	public Long getId() {
