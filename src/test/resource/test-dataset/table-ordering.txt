@@ -1,3 +1,4 @@
 role
+job_type
 employee
 employee_role

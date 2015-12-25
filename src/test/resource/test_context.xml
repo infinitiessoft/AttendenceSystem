@@ -32,7 +32,7 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="persistenceUnitName" value="attendancePU" />
 		<property name="persistenceXmlLocation"
-			value="file:src/test/resource/META-INF/persistence.xml"></property>
+			value="file:src/main/resource/META-INF/persistence.xml"></property>
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="generateDdl" value="true" />

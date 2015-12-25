@@ -7,6 +7,7 @@ import java.util.List;
 import transfer.DepartmentTransfer;
 import dao.DepartmentDao;
 import entity.Department;
+import exceptions.DepartmentNotFoundException;
 
 public class DepartmentServiceImpl implements DepartmentService {
 
@@ -18,22 +19,36 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public DepartmentTransfer retrieve(long id) {
-		return toDepartmentTransfer(departmentDao.find(id));
+		Department department = departmentDao.find(id);
+		if (department == null) {
+			throw new DepartmentNotFoundException(id);
+		}
+		return toDepartmentTransfer(department);
 	}
 
 	@Override
 	public void delete(long id) {
-		departmentDao.delete(id);
+		try {
+			departmentDao.delete(id);
+		} catch (NullPointerException e) {
+			throw new DepartmentNotFoundException(id);
+		}
 	}
 
 	@Override
 	public DepartmentTransfer save(Department department) {
+		department.setId(null);
 		return toDepartmentTransfer(departmentDao.save(department));
 	}
 
 	@Override
-	public DepartmentTransfer update(long id, Department department) {
-		return toDepartmentTransfer(departmentDao.save(department));
+	public DepartmentTransfer update(long id, Department updated) {
+		Department department = departmentDao.find(id);
+		if (department == null) {
+			throw new DepartmentNotFoundException(id);
+		}
+		updated.setId(department.getId());
+		return toDepartmentTransfer(departmentDao.save(updated));
 	}
 
 	@Override
@@ -50,7 +65,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentTransfer ret = new DepartmentTransfer();
 		ret.setId(department.getId());
 		ret.setName(department.getName());
-		// ret.setRoles(this.createRoleMap(department));
 		return ret;
 	}
 

@@ -1,9 +1,0 @@
-<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
-	<persistence-unit name="attendancePU" transaction-type="RESOURCE_LOCAL">
-		<class>entity.Employee</class>
-		<class>entity.Role</class>
-		<exclude-unlisted-classes>true</exclude-unlisted-classes>
-	</persistence-unit>
-</persistence>

@@ -4,6 +4,8 @@
 	<persistence-unit name="attendancePU" transaction-type="RESOURCE_LOCAL">
 		<class>entity.Employee</class>
 		<class>entity.Role</class>
+		<class>entity.Department</class>
+		<class>entity.JobType</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 	</persistence-unit>
 </persistence>
