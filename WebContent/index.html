@@ -64,6 +64,8 @@
 		<div ng-view></div>
 	</div>
 
+	<!-- apiCheck is used by formly to validate its api -->
+	<script src="https://npmcdn.com/api-check@latest/dist/api-check.js"></script>
 	<script type="text/javascript"
 		src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
 	<script type="text/javascript"
@@ -71,14 +73,20 @@
 		integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ=="
 		crossorigin="anonymous"></script>
 	<script type="text/javascript"
-		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.js"></script>
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
 	<script type="text/javascript"
-		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular-resource.js"></script>
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.js"></script>
 	<script type="text/javascript"
-		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular-route.js"></script>
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.js"></script>
 	<script type="text/javascript"
-		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular-cookies.js"></script>
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-cookies.js"></script>
+		<!-- Angular-UI Bootstrap has tabs directive we want -->
+    <script src="https://npmcdn.com/angular-ui-bootstrap@latest/ui-bootstrap-tpls.js"></script>
+	<script src="https://npmcdn.com/angular-formly@latest/dist/formly.js"></script>
+	<script
+		src="https://npmcdn.com/angular-formly-templates-bootstrap@latest/dist/angular-formly-templates-bootstrap.js"></script>
 	<script type="text/javascript" src="js/config.js"></script>
 	<script type="text/javascript" src="js/app.js"></script>
+	 <!-- Put custom templates here -->
 </body>
 </html>
