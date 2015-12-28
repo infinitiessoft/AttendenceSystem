@@ -88,15 +88,11 @@ public class AttendRecord extends AbstractEntity {
 	@Column(name = "permic_person_id2", nullable = false)
 	private Long permic_person_id2;
 
-	public AttendRecord(Long id, Timestamp end_date, Timestamp duration,
-			String reason, String permit, Long employee_id,
-			Timestamp modify_date, Timestamp modify_start_date,
-			Timestamp modify_end_date, Timestamp book_date,
-			Timestamp start_date, Long permic_person_id, Date dateinterval,
-			Date endperiod, Date modifyendperiod, Date modifystartperiod,
-			String modifypermit, Date period, Date startperiod,
-			Date modifydateinterval, String permit2, Long permic_person_id2,
-			String modifypermit2, String modifyreason, String modifytype,
+	public AttendRecord(Long id, Timestamp end_date, Timestamp duration, String reason, String permit, Long employee_id,
+			Timestamp modify_date, Timestamp modify_start_date, Timestamp modify_end_date, Timestamp book_date,
+			Timestamp start_date, Long permic_person_id, Date dateinterval, Date endperiod, Date modifyendperiod,
+			Date modifystartperiod, String modifypermit, Date period, Date startperiod, Date modifydateinterval,
+			String permit2, Long permic_person_id2, String modifypermit2, String modifyreason, String modifytype,
 			Set<AttendRecord> records) {
 		super();
 		this.id = id;
@@ -124,7 +120,7 @@ public class AttendRecord extends AbstractEntity {
 		this.modifypermit2 = modifypermit2;
 		this.modifyreason = modifyreason;
 		this.modifytype = modifytype;
-		this.records = records;
+
 	}
 
 	public Long getId() {
