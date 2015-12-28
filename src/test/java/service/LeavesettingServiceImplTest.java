@@ -16,9 +16,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import transfer.LeavesettingTransfer;
 import dao.LeavesettingDao;
 import entity.Leavesetting;
-import transfer.LeavesettingTransfer;
 
 public class LeavesettingServiceImplTest {
 
@@ -90,8 +90,10 @@ public class LeavesettingServiceImplTest {
 				will(new CustomAction("save leavesetting") {
 
 					@Override
-					public Object invoke(Invocation invocation) throws Throwable {
-						Leavesetting e = (Leavesetting) invocation.getParameter(0);
+					public Object invoke(Invocation invocation)
+							throws Throwable {
+						Leavesetting e = (Leavesetting) invocation
+								.getParameter(0);
 						e.setId(2L);
 						return e;
 					}
@@ -143,25 +145,6 @@ public class LeavesettingServiceImplTest {
 		assertEquals(1, rets.size());
 		LeavesettingTransfer ret = rets.iterator().next();
 		assertEquals("2", ret.getId());
-		assertEquals("demo", ret.getName());
-		assertEquals("1", ret.getOfficial());
-		assertEquals("11", ret.getPersonal());
-		assertEquals("111", ret.getSick());
-		assertEquals("1111", ret.getSpecial());
-
-	}
-
-	@Test
-	public void testFindByName() {
-		context.checking(new Expectations() {
-
-			{
-				exactly(1).of(leavesettingDao).findByName("demo");
-				will(returnValue(leavesetting));
-			}
-		});
-		LeavesettingTransfer ret = leavesettingService.findByName("demo");
-		assertEquals("1", ret.getId());
 		assertEquals("demo", ret.getName());
 		assertEquals("1", ret.getOfficial());
 		assertEquals("11", ret.getPersonal());

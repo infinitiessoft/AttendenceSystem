@@ -1,6 +1,7 @@
 package entity;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,7 +38,7 @@ public class Member extends AbstractEntity {
 	private String email;
 
 	@Column(name = "lastlogin", nullable = false)
-	private Timestamp lastlogin;
+	private Date lastlogin;
 
 	public Long getId() {
 		return id;
@@ -71,11 +72,11 @@ public class Member extends AbstractEntity {
 		this.email = email;
 	}
 
-	public Timestamp getLastlogin() {
+	public Date getLastlogin() {
 		return lastlogin;
 	}
 
-	public void setLastlogin(Timestamp lastlogin) {
+	public void setLastlogin(Date lastlogin) {
 		this.lastlogin = lastlogin;
 	}
 

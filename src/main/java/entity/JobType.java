@@ -7,8 +7,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
+/**
+ * In this example we will use Employee as entity.Id, firstname, lastname,
+ * birthdate, cellphone, jobtitle, username, createddate, email, password and
+ * gender are the attributes of this entity. It contains default constructor,
+ * setter and getter methods of those attributes.
+ * 
+ */
 
+@Entity
 @Table(name = "job_type")
 public class JobType extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;

@@ -16,9 +16,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import transfer.MemberTransfer;
 import dao.MemberDao;
 import entity.Member;
-import transfer.MemberTransfer;
 
 public class MemberServiceImplTest {
 
@@ -89,7 +89,8 @@ public class MemberServiceImplTest {
 				will(new CustomAction("save member") {
 
 					@Override
-					public Object invoke(Invocation invocation) throws Throwable {
+					public Object invoke(Invocation invocation)
+							throws Throwable {
 						Member e = (Member) invocation.getParameter(0);
 						e.setId(2L);
 						return e;
@@ -147,21 +148,4 @@ public class MemberServiceImplTest {
 
 	}
 
-	@Test
-	public void testFindByUsername() {
-		context.checking(new Expectations() {
-
-			{
-				exactly(1).of(memberDao).findByName("demo");
-				will(returnValue(member));
-			}
-		});
-		MemberTransfer ret = memberService.findByUsername("demo");
-		assertEquals("1", ret.getId());
-		assertEquals("demo", ret.getUsername());
-		assertEquals("demo", ret.getPassword());
-		assertEquals("demo", ret.getEmail());
-		assertEquals("2015-01-01", ret.getLastlogin());
-
-	}
 }

@@ -36,7 +36,8 @@ public class Job extends AbstractEntity {
 		super();
 	}
 
-	public Job(Long id, String name, Long department_id, Long job_type_id, JobType job_type) {
+	public Job(Long id, String name, Long department_id, Long job_type_id,
+			JobType job_type) {
 		super();
 		this.id = id;
 		this.name = name;

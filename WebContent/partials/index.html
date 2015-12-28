@@ -5,18 +5,34 @@
 <div class="page-header">
 	<h3>Employees</h3>
 </div>
-
-<div ng-repeat="newsEntry in newsEntries">
-	<hr />
-	<div class="pull-right">
-		<a href="" ng-click="deleteEntry(newsEntry)"
-			class="btn btn-xs btn-default" ng-show="hasRole('admin')"
-			title="delete"><span class="fa fa-trash-o"></span></a> <a
-			href="#!/edit/{{newsEntry.id}}" class="btn btn-xs btn-default"
-			ng-show="hasRole('admin')" title="edit"><span
-			class="fa fa-pencil"></span></a>
-	</div>
-	<h4>{{newsEntry.id}}</h4>
-	<p>{{newsEntry.name}}</p>
+<div>
+	<a href="#!/create" class="btn btn-sm btn-success" title="Create"><i
+		class="glyphicon glyphicon-plus"> </i> Add random item</a>
+	
+	<table st-table="displayedCollection" st-safe-src="rowCollection"
+		class="table table-striped">
+		<thead>
+			<tr>
+				<th st-sort="firstName">id</th>
+				<th st-sort="lastName">name</th>
+			</tr>
+			<tr>
+				<th colspan="5"><input st-search="" class="form-control"
+					placeholder="global search ..." type="text" /></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="row in displayedCollection">
+				<td>{{row.id}}</td>
+				<td>{{row.name}}</td>
+				<td>
+					<button type="button" ng-click="removeItem(row)"
+						class="btn btn-sm btn-danger">
+						<i class="glyphicon glyphicon-remove-circle"> </i>
+					</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>
 <hr />

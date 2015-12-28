@@ -1,1 +1,1 @@
-"id","name","dateofbirth","dateofjoined","email","password","username","specialleave","specialleave_used","sick","sick_used","personal","personal_used","official_used""1","test","2014-05-05 17:15:16","2014-05-05 17:15:16","pohsun@gmail.com","secret","pohsun",0,0,0,0,0,0,0
+"id","name","dateofjoined","email","password","username","specialleave","specialleave_used","sick","sick_used","personal","personal_used","official_used","department_id","gender""1","test","2014-05-05","pohsun@gmail.com","secret","pohsun",0,0,0,0,0,0,0,"1","male"

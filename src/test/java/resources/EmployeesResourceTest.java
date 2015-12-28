@@ -14,7 +14,9 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 
 import transfer.EmployeeTransfer;
+import entity.Department;
 import entity.Employee;
+import entity.Gender;
 
 public class EmployeesResourceTest extends ResourceTest {
 
@@ -57,18 +59,21 @@ public class EmployeesResourceTest extends ResourceTest {
 	@Test
 	public void testUpdateEmployee() {
 		Employee admin = new Employee();
-		admin.setDateofbirth(new Date());
 		admin.setDateofjoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
+		admin.setGender(Gender.male);
+		Department dep = new Department();
+		dep.setId(1L);
+		admin.setDepartment(dep);
 		Response response = target("employee").path("1")
 				.register(JacksonFeature.class).request()
 				.put(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
-		assertEquals(2l, transfer.getId());
+		assertEquals(1l, transfer.getId());
 		assertEquals(admin.getUsername(), transfer.getName());
 		assertEquals(0, transfer.getRoles().size());
 	}
@@ -76,7 +81,6 @@ public class EmployeesResourceTest extends ResourceTest {
 	@Test
 	public void testUpdateEmployeeWithNotFoundException() {
 		Employee admin = new Employee();
-		admin.setDateofbirth(new Date());
 		admin.setDateofjoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");
@@ -92,12 +96,15 @@ public class EmployeesResourceTest extends ResourceTest {
 	@Test
 	public void testSaveEmployee() {
 		Employee admin = new Employee();
-		admin.setDateofbirth(new Date());
 		admin.setDateofjoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
+		admin.setGender(Gender.male);
+		Department dep = new Department();
+		dep.setId(1L);
+		admin.setDepartment(dep);
 		Response response = target("employee").register(JacksonFeature.class)
 				.request().post(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
@@ -110,7 +117,6 @@ public class EmployeesResourceTest extends ResourceTest {
 	@Test
 	public void testSaveEmployeeWithDuplicateName() {
 		Employee admin = new Employee();
-		admin.setDateofbirth(new Date());
 		admin.setDateofjoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");

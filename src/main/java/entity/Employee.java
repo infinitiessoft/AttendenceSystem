@@ -6,8 +6,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,17 +45,11 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "responseto")
 	private Employee employee;
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "job_id", nullable = false)
-	// private JobType jobType;
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "department_id", nullable = false)
-	// private Department department;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "department_id", nullable = false)
+	private Department department;
 	@Column(name = "name", nullable = false, length = 20)
 	private String name;
-	@Temporal(TemporalType.DATE)
-	@Column(name = "dateofbirth", nullable = false, length = 13)
-	private Date dateofbirth;
 	@Temporal(TemporalType.DATE)
 	@Column(name = "dateofjoined", nullable = false, length = 13)
 	private Date dateofjoined;
@@ -62,15 +59,13 @@ public class Employee extends AbstractEntity implements UserDetails {
 	private String username;
 	@Column(name = "email", unique = true, nullable = false, length = 40)
 	private String email;
-	// @Column(name = "gender", nullable = false, length = 20)
-	// @Enumerated(EnumType.STRING)
-	// private Gender gender;
+	@Column(name = "gender", nullable = false, length = 6)
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 	@Column(name = "comment")
 	private String comment;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
 	private Set<Employee> employees = new HashSet<Employee>(0);
-	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
-	// private Set<Department> departments = new HashSet<Department>(0);
 	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "employeeByPermicPersonId")
 	// private Set<AttendRecord> attendRecordsForPermicPersonId = new
 	// HashSet<AttendRecord>(
@@ -191,14 +186,6 @@ public class Employee extends AbstractEntity implements UserDetails {
 		this.name = name;
 	}
 
-	public Date getDateofbirth() {
-		return dateofbirth;
-	}
-
-	public void setDateofbirth(Date dateofbirth) {
-		this.dateofbirth = dateofbirth;
-	}
-
 	public Date getDateofjoined() {
 		return dateofjoined;
 	}
@@ -223,13 +210,13 @@ public class Employee extends AbstractEntity implements UserDetails {
 		this.comment = comment;
 	}
 
-	public Set<Employee> getEmployees() {
-		return employees;
-	}
-
-	public void setEmployees(Set<Employee> employees) {
-		this.employees = employees;
-	}
+	// public Set<Employee> getEmployees() {
+	// return employees;
+	// }
+	//
+	// public void setEmployees(Set<Employee> employees) {
+	// this.employees = employees;
+	// }
 
 	public String getColor() {
 		return color;
@@ -317,6 +304,30 @@ public class Employee extends AbstractEntity implements UserDetails {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+
+	public Set<Employee> getEmployees() {
+		return employees;
+	}
+
+	public void setEmployees(Set<Employee> employees) {
+		this.employees = employees;
 	}
 
 }

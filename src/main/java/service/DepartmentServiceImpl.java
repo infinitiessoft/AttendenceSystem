@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import transfer.DepartmentTransfer;
 import dao.DepartmentDao;
-import dao.DepartmentDao;
-import entity.Department;
 import entity.Department;
 import exceptions.DepartmentNotFoundException;
-import transfer.DepartmentTransfer;
 
 public class DepartmentServiceImpl implements DepartmentService {
 
@@ -67,7 +65,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentTransfer ret = new DepartmentTransfer();
 		ret.setId(department.getId());
 		ret.setName(department.getName());
-
 		return ret;
 	}
 

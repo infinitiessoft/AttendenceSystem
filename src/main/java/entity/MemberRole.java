@@ -80,7 +80,6 @@ public class MemberRole extends AbstractEntity {
 
 	public MemberRole() {
 		super();
-
 	}
 
 }

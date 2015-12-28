@@ -97,6 +97,7 @@
 		init-method="initDataBase">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="roleDao" />
+		<constructor-arg ref="departmentDao" />
 		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
