@@ -36,19 +36,27 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public DepartmentTransfer save(Department department) {
+	public DepartmentTransfer save(DepartmentTransfer department) {
 		department.setId(null);
-		return toDepartmentTransfer(departmentDao.save(department));
+		Department dep = new Department();
+		setUpDepartment(department, dep);
+		return toDepartmentTransfer(departmentDao.save(dep));
+	}
+
+	private void setUpDepartment(DepartmentTransfer transfer, Department dep) {
+		if (transfer.isNameSet()) {
+			dep.setName(transfer.getName());
+		}
 	}
 
 	@Override
-	public DepartmentTransfer update(long id, Department updated) {
+	public DepartmentTransfer update(long id, DepartmentTransfer updated) {
 		Department department = departmentDao.find(id);
 		if (department == null) {
 			throw new DepartmentNotFoundException(id);
 		}
-		updated.setId(department.getId());
-		return toDepartmentTransfer(departmentDao.save(updated));
+		setUpDepartment(updated, department);
+		return toDepartmentTransfer(departmentDao.save(department));
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class DepartmentServiceImplTest {
 			}
 		});
 		DepartmentTransfer ret = departmentService.retrieve(1);
-		assertEquals(1l, ret.getId());
+		assertEquals(1l, ret.getId().longValue());
 		assertEquals("D_demo", ret.getName());
 		assertEquals("1", ret.getManager_id());
 		assertEquals("2", ret.getResponseto());
@@ -80,13 +80,13 @@ public class DepartmentServiceImplTest {
 
 	@Test
 	public void testSave() {
-		final Department newEntry = new Department();
+		final DepartmentTransfer newEntry = new DepartmentTransfer();
 		newEntry.setName("D_name");
 
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(departmentDao).save(newEntry);
+				exactly(1).of(departmentDao).save(with(any(Department.class)));
 				will(new CustomAction("save department") {
 
 					@Override
@@ -100,7 +100,7 @@ public class DepartmentServiceImplTest {
 			}
 		});
 		DepartmentTransfer ret = departmentService.save(newEntry);
-		assertEquals(2l, ret.getId());
+		assertEquals(2l, ret.getId().longValue());
 		assertEquals("D_name", ret.getName());
 		assertEquals("1", ret.getManager_id());
 		assertEquals("2", ret.getResponseto());
@@ -109,7 +109,8 @@ public class DepartmentServiceImplTest {
 
 	@Test
 	public void testUpdate() {
-		department.setName("name");
+		final DepartmentTransfer newEntry = new DepartmentTransfer();
+		newEntry.setName("D_name");
 		context.checking(new Expectations() {
 
 			{
@@ -117,8 +118,8 @@ public class DepartmentServiceImplTest {
 				will(returnValue(department));
 			}
 		});
-		DepartmentTransfer ret = departmentService.update(1l, department);
-		assertEquals(1l, ret.getId());
+		DepartmentTransfer ret = departmentService.update(1l, newEntry);
+		assertEquals(1l, ret.getId().longValue());
 		assertEquals("D_name", ret.getName());
 		assertEquals("1", ret.getManager_id());
 		assertEquals("2", ret.getResponseto());
@@ -139,7 +140,7 @@ public class DepartmentServiceImplTest {
 		Collection<DepartmentTransfer> rets = departmentService.findAll();
 		assertEquals(1, rets.size());
 		DepartmentTransfer ret = rets.iterator().next();
-		assertEquals(1l, ret.getId());
+		assertEquals(1l, ret.getId().longValue());
 		assertEquals("Ddemo", ret.getName());
 		assertEquals("1", ret.getManager_id());
 		assertEquals("2", ret.getResponseto());

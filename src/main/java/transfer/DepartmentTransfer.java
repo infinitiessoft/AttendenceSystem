@@ -1,21 +1,23 @@
 package transfer;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 public class DepartmentTransfer {
 
-	private long id;
+	private Long id;
 	private String name;
-	private long manager_id;
-	private long responseto;
+	private Long manager_id;
+	private Long responseto;
 
-	// private List<String, Boolean> departments;
+	private boolean isNameSet;
 
 	public DepartmentTransfer() {
 		super();
 
 	}
 
-	public DepartmentTransfer(long id, String name, long manager_id,
-			long responseto) {
+	public DepartmentTransfer(Long id, String name, Long manager_id,
+			Long responseto) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -23,11 +25,11 @@ public class DepartmentTransfer {
 		this.responseto = responseto;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -36,23 +38,34 @@ public class DepartmentTransfer {
 	}
 
 	public void setName(String name) {
+		setNameSet(true);
 		this.name = name;
 	}
 
-	public long getManager_id() {
+	public Long getManager_id() {
 		return manager_id;
 	}
 
-	public void setManager_id(long manager_id) {
+	public void setManager_id(Long manager_id) {
 		this.manager_id = manager_id;
 	}
 
-	public long getResponseto() {
+	public Long getResponseto() {
 		return responseto;
 	}
 
-	public void setResponseto(long responseto) {
+	public void setResponseto(Long responseto) {
 		this.responseto = responseto;
+	}
+
+	@XmlTransient
+	public boolean isNameSet() {
+		return isNameSet;
+	}
+
+	@XmlTransient
+	public void setNameSet(boolean isNameSet) {
+		this.isNameSet = isNameSet;
 	}
 
 }

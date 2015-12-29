@@ -46,12 +46,14 @@
 
 	<bean id="employeeDao" class="dao.jpa.JpaEmployeeDao">
 	</bean>
+	
+	<bean id="departmentDao" class="dao.jpa.JpaDepartmentDao">
+	</bean>
 
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
-	</bean>
-
-	<bean id="departmentDao" class="dao.jpa.JpaDepartmentDao">
+		<constructor-arg ref="departmentDao" />
+		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
 	<bean id="departmentService" class="service.DepartmentServiceImpl">
@@ -109,11 +111,15 @@
 	</security:authentication-manager>
 
 	<security:http realm="Protected API" use-expressions="true"
-		auto-config="false" create-session="stateless" entry-point-ref="unauthorizedEntryPoint"
-		authentication-manager-ref="authenticationManager">
-		<security:custom-filter ref="authenticationTokenProcessingFilter"
-			position="FORM_LOGIN_FILTER" />
-		<security:intercept-url pattern="/rest/auth/authenticate"
+		auto-config="true" authentication-manager-ref="authenticationManager">
+		<security:intercept-url pattern="/" access="permitAll" />
+		<security:intercept-url pattern="/index.html"
+			access="permitAll" />
+		<security:intercept-url pattern="/login.html"
+			access="permitAll" />
+		<security:intercept-url pattern="/home.html"
+			access="permitAll" />
+		<security:intercept-url pattern="/rest/**"
 			access="permitAll" />
 		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
 			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
@@ -123,13 +129,8 @@
 		<security:csrf token-repository-ref="csrfTokenRepository" />
 		<security:custom-filter ref="csrfHeaderFilter"
 			after="CSRF_FILTER" />
+		<security:http-basic />
+		<security:logout/>
 	</security:http>
-
-
-	<bean id="unauthorizedEntryPoint" class="security.UnauthorizedEntryPoint" />
-
-	<bean class="security.AuthenticationTokenProcessingFilter" id="authenticationTokenProcessingFilter">
-		<constructor-arg ref="employeeDao" />
-	</bean>
 
 </beans>

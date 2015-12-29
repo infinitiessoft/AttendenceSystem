@@ -1,7 +1,6 @@
 package service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,8 +15,10 @@ import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import transfer.EmployeeTransfer;
+import dao.DepartmentDao;
 import dao.EmployeeDao;
 import entity.Employee;
 import entity.Role;
@@ -32,6 +33,8 @@ public class EmployeeServiceImplTest {
 	};
 
 	private EmployeeDao employeeDao;
+	private DepartmentDao departmentDao;
+	private PasswordEncoder passwordEncoder;
 	private EmployeeServiceImpl employeeService;
 
 	private Employee employee;
@@ -39,8 +42,11 @@ public class EmployeeServiceImplTest {
 
 	@Before
 	public void setUp() throws Exception {
+		passwordEncoder = context.mock(PasswordEncoder.class);
 		employeeDao = context.mock(EmployeeDao.class);
-		employeeService = new EmployeeServiceImpl(employeeDao);
+		departmentDao = context.mock(DepartmentDao.class);
+		employeeService = new EmployeeServiceImpl(employeeDao, departmentDao,
+				passwordEncoder);
 		employee = new Employee();
 		employee.setId(1L);
 		employee.setUsername("demo");
@@ -63,10 +69,8 @@ public class EmployeeServiceImplTest {
 			}
 		});
 		EmployeeTransfer ret = employeeService.retrieve(1);
-		assertEquals(1l, ret.getId());
+		assertEquals(1l, ret.getId().longValue());
 		assertEquals("demo", ret.getName());
-		assertEquals(1, ret.getRoles().size());
-		assertTrue(ret.getRoles().get("admin"));
 	}
 
 	@Test
@@ -82,13 +86,12 @@ public class EmployeeServiceImplTest {
 
 	@Test
 	public void testSave() {
-		final Employee newEntry = new Employee();
+		final EmployeeTransfer newEntry = new EmployeeTransfer();
 		newEntry.setUsername("name");
-		newEntry.getRoles().add(admin);
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeDao).save(newEntry);
+				exactly(1).of(employeeDao).save(with(any(Employee.class)));
 				will(new CustomAction("save employee") {
 
 					@Override
@@ -102,15 +105,14 @@ public class EmployeeServiceImplTest {
 			}
 		});
 		EmployeeTransfer ret = employeeService.save(newEntry);
-		assertEquals(2l, ret.getId());
+		assertEquals(2l, ret.getId().longValue());
 		assertEquals("name", ret.getName());
-		assertEquals(1, ret.getRoles().size());
-		assertTrue(ret.getRoles().get("admin"));
 	}
 
 	@Test
 	public void testUpdate() {
-		employee.setUsername("name");
+		EmployeeTransfer newEntry = new EmployeeTransfer();
+		newEntry.setUsername("name");
 		context.checking(new Expectations() {
 
 			{
@@ -118,11 +120,9 @@ public class EmployeeServiceImplTest {
 				will(returnValue(employee));
 			}
 		});
-		EmployeeTransfer ret = employeeService.update(1l, employee);
-		assertEquals(1l, ret.getId());
+		EmployeeTransfer ret = employeeService.update(1l, newEntry);
+		assertEquals(1l, ret.getId().longValue());
 		assertEquals("name", ret.getName());
-		assertEquals(1, ret.getRoles().size());
-		assertTrue(ret.getRoles().get("admin"));
 	}
 
 	@Test
@@ -139,10 +139,8 @@ public class EmployeeServiceImplTest {
 		Collection<EmployeeTransfer> rets = employeeService.findAll();
 		assertEquals(1, rets.size());
 		EmployeeTransfer ret = rets.iterator().next();
-		assertEquals(1l, ret.getId());
+		assertEquals(1l, ret.getId().longValue());
 		assertEquals("demo", ret.getName());
-		assertEquals(1, ret.getRoles().size());
-		assertTrue(ret.getRoles().get("admin"));
 	}
 
 	@Test
@@ -155,9 +153,7 @@ public class EmployeeServiceImplTest {
 			}
 		});
 		EmployeeTransfer ret = employeeService.findByUsername("demo");
-		assertEquals(1l, ret.getId());
+		assertEquals(1l, ret.getId().longValue());
 		assertEquals("demo", ret.getName());
-		assertEquals(1, ret.getRoles().size());
-		assertTrue(ret.getRoles().get("admin"));
 	}
 }

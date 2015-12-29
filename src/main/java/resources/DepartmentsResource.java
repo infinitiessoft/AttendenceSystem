@@ -43,22 +43,21 @@ public class DepartmentsResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteDepartment(@PathParam("id") long id) {
 		departmentService.delete(id);
-		return Response.status(Status.OK)
-				.entity("department has been successfully deleted")
-				.type(MediaType.APPLICATION_JSON).build();
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+				.build();
 	}
 
 	// **Method to update
 	@PUT
 	@Path(value = "{id}")
 	public DepartmentTransfer updateDepartment(@PathParam("id") long id,
-			Department department) {
+			DepartmentTransfer department) {
 		return departmentService.update(id, department);
 	}
 
 	// **Method to save or create
 	@POST
-	public DepartmentTransfer saveDepartment(Department department) {
+	public DepartmentTransfer saveDepartment(DepartmentTransfer department) {
 		return departmentService.save(department);
 	}
 

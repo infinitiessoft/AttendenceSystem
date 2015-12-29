@@ -3,7 +3,6 @@ package service;
 import java.util.Collection;
 
 import transfer.EmployeeTransfer;
-import entity.Employee;
 
 /**
  * An interface that defines what a Employee Services looks like in general
@@ -17,10 +16,10 @@ public interface EmployeeService {
 
 	public void delete(long id);
 
-	public EmployeeTransfer save(Employee employee);
+	public EmployeeTransfer save(EmployeeTransfer employee);
 
 	public Collection<EmployeeTransfer> findAll();
 
-	public EmployeeTransfer update(long id, Employee employee);
+	public EmployeeTransfer update(long id, EmployeeTransfer employee);
 
 }

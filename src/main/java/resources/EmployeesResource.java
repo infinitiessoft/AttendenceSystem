@@ -21,14 +21,13 @@ import org.springframework.stereotype.Component;
 
 import service.EmployeeService;
 import transfer.EmployeeTransfer;
-import entity.Employee;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/employee")
 public class EmployeesResource {
-	
+
 	@Autowired
 	private EmployeeService employeeService;
 
@@ -58,13 +57,13 @@ public class EmployeesResource {
 	@PUT
 	@Path(value = "{id}")
 	public EmployeeTransfer updateEmployee(@PathParam("id") long id,
-			Employee employee) {
+			EmployeeTransfer employee) {
 		return employeeService.update(id, employee);
 	}
 
 	// **Method to save or create
 	@POST
-	public EmployeeTransfer saveEmployee(Employee employee) {
+	public EmployeeTransfer saveEmployee(EmployeeTransfer employee) {
 		return employeeService.save(employee);
 	}
 

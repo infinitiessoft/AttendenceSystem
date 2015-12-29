@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * In this example we will use Employee as entity.Id, firstname, lastname,
@@ -32,11 +33,11 @@ public class Department extends AbstractEntity {
 	private Long id;
 	@Column(name = "name", nullable = false)
 	private String name;
-	@Column(name = "manager_id", nullable = false)
+	@Column(name = "manager_id", nullable = true)
 	private Long manager_id;
-	@Column(name = "responseto", nullable = false)
+	@Column(name = "responseto", nullable = true)
 	private Long responseto;
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade=CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.REMOVE)
 	private Set<Employee> employees = new HashSet<Employee>(0);
 
 	public Long getId() {
@@ -71,6 +72,7 @@ public class Department extends AbstractEntity {
 		this.responseto = responseto;
 	}
 
+	@XmlTransient
 	public Set<Employee> getEmployees() {
 		return employees;
 	}

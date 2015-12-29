@@ -26,11 +26,8 @@ public class EmployeesResourceTest extends ResourceTest {
 				.register(JacksonFeature.class).request().get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
-		assertEquals(1l, transfer.getId());
+		assertEquals(1l, transfer.getId().longValue());
 		assertEquals("pohsun", transfer.getName());
-		assertEquals(2, transfer.getRoles().size());
-		assertEquals(true, transfer.getRoles().get("admin"));
-		assertEquals(true, transfer.getRoles().get("user"));
 	}
 
 	@Test
@@ -73,9 +70,8 @@ public class EmployeesResourceTest extends ResourceTest {
 				.put(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
-		assertEquals(1l, transfer.getId());
+		assertEquals(1l, transfer.getId().longValue());
 		assertEquals(admin.getUsername(), transfer.getName());
-		assertEquals(0, transfer.getRoles().size());
 	}
 
 	@Test
@@ -109,9 +105,8 @@ public class EmployeesResourceTest extends ResourceTest {
 				.request().post(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
-		assertEquals(2l, transfer.getId());
+		assertEquals(2l, transfer.getId().longValue());
 		assertEquals(admin.getUsername(), transfer.getName());
-		assertEquals(0, transfer.getRoles().size());
 	}
 
 	@Test
@@ -137,11 +132,8 @@ public class EmployeesResourceTest extends ResourceTest {
 				});
 		assertEquals(1, rets.size());
 		EmployeeTransfer transfer = rets.iterator().next();
-		assertEquals(1l, transfer.getId());
+		assertEquals(1l, transfer.getId().longValue());
 		assertEquals("pohsun", transfer.getName());
-		assertEquals(2, transfer.getRoles().size());
-		assertEquals(true, transfer.getRoles().get("admin"));
-		assertEquals(true, transfer.getRoles().get("user"));
 	}
 
 	@Override

@@ -11,10 +11,10 @@ public interface DepartmentService {
 
 	public void delete(long id);
 
-	public DepartmentTransfer save(Department department);
+	public DepartmentTransfer save(DepartmentTransfer department);
 
 	public Collection<DepartmentTransfer> findAll();
 
-	public DepartmentTransfer update(long id, Department department);
+	public DepartmentTransfer update(long id, DepartmentTransfer department);
 
 }

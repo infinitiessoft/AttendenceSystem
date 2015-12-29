@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -45,7 +44,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "responseto")
 	private Employee employee;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "department_id", nullable = false)
 	private Department department;
 	@Column(name = "name", nullable = false, length = 20)
@@ -170,6 +169,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 		this.id = id;
 	}
 
+	@XmlTransient
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -306,6 +306,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 		this.username = username;
 	}
 
+	@XmlTransient
 	public Department getDepartment() {
 		return department;
 	}
@@ -322,6 +323,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 		this.gender = gender;
 	}
 
+	@XmlTransient
 	public Set<Employee> getEmployees() {
 		return employees;
 	}
