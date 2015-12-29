@@ -1,8 +1,9 @@
 angular
 		.module(
-				'exampleApp',
-				[ 'ngRoute', 'ngCookies', 'exampleApp.services', 'formly',
-						'formlyBootstrap', 'ui.bootstrap' ,'smart-table'])
+				'attendance',
+				[ 'ngRoute', 'ngCookies',
+						'formly', 'formlyBootstrap', 'ui.bootstrap',
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee', 'list-departments', 'edit-department' ])
 		.config(
 				[
 						'$routeProvider',
@@ -11,26 +12,75 @@ angular
 						function($routeProvider, $locationProvider,
 								$httpProvider) {
 
-							$routeProvider.when('/create', {
-								templateUrl : 'partials/create.html',
-								controller : CreateController
+							$routeProvider.when('/', {
+								templateUrl : 'partials/list-employees.html',
+								controller : 'list-employees'
 							});
 
-							$routeProvider.when('/edit/:id', {
-								templateUrl : 'partials/edit.html',
-								controller : EditController
-							});
+							$routeProvider
+									.when(
+											'/edit-employee/:id',
+											{
+												templateUrl : 'partials/edit.html',
+												controller : 'edit-employee',
+												resolve : {
+													employee : function(
+															employeeService,
+															$route) {
+														var id = $route.current.params.id;
+														if(id == 0){
+															return {data:{}};
+														}
+														return employeeService.get(id);
+													}
+												}
+											});
 
 							$routeProvider.when('/login', {
 								templateUrl : 'partials/login.html',
-								controller : LoginController
+								controller : 'navigation'
 							});
+
+							$routeProvider.when('/home', {
+								templateUrl : 'partials/list-employees.html',
+								controller : 'list-employees'
+							});
+							
+							$routeProvider.when('/list-employees', {
+								templateUrl : 'partials/list-employees.html',
+								controller : 'list-employees'
+							});
+							
+							$routeProvider.when('/list-departments', {
+								templateUrl : 'partials/list-departments.html',
+								controller : 'list-departments'
+							});
+							
+							$routeProvider
+							.when(
+									'/edit-department/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-department',
+										resolve : {
+											department : function(
+													departmentService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return departmentService.get(id);
+											}
+										}
+									});
 
 							$routeProvider.otherwise({
-								templateUrl : 'partials/index.html',
-								controller : IndexController
+								templateUrl : 'partials/list-employees.html',
+								controller : 'list-employees'
 							});
 
+							$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 							$locationProvider.hashPrefix('!');
 
 							/*
@@ -59,42 +109,89 @@ angular
 										return $q.reject(rejection);
 									}
 								};
+
 							});
-
-							/*
-							 * Registers auth token interceptor, auth token is
-							 * either passed by header or by query parameter as
-							 * soon as there is an authenticated user
-							 */
-							$httpProvider.interceptors
-									.push(function($q, $rootScope, $location) {
-										return {
-											'request' : function(config) {
-												var isRestCall = config.url
-														.indexOf('rest') == 0;
-												if (isRestCall
-														&& angular
-																.isDefined($rootScope.authToken)) {
-													var authToken = $rootScope.authToken;
-													if (exampleAppConfig.useAuthTokenHeader) {
-														config.headers['X-Auth-Token'] = authToken;
-													} else {
-														config.url = config.url
-																+ "?token="
-																+ authToken;
-													}
-												}
-												return config
-														|| $q.when(config);
-											}
-										};
-									});
-
 						} ]
 
 		)
+		.factory(
+				'employeeService',
+				[
+						'$http',
+						function($http) {
+							var serviceBase = 'rest/employee/';
+							var obj = {};
+							obj.list = function() {
+								return $http.get(serviceBase);
+							}
+
+							obj.get = function(id) {
+								return $http.get(serviceBase  + id);
+							}
+
+							obj.insert = function(employee) {
+								return $http.post(serviceBase, employee).then(
+										function(results) {
+											return results;
+										});
+							};
+
+							obj.update = function(id, employee) {
+								return $http.put(serviceBase  + id,
+										employee).then(function(results) {
+									return results;
+								});
+							};
+							
+							obj.remove = function(id) {
+								return $http.delete(serviceBase + id).then(function(status) {
+									return status;
+								});
+							};
+
+							return obj;
+						} ]).factory(
+								'departmentService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/department/';
+											var obj = {};
+											obj.list = function() {
+												return $http.get(serviceBase);
+											}
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											}
+
+											obj.insert = function(department) {
+												return $http.post(serviceBase, department).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, department) {
+												return $http.put(serviceBase  + id,
+														department).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ])
 		.run(
-				function($rootScope, $location, $cookieStore, UserService, formlyConfig) {
+				function($rootScope, $location, $cookieStore, $http,
+						formlyConfig, auth) {
+
+					auth.init('/', '/login', 'logout');
 
 					/* Reset error when a new view is loaded */
 					$rootScope.$on('$viewContentLoaded', function() {
@@ -113,25 +210,6 @@ angular
 
 						return $rootScope.user.roles[role];
 					};
-
-					$rootScope.logout = function() {
-						delete $rootScope.user;
-						delete $rootScope.authToken;
-						$cookieStore.remove('authToken');
-						$location.path("/login");
-					};
-
-					/* Try getting valid user from cookie or go to login page */
-					var originalPath = $location.path();
-					$location.path("/login");
-					var authToken = $cookieStore.get('authToken');
-					if (authToken !== undefined) {
-						$rootScope.authToken = authToken;
-						UserService.get(function(user) {
-							$rootScope.user = user;
-							$location.path(originalPath);
-						});
-					}
 
 					$rootScope.initialized = true;
 
@@ -162,8 +240,6 @@ angular
 						};
 					});
 
-					console.log(ngModelAttrs);
-
 					formlyConfig.setType({
 						name : 'datepicker',
 						templateUrl : 'template/datepicker.html',
@@ -172,7 +248,7 @@ angular
 							ngModelAttrs : ngModelAttrs,
 							templateOptions : {
 								datepickerOptions : {
-									format : 'MM.dd.yyyy',
+									format : 'yyyy-MM-dd',
 									initDate : new Date()
 								}
 							}
@@ -200,316 +276,3 @@ angular
 					}
 
 				});
-
-function IndexController($scope, NewsService) {
-
-	$scope.rowCollection = NewsService.query();
-	//copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
-	console.log($scope.rowCollection);
-    $scope.displayedCollection = [].concat($scope.rowCollection);
-
-	$scope.deleteEntry = function(newsEntry) {
-		newsEntry.$remove(function() {
-			$scope.newsEntries = NewsService.query();
-		});
-	};
-};
-
-function EditController($scope, $routeParams, $location, NewsService,
-		formlyVersion) {
-	var vm = this;
-	$scope.vm = vm;
-	vm.onSubmit = onSubmit;
-	vm.author = {
-		name : 'pohsun',
-		url : ''
-	};
-	vm.env = {
-		angularVersion : angular.version.full,
-		formlyVersion : formlyVersion
-	};
-
-	vm.model = {
-		awesome : true
-	};
-	vm.options = {
-		formState : {
-			awesomeIsForced : false
-		}
-	};
-
-	vm.fields = [
-			{
-				key : 'date1',
-				type : 'datepicker',
-				templateOptions : {
-					label : 'Date 1',
-					type : 'text',
-					datepickerPopup : 'dd-MMMM-yyyy'
-				}
-			},
-			{
-				key : 'text',
-				type : 'input',
-				templateOptions : {
-					label : 'Text',
-					placeholder : 'Formly is terrific!',
-					type: 'email',
-					required: true
-				}
-			},
-			{
-				key : 'nested.story',
-				type : 'textarea',
-				templateOptions : {
-					label : 'Some sweet story',
-					placeholder : 'It allows you to build and maintain your forms with the ease of JavaScript :-)',
-					description : ''
-				},
-				expressionProperties : {
-					'templateOptions.focus' : 'formState.awesomeIsForced',
-					'templateOptions.description' : function(viewValue,
-							modelValue, scope) {
-						if (scope.formState.awesomeIsForced) {
-							return 'And look! This field magically got focus!';
-						}
-					}
-				}
-			},
-			{
-				key : 'awesome',
-				type : 'checkbox',
-				templateOptions : {
-					label : ''
-				},
-				expressionProperties : {
-					'templateOptions.disabled' : 'formState.awesomeIsForced',
-					'templateOptions.label' : function(viewValue, modelValue,
-							scope) {
-						if (scope.formState.awesomeIsForced) {
-							return 'Too bad, formly is really awesome...';
-						} else {
-							return 'Is formly totally awesome? (uncheck this and see what happens)';
-						}
-					}
-				}
-			},
-			{
-				key : 'whyNot',
-				type : 'textarea',
-				expressionProperties : {
-					'templateOptions.placeholder' : function(viewValue,
-							modelValue, scope) {
-						if (scope.formState.awesomeIsForced) {
-							return 'Too bad... It really is awesome! Wasn\'t that cool?';
-						} else {
-							return 'Type in here... I dare you';
-						}
-					},
-					'templateOptions.disabled' : 'formState.awesomeIsForced'
-				},
-				hideExpression : 'model.awesome',
-				templateOptions : {
-					label : 'Why Not?',
-					placeholder : 'Type in here... I dare you'
-				},
-				watcher : {
-					listener : function(field, newValue, oldValue, formScope,
-							stopWatching) {
-						if (newValue) {
-							stopWatching();
-							formScope.model.awesome = true;
-							formScope.model.whyNot = undefined;
-							field.hideExpression = null;
-							formScope.options.formState.awesomeIsForced = true;
-						}
-					}
-				}
-			} ];
-	function onSubmit() {
-		alert(JSON.stringify(vm.model), null, 2);
-	}
-
-	$scope.newsEntry = NewsService.get({
-		id : $routeParams.id
-	});
-
-	$scope.save = function() {
-		$scope.newsEntry.$save(function() {
-			$location.path('/');
-		});
-	};
-};
-
-function CreateController($scope, $location, NewsService, formlyVersion) {
-	var vm = this;
-	$scope.vm = vm;
-	vm.onSubmit = onSubmit;
-	vm.author = {
-		name : 'pohsun',
-		url : ''
-	};
-	vm.env = {
-		angularVersion : angular.version.full,
-		formlyVersion : formlyVersion
-	};
-
-	vm.model = {
-		awesome : true
-	};
-	vm.options = {
-		formState : {
-			awesomeIsForced : false
-		}
-	};
-
-	vm.fields = [
-			{
-				key : 'date1',
-				type : 'datepicker',
-				templateOptions : {
-					label : 'Date 1',
-					type : 'text',
-					datepickerPopup : 'dd-MMMM-yyyy'
-				}
-			},
-			{
-				key : 'text',
-				type : 'input',
-				templateOptions : {
-					label : 'Text',
-					placeholder : 'Formly is terrific!',
-					type: 'email',
-					required: true
-				}
-			},
-			{
-				key : 'nested.story',
-				type : 'textarea',
-				templateOptions : {
-					label : 'Some sweet story',
-					placeholder : 'It allows you to build and maintain your forms with the ease of JavaScript :-)',
-					description : ''
-				},
-				expressionProperties : {
-					'templateOptions.focus' : 'formState.awesomeIsForced',
-					'templateOptions.description' : function(viewValue,
-							modelValue, scope) {
-						if (scope.formState.awesomeIsForced) {
-							return 'And look! This field magically got focus!';
-						}
-					}
-				}
-			},
-			{
-				key : 'awesome',
-				type : 'checkbox',
-				templateOptions : {
-					label : ''
-				},
-				expressionProperties : {
-					'templateOptions.disabled' : 'formState.awesomeIsForced',
-					'templateOptions.label' : function(viewValue, modelValue,
-							scope) {
-						if (scope.formState.awesomeIsForced) {
-							return 'Too bad, formly is really awesome...';
-						} else {
-							return 'Is formly totally awesome? (uncheck this and see what happens)';
-						}
-					}
-				}
-			},
-			{
-				key : 'whyNot',
-				type : 'textarea',
-				expressionProperties : {
-					'templateOptions.placeholder' : function(viewValue,
-							modelValue, scope) {
-						if (scope.formState.awesomeIsForced) {
-							return 'Too bad... It really is awesome! Wasn\'t that cool?';
-						} else {
-							return 'Type in here... I dare you';
-						}
-					},
-					'templateOptions.disabled' : 'formState.awesomeIsForced'
-				},
-				hideExpression : 'model.awesome',
-				templateOptions : {
-					label : 'Why Not?',
-					placeholder : 'Type in here... I dare you'
-				},
-				watcher : {
-					listener : function(field, newValue, oldValue, formScope,
-							stopWatching) {
-						if (newValue) {
-							stopWatching();
-							formScope.model.awesome = true;
-							formScope.model.whyNot = undefined;
-							field.hideExpression = null;
-							formScope.options.formState.awesomeIsForced = true;
-						}
-					}
-				}
-			} ];
-	function onSubmit() {
-		alert(JSON.stringify(vm.model), null, 2);
-	}
-
-	$scope.newsEntry = new NewsService();
-
-	$scope.save = function() {
-		$scope.newsEntry.$save(function() {
-			$location.path('/');
-		});
-	};
-};
-
-function LoginController($scope, $rootScope, $location, $cookieStore,
-		UserService, NewsService) {
-
-	$scope.rememberMe = false;
-
-	$scope.login = function() {
-		UserService.authenticate($.param({
-			username : $scope.username,
-			password : $scope.password
-		}), function(authenticationResult) {
-			var authToken = authenticationResult.token;
-			var id = authenticationResult.userId;
-			$rootScope.authToken = authToken;
-			if ($scope.rememberMe) {
-				$cookieStore.put('authToken', authToken);
-			}
-			NewsService.get({
-				id : id
-			}, function(user) {
-				$rootScope.user = user;
-				$location.path('/');
-			});
-		});
-	};
-};
-
-var services = angular.module('exampleApp.services', [ 'ngResource' ]);
-
-services.factory('UserService', function($resource) {
-
-	return $resource('rest/auth/:action', {}, {
-		authenticate : {
-			method : 'POST',
-			params : {
-				'action' : 'authenticate'
-			},
-			headers : {
-				'Content-Type' : 'application/x-www-form-urlencoded'
-			}
-		},
-	});
-});
-
-services.factory('NewsService', function($resource) {
-
-	return $resource('rest/employee/:id', {
-		id : '@id'
-	});
-});

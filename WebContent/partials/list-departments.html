@@ -1,9 +1,9 @@
 <div class="pull-right">
-	<a href="#!/edit-employee/0" class="btn btn-sm btn-success" title="Create"><i
+	<a href="#!/edit-department/0" class="btn btn-sm btn-success" title="Create"><i
 		class="glyphicon glyphicon-plus"> </i></a>
 </div>
 <div class="page-header">
-	<h3>Employee</h3>
+	<h3>Department</h3>
 </div>
 <div>
 	<table st-table="displayedCollection" st-safe-src="rowCollection"
@@ -12,11 +12,6 @@
 			<tr>
 				<th st-sort="id">id</th>
 				<th st-sort="name">name</th>
-				<th st-sort="username">username</th>
-				<th st-sort="dateOfJoined">dateOfJoined</th>
-				<th st-sort="email">email</th>
-				<th st-sort="gender">gender</th>
-				<th st-sort="department">department</th>
 			</tr>
 			<tr>
 				<th colspan="5"><input st-search="" class="form-control"
@@ -27,12 +22,7 @@
 			<tr ng-repeat="row in displayedCollection">
 				<td>{{row.id}}</td>
 				<td>{{row.name}}</td>
-				<td>{{row.username}}</td>
-				<td>{{row.dateOfJoined}}</td>
-				<td>{{row.email}}</td>
-				<td>{{row.gender}}</td>
-				<td>{{row.department.name}}</td>
-				<td><a href="#!/edit-employee/{{row.id}}" class="btn btn-sm btn-primary">
+				<td><a href="#!/edit-department/{{row.id}}" class="btn btn-sm btn-primary">
 						<i class="glyphicon glyphicon-pencil"> </i>
 				</a>
 					<button type="button" ng-click="removeEntry(row)"
