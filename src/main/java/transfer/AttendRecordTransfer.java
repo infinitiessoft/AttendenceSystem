@@ -5,7 +5,7 @@ import java.util.Date;
 public class AttendRecordTransfer {
 
 	private long id;
-	private String name;
+
 	private Date modify_end_date;
 	private Date modify_start_date;
 	private Date modify_date;
@@ -29,6 +29,7 @@ public class AttendRecordTransfer {
 	private String modifyreason;
 	private String modifytype;
 	private Long permic_person_id2;
+	private Date modifydateinterval;
 
 	public AttendRecordTransfer() {
 		super();
@@ -39,10 +40,12 @@ public class AttendRecordTransfer {
 			Long employee_id, String permit, String reason, Date duration, Date end_date, Date book_date,
 			Date start_date, Long permic_person_id, Date dateinterval, Date endperiod, Date modifyendperiod,
 			Date modifystartperiod, String modifypermit, Date startperiod, Date period, String permit2,
-			String modifypermit2, String modifyreason, String modifytype, Long permic_person_id2) {
+			String modifypermit2, String modifyreason, String modifytype, Long permic_person_id2,
+			Date modifydateinterval) {
+
 		super();
 		this.id = id;
-		this.name = name;
+
 		this.modify_end_date = modify_end_date;
 		this.modify_start_date = modify_start_date;
 		this.modify_date = modify_date;
@@ -66,6 +69,7 @@ public class AttendRecordTransfer {
 		this.modifyreason = modifyreason;
 		this.modifytype = modifytype;
 		this.permic_person_id2 = permic_person_id2;
+		this.modifydateinterval = modifydateinterval;
 	}
 
 	public long getId() {
@@ -74,14 +78,6 @@ public class AttendRecordTransfer {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Date getModify_end_date() {
@@ -268,4 +264,12 @@ public class AttendRecordTransfer {
 		this.permic_person_id2 = permic_person_id2;
 	}
 
+	public void setModifydateinterval(Date modifydateinterval) {
+		this.modifydateinterval = modifydateinterval;
+
+	}
+
+	public Date getModifydateinterval() {
+		return modifydateinterval;
+	}
 }

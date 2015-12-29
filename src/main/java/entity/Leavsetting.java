@@ -93,13 +93,6 @@ public class Leavsetting extends AbstractEntity {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((official == null) ? 0 : official.hashCode());
-		result = prime * result
-				+ ((personal == null) ? 0 : personal.hashCode());
-		result = prime * result + ((sick == null) ? 0 : sick.hashCode());
-		result = prime * result + ((special == null) ? 0 : special.hashCode());
 		return result;
 	}
 
@@ -145,8 +138,7 @@ public class Leavsetting extends AbstractEntity {
 		return true;
 	}
 
-	public Leavsetting(Long id, String name, Long official, Long personal,
-			Long sick, Long special) {
+	public Leavsetting(Long id, String name, Long official, Long personal, Long sick, Long special) {
 		super();
 		this.id = id;
 		this.name = name;
