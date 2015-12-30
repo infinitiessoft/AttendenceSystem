@@ -1,7 +1,5 @@
 package resources;
 
-import java.util.Collection;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -10,11 +8,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import service.DepartmentService;
@@ -63,8 +63,10 @@ public class DepartmentsResource {
 	// ** Method to find All the departments in the list
 
 	@GET
-	public Collection<DepartmentTransfer> findallDepartment() {
-		return departmentService.findAll();
+	public Page<DepartmentTransfer> findallDepartment(
+			@QueryParam("page") Integer page,
+			@QueryParam("pageSize") Integer pageSize,
+			@QueryParam("sort") String sort, @QueryParam("dir") String dir) {
+		return departmentService.findAll(page, pageSize, sort, dir);
 	}
-
 }

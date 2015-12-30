@@ -6,7 +6,7 @@ angular.module('edit-department', []).controller(
 			$rootScope.listPage = '#!/list-departments'
 			$rootScope.title = (id > 0) ? 'Edit Department' : 'Add Department';
 			$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
-			var data = department;
+			var data = department.data;
 			var vm = this;
 			$scope.vm = vm;
 			vm.onSubmit = onSubmit;

@@ -1,6 +1,6 @@
 package service;
 
-import java.util.Collection;
+import org.springframework.data.domain.Page;
 
 import transfer.DepartmentTransfer;
 
@@ -12,7 +12,8 @@ public interface DepartmentService {
 
 	public DepartmentTransfer save(DepartmentTransfer department);
 
-	public Collection<DepartmentTransfer> findAll();
+	public Page<DepartmentTransfer> findAll(Integer page, Integer pageSize,
+			String property, String dir);
 
 	public DepartmentTransfer update(long id, DepartmentTransfer department);
 
