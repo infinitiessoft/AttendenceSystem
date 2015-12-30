@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import service.DepartmentService;
 import transfer.DepartmentTransfer;
-import entity.Department;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)

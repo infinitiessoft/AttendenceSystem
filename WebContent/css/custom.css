@@ -20,3 +20,11 @@ ng-hide {
 	right: 0;
 	margin: auto;
 }
+
+.st-sort-ascent:before {
+	content: '\25B2';
+}
+
+.st-sort-descent:before {
+	content: '\25BC';
+}

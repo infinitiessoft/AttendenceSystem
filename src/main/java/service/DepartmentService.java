@@ -3,7 +3,6 @@ package service;
 import java.util.Collection;
 
 import transfer.DepartmentTransfer;
-import entity.Department;
 
 public interface DepartmentService {
 
