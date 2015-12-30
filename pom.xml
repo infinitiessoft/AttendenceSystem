@@ -11,8 +11,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<javaCompilerVersion>1.6</javaCompilerVersion>
 		<!-- Spring Security is based on Spring 3.0.7 -->
-		<spring.version>4.0.3.RELEASE</spring.version>
-		<spring.security.version>4.0.3.RELEASE</spring.security.version>
+		<spring.version>4.1.9.RELEASE</spring.version>
+		<spring.security.version>4.0.2.RELEASE</spring.security.version>
+		<spring.data.version>1.9.2.RELEASE</spring.data.version>
 		<jersey.version>2.22.1</jersey.version>
 		<org.slf4j.version>1.7.7</org.slf4j.version>
 		<logback.version>1.1.2</logback.version>
@@ -79,35 +80,12 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-orm</artifactId>
-			<version>${spring.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 
 		<!-- Huh? Spring Jdbc is suddenly marked as provided by spring-orm? -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>${spring.version}</version>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-jpa</artifactId>
+			<version>${spring.data.version}</version>
 		</dependency>
 
 		<dependency>

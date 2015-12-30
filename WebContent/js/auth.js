@@ -28,8 +28,7 @@ angular
 								authorization : "Basic "
 										+ btoa(credentials.username + ":"
 												+ credentials.password)
-							}
-									: {};
+							} : {};
 
 							$http
 									.get('rest/auth', {
@@ -62,8 +61,10 @@ angular
 							auth.user = {};
 							$http.post(auth.logoutPath, {}).success(function() {
 								console.log("Logout succeeded");
+								$location.path(auth.loginPath);
 							}).error(function(data) {
 								console.log("Logout failed");
+								$location.path(auth.loginPath);
 							});
 						},
 

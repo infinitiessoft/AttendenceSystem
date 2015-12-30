@@ -5,9 +5,6 @@ angular.module('list-departments', [ 'ngResource' ]).controller(
 				'$http',
 				'departmentService',
 				function($scope, $http, departmentService) {
-					$http.get('rest/auth/').success(function(data) {
-						$scope.user = data.name;
-					});
 					$scope.rowCollection = [];
 
 					var query = function() {

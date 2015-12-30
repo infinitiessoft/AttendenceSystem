@@ -5,9 +5,6 @@ angular.module('list-employees', [ 'ngResource' ]).controller(
 				'$http',
 				'employeeService',
 				function($scope, $http, employeeService) {
-					$http.get('rest/auth/').success(function(data) {
-						$scope.user = data.name;
-					});
 					$scope.rowCollection = [];
 
 					var query = function() {

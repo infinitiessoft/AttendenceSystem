@@ -1,9 +1,9 @@
 package dao;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import entity.Employee;
 
-public interface EmployeeDao extends Dao<Employee, Long>, UserDetailsService {
-	Employee findByName(String name);
+public interface EmployeeDao extends PagingAndSortingRepository<Employee, Long> {
+	Employee findByUsername(String username);
 }

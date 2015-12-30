@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
 			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
@@ -44,11 +45,7 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<bean id="employeeDao" class="dao.jpa.JpaEmployeeDao">
-	</bean>
-	
-	<bean id="departmentDao" class="dao.jpa.JpaDepartmentDao">
-	</bean>
+	<jpa:repositories base-package="dao" />
 
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
@@ -60,18 +57,12 @@
 		<constructor-arg ref="departmentDao" />
 	</bean>
 
-	<bean id="jobTypeDao" class="dao.jpa.JpaJobTypeDao">
-	</bean>
-
-	<bean id="jobTypeService" class="service.JobTypeServiceImpl">
-		<constructor-arg ref="jobTypeDao" />
-	</bean>
-
-	<bean id="roleDao" class="dao.jpa.JpaRoleDao">
-	</bean>
-
 	<bean id="roleService" class="service.RoleServiceImpl">
 		<constructor-arg ref="roleDao" />
+	</bean>
+
+	<bean id="userDetailDao" class="dao.jpa.JpaUserDetailDao">
+		<constructor-arg ref="employeeDao" />
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
@@ -105,22 +96,32 @@
 
 	<security:authentication-manager id="authenticationManager">
 		<security:authentication-provider
-			user-service-ref="employeeDao">
+			user-service-ref="userDetailDao">
 			<security:password-encoder ref="passwordEncoder"></security:password-encoder>
 		</security:authentication-provider>
 	</security:authentication-manager>
 
 	<security:http realm="Protected API" use-expressions="true"
-		auto-config="true" authentication-manager-ref="authenticationManager">
+		auto-config="true"
+		authentication-manager-ref="authenticationManager">
 		<security:intercept-url pattern="/" access="permitAll" />
 		<security:intercept-url pattern="/index.html"
 			access="permitAll" />
-		<security:intercept-url pattern="/login.html"
+		<security:intercept-url pattern="/login"
 			access="permitAll" />
-		<security:intercept-url pattern="/home.html"
+		<security:intercept-url pattern="/list-employees"
+			access="permitAll" />
+		<security:intercept-url pattern="/edit-employee"
+			access="permitAll" />
+		<security:intercept-url pattern="/list-departments"
+			access="permitAll" />
+		<security:intercept-url pattern="/edit-department"
+			access="permitAll" />
+		<security:intercept-url pattern="/rest/auth"
 			access="permitAll" />
 		<security:intercept-url pattern="/rest/**"
-			access="permitAll" />
+			access="isAuthenticated()" />
+
 		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
 			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 
@@ -130,7 +131,7 @@
 		<security:custom-filter ref="csrfHeaderFilter"
 			after="CSRF_FILTER" />
 		<security:http-basic />
-		<security:logout/>
+		<security:logout />
 	</security:http>
 
 </beans>

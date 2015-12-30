@@ -19,7 +19,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleTransfer retrieve(long id) {
-		Role role = roleDao.find(id);
+		Role role = roleDao.findOne(id);
 		if (role == null) {
 			throw new RoleNotFoundException(id);
 		}
@@ -43,7 +43,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public RoleTransfer update(long id, Role updated) {
-		Role role = roleDao.find(id);
+		Role role = roleDao.findOne(id);
 		if (role == null) {
 			throw new RoleNotFoundException(id);
 		}

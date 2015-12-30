@@ -40,11 +40,6 @@ angular
 								templateUrl : 'partials/login.html',
 								controller : 'navigation'
 							});
-
-							$routeProvider.when('/home', {
-								templateUrl : 'partials/list-employees.html',
-								controller : 'list-employees'
-							});
 							
 							$routeProvider.when('/list-employees', {
 								templateUrl : 'partials/list-employees.html',
@@ -75,10 +70,7 @@ angular
 										}
 									});
 
-							$routeProvider.otherwise({
-								templateUrl : 'partials/list-employees.html',
-								controller : 'list-employees'
-							});
+							$routeProvider.otherwise('/');
 
 							$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 							$locationProvider.hashPrefix('!');
@@ -192,7 +184,7 @@ angular
 						formlyConfig, auth) {
 
 					auth.init('/', '/login', 'logout');
-
+					
 					/* Reset error when a new view is loaded */
 					$rootScope.$on('$viewContentLoaded', function() {
 						delete $rootScope.error;

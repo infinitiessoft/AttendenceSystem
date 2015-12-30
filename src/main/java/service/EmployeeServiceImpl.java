@@ -34,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public EmployeeTransfer retrieve(long id) {
-		Employee employee = employeeDao.find(id);
+		Employee employee = employeeDao.findOne(id);
 		if (employee == null) {
 			throw new EmployeeNotFoundException(id);
 		}
@@ -79,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		if (transfer.isDepartmentSet()) {
 			if (transfer.getDepartment().isIdSet()) {
-				entity.Department department = departmentDao.find(transfer
+				entity.Department department = departmentDao.findOne(transfer
 						.getDepartment().getId());
 				if (department == null) {
 					throw new DepartmentNotFoundException(transfer
@@ -93,7 +93,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public EmployeeTransfer update(long id, EmployeeTransfer updated) {
-		Employee employee = employeeDao.find(id);
+		Employee employee = employeeDao.findOne(id);
 		if (employee == null) {
 			throw new EmployeeNotFoundException(id);
 		}
@@ -127,6 +127,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public EmployeeTransfer findByUsername(String username) {
-		return toEmployeeTransfer(employeeDao.findByName(username));
+		return toEmployeeTransfer(employeeDao.findByUsername(username));
 	}
 }

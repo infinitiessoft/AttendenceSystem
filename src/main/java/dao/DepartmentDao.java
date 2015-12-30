@@ -1,7 +1,10 @@
 package dao;
 
+import org.springframework.data.repository.PagingAndSortingRepository;
+
 import entity.Department;
 
-public interface DepartmentDao extends Dao<Department, Long> {
+public interface DepartmentDao extends
+		PagingAndSortingRepository<Department, Long> {
 
 }

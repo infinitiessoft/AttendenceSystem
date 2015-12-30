@@ -23,10 +23,6 @@ function($scope, $route, auth) {
 		return false;
 	};
 
-	$scope.tab = function(route) {
-		return $route.current && route === $route.current.controller;
-	};
-
 	$scope.user = function() {
 		return auth.user;
 	}

@@ -19,7 +19,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public DepartmentTransfer retrieve(long id) {
-		Department department = departmentDao.find(id);
+		Department department = departmentDao.findOne(id);
 		if (department == null) {
 			throw new DepartmentNotFoundException(id);
 		}
@@ -51,7 +51,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public DepartmentTransfer update(long id, DepartmentTransfer updated) {
-		Department department = departmentDao.find(id);
+		Department department = departmentDao.findOne(id);
 		if (department == null) {
 			throw new DepartmentNotFoundException(id);
 		}
