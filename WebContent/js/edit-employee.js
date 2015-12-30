@@ -55,7 +55,6 @@ angular.module('edit-employee', ['formly', 'formlyBootstrap']).constant('formlyE
   }).controller('edit-employee',
 		function($rootScope, $scope, $routeParams, $location, formlyVersion, employee, employeeService, departmentService) {
 		var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
-		$rootScope.listPage = '#!/list-employees'
 		$rootScope.title = (id > 0) ? 'Edit Employee' : 'Add Employee';
 		$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
 			$scope.departments=[];

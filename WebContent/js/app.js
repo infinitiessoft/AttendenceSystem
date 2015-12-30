@@ -197,6 +197,10 @@ angular
 					$rootScope.$on('$viewContentLoaded', function() {
 						delete $rootScope.error;
 					});
+					
+					$rootScope.back = function() { 
+					    window.history.back();
+					  };
 
 					$rootScope.hasRole = function(role) {
 
