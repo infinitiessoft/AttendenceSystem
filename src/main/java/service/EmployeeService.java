@@ -1,6 +1,6 @@
 package service;
 
-import java.util.Collection;
+import org.springframework.data.domain.Page;
 
 import transfer.EmployeeTransfer;
 
@@ -18,7 +18,8 @@ public interface EmployeeService {
 
 	public EmployeeTransfer save(EmployeeTransfer employee);
 
-	public Collection<EmployeeTransfer> findAll();
+	public Page<EmployeeTransfer> findAll(Integer page, Integer pageSize,
+			String property, String dir);
 
 	public EmployeeTransfer update(long id, EmployeeTransfer employee);
 

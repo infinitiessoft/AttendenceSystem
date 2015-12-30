@@ -1,12 +1,12 @@
 <div class="pull-right">
-	<a href="#!/edit-employee/0" class="btn btn-sm btn-success" title="Create"><i
-		class="glyphicon glyphicon-plus"> </i></a>
+	<a href="#!/edit-employee/0" class="btn btn-sm btn-success"
+		title="Create"><i class="glyphicon glyphicon-plus"> </i></a>
 </div>
 <div class="page-header">
 	<h3>Employee</h3>
 </div>
 <div>
-	<table st-table="displayedCollection" st-safe-src="rowCollection"
+	<table st-pipe="callServer" st-table="displayed"
 		class="table table-striped">
 		<thead>
 			<tr>
@@ -18,13 +18,9 @@
 				<th st-sort="gender">gender</th>
 				<th st-sort="department">department</th>
 			</tr>
-			<tr>
-				<th colspan="8"><input st-search="" class="form-control"
-					placeholder="global search ..." type="text" /></th>
-			</tr>
 		</thead>
-		<tbody>
-			<tr ng-repeat="row in displayedCollection">
+		<tbody ng-show="!isLoading">
+			<tr ng-repeat="row in displayed">
 				<td>{{row.id}}</td>
 				<td>{{row.name}}</td>
 				<td>{{row.username}}</td>
@@ -32,8 +28,9 @@
 				<td>{{row.email}}</td>
 				<td>{{row.gender}}</td>
 				<td>{{row.department.name}}</td>
-				<td><a href="#!/edit-employee/{{row.id}}" class="btn btn-sm btn-primary">
-						<i class="glyphicon glyphicon-pencil"> </i>
+				<td><a href="#!/edit-employee/{{row.id}}"
+					class="btn btn-sm btn-primary"> <i
+						class="glyphicon glyphicon-pencil"> </i>
 				</a>
 					<button type="button" ng-click="removeEntry(row)"
 						class="btn btn-sm btn-danger">
@@ -41,6 +38,17 @@
 					</button></td>
 			</tr>
 		</tbody>
+		<tbody ng-show="isLoading">
+			<tr>
+				<td colspan="3" class="text-center">Loading ...</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td class="text-center" st-pagination="" st-items-by-page="10"
+					colspan="3"></td>
+			</tr>
+		</tfoot>
 	</table>
 </div>
 <hr />
