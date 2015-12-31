@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 
 import resources.Config;
 import transfer.DepartmentTransfer;
@@ -67,8 +68,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Page<DepartmentTransfer> findAll(Integer page, Integer pageSize,
-			String property, String dir) {
+	public Page<DepartmentTransfer> findAll(Specification<Department> spec,
+			Integer page, Integer pageSize, String property, String dir) {
 		if (page == null) {
 			page = 0;
 		}
@@ -84,7 +85,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 		Sort sort = new Sort(Direction.valueOf(dir), property);
 		Pageable pageable = new PageRequest(page, pageSize, sort);
 		List<DepartmentTransfer> transfers = new ArrayList<DepartmentTransfer>();
-		Page<Department> departments = departmentDao.findAll(pageable);
+		Page<Department> departments = departmentDao.findAll(spec, pageable);
 		for (Department department : departments) {
 			transfers.add(toDepartmentTransfer(department));
 		}
