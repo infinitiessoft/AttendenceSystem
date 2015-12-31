@@ -2,18 +2,18 @@ package transfer;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-public class RoleTransfer {
+public class AttendRecordTypeTransfer {
 
 	private Long id;
 	private String name;
 
 	private boolean isNameSet;
 
-	public RoleTransfer() {
+	public AttendRecordTypeTransfer() {
 		super();
 	}
 
-	public RoleTransfer(Long id, String name) {
+	public AttendRecordTypeTransfer(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -32,7 +32,7 @@ public class RoleTransfer {
 	}
 
 	public void setName(String name) {
-		isNameSet = true;
+		setNameSet(true);
 		this.name = name;
 	}
 

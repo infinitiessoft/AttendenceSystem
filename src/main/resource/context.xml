@@ -64,6 +64,10 @@
 	<bean id="userDetailDao" class="dao.jpa.JpaUserDetailDao">
 		<constructor-arg ref="employeeDao" />
 	</bean>
+	
+	<bean id="attendRecordTypeService" class="service.AttendRecordTypeServiceImpl">
+		<constructor-arg ref="attendRecordTypeDao" />
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
@@ -91,6 +95,7 @@
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="departmentDao" />
+		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="passwordEncoder" />
 	</bean>
 

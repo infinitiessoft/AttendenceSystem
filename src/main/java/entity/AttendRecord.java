@@ -27,26 +27,11 @@
 //	@Column(name = "end_date", nullable = false)
 //	private Date end_date;
 //
-//	@Column(name = "duration", nullable = false)
-//	private Date duration;
-//
 //	@Column(name = "reason", nullable = false)
 //	private String reason;
 //
-//	@Column(name = "permit", nullable = false)
-//	private String permit;
-//
 //	@Column(name = "employee_id", nullable = false)
 //	private Long employee_id;
-//
-//	@Column(name = "modify_date", nullable = false)
-//	private Date modify_date;
-//
-//	@Column(name = "modify_start_date", nullable = false)
-//	private Date modify_start_date;
-//
-//	@Column(name = "modify_end_date", nullable = false)
-//	private Date modify_end_date;
 //
 //	@Column(name = "book_date", nullable = false)
 //	private Date book_date;
@@ -54,38 +39,11 @@
 //	@Column(name = "start_date", nullable = false)
 //	private Date start_date;
 //
-//	@Column(name = "permic_person_id", nullable = false)
-//	private Long permic_person_id;
-//
-//	@Column(name = "dateinterval", nullable = false)
-//	private Date dateinterval;
-//
 //	@Column(name = "endperiod", nullable = false)
 //	private Date endperiod;
+//	
+//	private Type type;
 //
-//	@Column(name = "modifyendperiod", nullable = false)
-//	private Date modifyendperiod;
-//
-//	@Column(name = "modifystartperiod", nullable = false)
-//	private Date modifystartperiod;
-//
-//	@Column(name = "modifypermit", nullable = false)
-//	private String modifypermit;
-//
-//	@Column(name = "period", nullable = false)
-//	private Date period;
-//
-//	@Column(name = "startperiod", nullable = false)
-//	private Date startperiod;
-//
-//	@Column(name = "modifydateinterval", nullable = false)
-//	private Date modifydateinterval;
-//
-//	@Column(name = "permit2", nullable = false)
-//	private String permit2;
-//
-//	@Column(name = "permic_person_id2", nullable = false)
-//	private Long permic_person_id2;
 //
 //	public AttendRecord(Long id, Date end_date, Date duration, String reason, String permit, Long employee_id,
 //			Date modify_date, Date modify_start_date, Date modify_end_date, Date book_date, Date start_date,

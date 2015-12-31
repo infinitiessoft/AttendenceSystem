@@ -3,27 +3,24 @@ package resources;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import resources.specification.DepartmentSpecification;
+import resources.specification.SimplePageRequest;
 import service.DepartmentService;
 import transfer.DepartmentTransfer;
-import entity.Department;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
@@ -69,11 +66,8 @@ public class DepartmentsResource {
 
 	@GET
 	public Page<DepartmentTransfer> findallDepartment(
-			@QueryParam("page") @DefaultValue("0") Integer page,
-			@QueryParam("pageSize") @DefaultValue("20") Integer pageSize,
-			@QueryParam("sort") @DefaultValue("id") String sort,
-			@QueryParam("dir") @DefaultValue("ASC") String dir,
+			@BeanParam SimplePageRequest pageRequest,
 			@BeanParam DepartmentSpecification spec) {
-		return departmentService.findAll(spec, page, pageSize, sort, dir);
+		return departmentService.findAll(spec, pageRequest);
 	}
 }

@@ -3,7 +3,7 @@ angular
 				'attendance',
 				[ 'ngRoute', 'ngCookies',
 						'formly', 'formlyBootstrap', 'ui.bootstrap',
-						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee', 'list-departments', 'edit-department' ])
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ])
 		.config(
 				[
 						'$routeProvider',
@@ -66,6 +66,54 @@ angular
 													return {data:{}};
 												}
 												return departmentService.get(id);
+											}
+										}
+									});
+							
+							$routeProvider.when('/list-roles', {
+								templateUrl : 'partials/list-roles.html',
+								controller : 'list-roles'
+							});
+							
+							$routeProvider
+							.when(
+									'/edit-role/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-role',
+										resolve : {
+											role : function(
+													roleService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return roleService.get(id);
+											}
+										}
+									});
+							
+							$routeProvider.when('/list-recordtypes', {
+								templateUrl : 'partials/list-recordtypes.html',
+								controller : 'list-recordtypes'
+							});
+							
+							$routeProvider
+							.when(
+									'/edit-recordtype/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-recordtype',
+										resolve : {
+											recordtype : function(
+													recordtypeService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return recordtypeService.get(id);
 											}
 										}
 									});
@@ -179,6 +227,79 @@ angular
 
 											return obj;
 										} ])
+										.factory(
+								'roleService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/role/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											}
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											}
+
+											obj.insert = function(role) {
+												return $http.post(serviceBase, role).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, role) {
+												return $http.put(serviceBase  + id,
+														role).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ]).factory(
+												'recordtypeService',
+												[
+														'$http',
+														function($http) {
+															var serviceBase = 'rest/recordtype/';
+															var obj = {};
+															obj.list = function(queries) {
+																return $http.get(serviceBase, {params:queries});
+															}
+
+															obj.get = function(id) {
+																return $http.get(serviceBase  + id);
+															}
+
+															obj.insert = function(recordtype) {
+																return $http.post(serviceBase, recordtype).then(
+																		function(results) {
+																			return results;
+																		});
+															};
+
+															obj.update = function(id, recordtype) {
+																return $http.put(serviceBase  + id,
+																		recordtype).then(function(results) {
+																	return results;
+																});
+															};
+															
+															obj.remove = function(id) {
+																return $http.delete(serviceBase + id).then(function(status) {
+																	return status;
+																});
+															};
+
+															return obj;
+														} ])
 		.run(
 				function($rootScope, $location, $cookieStore, $http,
 						formlyConfig, auth) {

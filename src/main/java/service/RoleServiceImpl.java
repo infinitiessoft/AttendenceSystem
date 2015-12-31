@@ -1,9 +1,13 @@
 package service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
+import resources.specification.RoleSpecification;
 import transfer.RoleTransfer;
 import dao.RoleDao;
 import entity.Role;
@@ -36,28 +40,33 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleTransfer save(Role role) {
-		role.setId(null);
+	public RoleTransfer save(RoleTransfer transfer) {
+		transfer.setId(null);
+		Role role = new Role();
+		setUpRole(transfer, role);
 		return toRoleTransfer(roleDao.save(role));
 	}
 
 	@Override
-	public RoleTransfer update(long id, Role updated) {
+	public RoleTransfer update(long id, RoleTransfer updated) {
 		Role role = roleDao.findOne(id);
 		if (role == null) {
 			throw new RoleNotFoundException(id);
 		}
 		updated.setId(role.getId());
-		return toRoleTransfer(roleDao.save(updated));
+		setUpRole(updated, role);
+		return toRoleTransfer(roleDao.save(role));
 	}
 
 	@Override
-	public Collection<RoleTransfer> findAll() {
-		List<RoleTransfer> rets = new ArrayList<RoleTransfer>();
-
-		for (Role role : roleDao.findAll()) {
-			rets.add(toRoleTransfer(role));
+	public Page<RoleTransfer> findAll(RoleSpecification spec, Pageable pageable) {
+		List<RoleTransfer> transfers = new ArrayList<RoleTransfer>();
+		Page<Role> roles = roleDao.findAll(spec, pageable);
+		for (Role role : roles) {
+			transfers.add(toRoleTransfer(role));
 		}
+		Page<RoleTransfer> rets = new PageImpl<RoleTransfer>(transfers,
+				pageable, roles.getTotalElements());
 		return rets;
 	}
 
@@ -67,6 +76,12 @@ public class RoleServiceImpl implements RoleService {
 		ret.setName(role.getName());
 
 		return ret;
+	}
+
+	private void setUpRole(RoleTransfer transfer, Role role) {
+		if (transfer.isNameSet()) {
+			role.setName(transfer.getName());
+		}
 	}
 
 }

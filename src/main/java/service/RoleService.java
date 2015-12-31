@@ -1,9 +1,10 @@
 package service;
 
-import java.util.Collection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import resources.specification.RoleSpecification;
 import transfer.RoleTransfer;
-import entity.Role;
 
 public interface RoleService {
 
@@ -11,10 +12,10 @@ public interface RoleService {
 
 	public void delete(long id);
 
-	public RoleTransfer save(Role role);
+	public RoleTransfer save(RoleTransfer role);
 
-	public Collection<RoleTransfer> findAll();
+	public Page<RoleTransfer> findAll(RoleSpecification spec, Pageable pageable);
 
-	public RoleTransfer update(long id, Role role);
+	public RoleTransfer update(long id, RoleTransfer role);
 
 }

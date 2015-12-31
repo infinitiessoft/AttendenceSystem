@@ -5,13 +5,9 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import resources.Config;
 import resources.specification.EmployeeSpecification;
 import transfer.EmployeeTransfer;
 import transfer.EmployeeTransfer.Department;
@@ -110,22 +106,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Page<EmployeeTransfer> findAll(Integer page, Integer pageSize,
-			String property, String dir, EmployeeSpecification spec) {
-		if (page == null) {
-			page = 0;
-		}
-		if (pageSize == null) {
-			pageSize = Integer.parseInt(Config.getProperty(Config.PAGE_SIZE));
-		}
-		if (property == null) {
-			property = "id";
-		}
-		if (dir == null) {
-			dir = Direction.ASC.name();
-		}
-		Sort sort = new Sort(Direction.valueOf(dir), property);
-		Pageable pageable = new PageRequest(page, pageSize, sort);
+	public Page<EmployeeTransfer> findAll(EmployeeSpecification spec,
+			Pageable pageable) {
 		List<EmployeeTransfer> transfers = new ArrayList<EmployeeTransfer>();
 		Page<Employee> employees = employeeDao.findAll(spec, pageable);
 		for (Employee employee : employees) {

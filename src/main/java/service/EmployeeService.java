@@ -1,6 +1,7 @@
 package service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import resources.specification.EmployeeSpecification;
 import transfer.EmployeeTransfer;
@@ -19,8 +20,8 @@ public interface EmployeeService {
 
 	public EmployeeTransfer save(EmployeeTransfer employee);
 
-	public Page<EmployeeTransfer> findAll(Integer page, Integer pageSize,
-			String property, String dir, EmployeeSpecification spec);
+	public Page<EmployeeTransfer> findAll(EmployeeSpecification spec,
+			Pageable pageable);
 
 	public EmployeeTransfer update(long id, EmployeeTransfer employee);
 

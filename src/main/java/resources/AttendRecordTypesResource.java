@@ -1,7 +1,5 @@
 package resources;
 
-import java.util.Collection;
-
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,33 +17,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import resources.specification.RoleSpecification;
+import resources.specification.AttendRecordTypeSpecification;
 import resources.specification.SimplePageRequest;
-import service.RoleService;
-import transfer.RoleTransfer;
+import service.AttendRecordTypeService;
+import transfer.AttendRecordTypeTransfer;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/role")
-public class RolesResource {
+@Path("/recordtype")
+public class AttendRecordTypesResource {
 
 	@Autowired
-	private RoleService roleService;
+	private AttendRecordTypeService attendRecordTypeService;
 
 	@GET
 	@Path(value = "{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RoleTransfer getRole(@PathParam("id") long id) {
-		return roleService.retrieve(id);
+	public AttendRecordTypeTransfer getAttendRecordType(@PathParam("id") long id) {
+		return attendRecordTypeService.retrieve(id);
 	}
 
 	// ** Method to delete
 	@DELETE
 	@Path(value = "{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response deleteRole(@PathParam("id") long id) {
-		roleService.delete(id);
+	public Response deleteAttendRecordType(@PathParam("id") long id) {
+		attendRecordTypeService.delete(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
 				.build();
 	}
@@ -53,23 +51,24 @@ public class RolesResource {
 	// **Method to update
 	@PUT
 	@Path(value = "{id}")
-	public RoleTransfer updateRole(@PathParam("id") long id, RoleTransfer role) {
-		return roleService.update(id, role);
+	public AttendRecordTypeTransfer updateAttendRecordType(
+			@PathParam("id") long id, AttendRecordTypeTransfer attendRecordType) {
+		return attendRecordTypeService.update(id, attendRecordType);
 	}
 
 	// **Method to save or create
 	@POST
-	public RoleTransfer saveRole(RoleTransfer role) {
-		return roleService.save(role);
+	public AttendRecordTypeTransfer saveAttendRecordType(
+			AttendRecordTypeTransfer attendRecordType) {
+		return attendRecordTypeService.save(attendRecordType);
 	}
 
-	// ** Method to find All the roles in the list
+	// ** Method to find All the attendRecordTypes in the list
 
 	@GET
-	public Page<RoleTransfer> findallRole(
+	public Page<AttendRecordTypeTransfer> findallAttendRecordType(
 			@BeanParam SimplePageRequest pageRequest,
-			@BeanParam RoleSpecification spec) {
-		return roleService.findAll(spec, pageRequest);
+			@BeanParam AttendRecordTypeSpecification spec) {
+		return attendRecordTypeService.findAll(spec, pageRequest);
 	}
-
 }

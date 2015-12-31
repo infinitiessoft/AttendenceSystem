@@ -14,7 +14,6 @@ import org.springframework.data.jpa.domain.Specification;
 import com.google.common.base.Strings;
 
 import entity.Employee;
-import entity.Gender;
 
 public class EmployeeSpecification implements Specification<Employee> {
 
@@ -36,7 +35,8 @@ public class EmployeeSpecification implements Specification<Employee> {
 					+ username + "%"));
 		}
 		if (!Strings.isNullOrEmpty(gender)) {
-			predicates.add(cb.like(root.<String> get("gender"), "%" + gender + "%"));
+			predicates.add(cb.like(root.<String> get("gender"), "%" + gender
+					+ "%"));
 		}
 		if (!Strings.isNullOrEmpty(name)) {
 			predicates
