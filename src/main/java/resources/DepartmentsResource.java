@@ -1,5 +1,6 @@
 package resources;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -72,8 +73,7 @@ public class DepartmentsResource {
 			@QueryParam("pageSize") @DefaultValue("20") Integer pageSize,
 			@QueryParam("sort") @DefaultValue("id") String sort,
 			@QueryParam("dir") @DefaultValue("ASC") String dir,
-			@QueryParam("name") String name) {
-		Specification<Department> spec = new DepartmentSpecification(name);
+			@BeanParam DepartmentSpecification spec) {
 		return departmentService.findAll(spec, page, pageSize, sort, dir);
 	}
 }

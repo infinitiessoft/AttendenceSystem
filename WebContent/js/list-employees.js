@@ -5,31 +5,52 @@ angular.module('list-employees', [ 'ngResource' ]).controller(
 				'$http',
 				'employeeService',
 				function($scope, $http, employeeService) {
-					var lastPage = 0;
-					var lastPageSize = 10;
-					var lastSort = 'id';
-					var lastDir = 'ASC';
-
-					$scope.displayed = [];
-					$scope.callServer = function callServer(tableState) {
-						$scope.isLoading = true;
+					var lastState = {
+							pagination : {
+								start : 0,
+								number : 10
+							},
+							sort : {
+								predicate : 'id',
+								reverse : false
+							},
+							search : {
+								predicateObject : {}
+							}
+						};
+					
+					var queryParams = function(tableState){
 						var pagination = tableState.pagination;
-
 						var start = pagination.start || 0;
 						var pageSize = pagination.number || 10;
 						var sort = tableState.sort.predicate;
 						var dir = tableState.sort.reverse ? 'DESC'
 								: 'ASC';
+						var predicate = tableState.search.predicateObject;
 						var page = (start / pageSize);
 						if (page < 0) {
 							page = 0;
 						}
-						lastPage = page;
-						lastPageSize = pageSize;
-						lastSort = sort;
-						lastDir = dir;
+						lastState.pagination.start = start;
+						lastState.pagination.number = pageSize;
+						lastState.sort.predicate = sort;
+						lastState.sort.reverse = tableState.sort.reverse;
+						lastState.search = tableState.search;
+						var filters = tableState.search.predicateObject
+								|| {};
+						filters.sort = sort;
+						filters.pageSize = pageSize;
+						filters.page = page;
+						filters.dir = dir;
+						return filters;
+					}
+
+					$scope.displayed = [];
+					$scope.callServer = function callServer(tableState) {
+						$scope.isLoading = true;
+						var filters = queryParams(tableState);
 						employeeService
-								.list(page, pageSize, sort, dir)
+								.list(filters)
 								.then(
 										function(status) {
 											$scope.displayed = status.data.content;
@@ -46,12 +67,22 @@ angular.module('list-employees', [ 'ngResource' ]).controller(
 									.remove(newsEntry.id)
 									.then(
 											function(status) {
-														employeeService
-														.list(
-																lastPage,
-																lastPageSize,
-																lastSort,
-																lastDir)
+												var pagination = lastState.pagination;
+												console.log(tableState);
+												var start = pagination.start || 0;
+												var pageSize = pagination.number || 10;
+												var sort = tableState.sort.predicate;
+												var dir = tableState.sort.reverse ? 'DESC'
+														: 'ASC';
+												var page = (start / pageSize);
+												if (page < 0) {
+													page = 0;
+												}
+
+												var filters = queryParams(lastState);
+
+												employeeService
+														.list(filters)
 														.then(
 																function(
 																		status) {

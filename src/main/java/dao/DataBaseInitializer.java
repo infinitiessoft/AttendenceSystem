@@ -42,7 +42,7 @@ public class DataBaseInitializer {
 		role.setName("admin");
 		Role user = new Role();
 		user.setName("user");
-		admin.setGender(Gender.male);
+		admin.setGender(Gender.male.name());
 		role = roleDao.save(role);
 		user = roleDao.save(user);
 		admin.getRoles().add(role);

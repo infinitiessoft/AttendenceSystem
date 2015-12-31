@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import resources.Config;
+import resources.specification.EmployeeSpecification;
 import transfer.EmployeeTransfer;
 import transfer.EmployeeTransfer.Department;
 import dao.DepartmentDao;
@@ -78,7 +79,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 			newEntry.setUsername(transfer.getUsername());
 		}
 		if (transfer.isGenderSet()) {
-			newEntry.setGender(Gender.valueOf(transfer.getGender()));
+			Gender.valueOf(transfer.getGender());
+			newEntry.setGender(transfer.getGender());
 		}
 		if (transfer.isPasswordSet()) {
 			newEntry.setPassword(passwordEncoder.encode(transfer.getPassword()));
@@ -109,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public Page<EmployeeTransfer> findAll(Integer page, Integer pageSize,
-			String property, String dir) {
+			String property, String dir, EmployeeSpecification spec) {
 		if (page == null) {
 			page = 0;
 		}
@@ -125,7 +127,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Sort sort = new Sort(Direction.valueOf(dir), property);
 		Pageable pageable = new PageRequest(page, pageSize, sort);
 		List<EmployeeTransfer> transfers = new ArrayList<EmployeeTransfer>();
-		Page<Employee> employees = employeeDao.findAll(pageable);
+		Page<Employee> employees = employeeDao.findAll(spec, pageable);
 		for (Employee employee : employees) {
 			transfers.add(toEmployeeTransfer(employee));
 		}
@@ -141,7 +143,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ret.setName(employee.getName());
 		ret.setDateOfJoined(employee.getDateofjoined());
 		ret.setEmail(employee.getEmail());
-		ret.setGender(employee.getGender().name());
+		ret.setGender(employee.getGender());
 		// ret.setPassword(employee.getPassword());
 		ret.setDepartment(new Department(employee.getDepartment().getId(),
 				employee.getDepartment().getName()));

@@ -1,7 +1,9 @@
 package resources;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 
+import resources.specification.EmployeeSpecification;
 import service.EmployeeService;
 import transfer.EmployeeTransfer;
 
@@ -71,10 +74,12 @@ public class EmployeesResource {
 
 	@GET
 	public Page<EmployeeTransfer> findallEmployee(
-			@QueryParam("page") Integer page,
-			@QueryParam("pageSize") Integer pageSize,
-			@QueryParam("sort") String sort, @QueryParam("dir") String dir) {
-		return employeeService.findAll(page, pageSize, sort, dir);
+			@QueryParam("page") @DefaultValue("0") Integer page,
+			@QueryParam("pageSize") @DefaultValue("20") Integer pageSize,
+			@QueryParam("sort") @DefaultValue("id") String sort,
+			@QueryParam("dir") @DefaultValue("ASC") String dir,
+			@BeanParam EmployeeSpecification spec) {
+		return employeeService.findAll(page, pageSize, sort, dir, spec);
 	}
 
 	// @GET

@@ -2,6 +2,7 @@ package service;
 
 import org.springframework.data.domain.Page;
 
+import resources.specification.EmployeeSpecification;
 import transfer.EmployeeTransfer;
 
 /**
@@ -19,7 +20,7 @@ public interface EmployeeService {
 	public EmployeeTransfer save(EmployeeTransfer employee);
 
 	public Page<EmployeeTransfer> findAll(Integer page, Integer pageSize,
-			String property, String dir);
+			String property, String dir, EmployeeSpecification spec);
 
 	public EmployeeTransfer update(long id, EmployeeTransfer employee);
 

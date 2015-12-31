@@ -4,6 +4,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.ws.rs.QueryParam;
 
 import org.springframework.data.jpa.domain.Specification;
 
@@ -13,11 +14,8 @@ import entity.Department;
 
 public class DepartmentSpecification implements Specification<Department> {
 
+	@QueryParam("name")
 	private String name;
-
-	public DepartmentSpecification(String name) {
-		this.name = name;
-	}
 
 	@Override
 	public Predicate toPredicate(Root<Department> root, CriteriaQuery<?> query,
@@ -27,4 +25,13 @@ public class DepartmentSpecification implements Specification<Department> {
 		}
 		return null;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 }

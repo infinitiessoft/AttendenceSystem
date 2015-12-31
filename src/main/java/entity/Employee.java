@@ -8,8 +8,6 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -59,8 +57,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@Column(name = "email", unique = true, nullable = false, length = 40)
 	private String email;
 	@Column(name = "gender", nullable = false, length = 6)
-	@Enumerated(EnumType.STRING)
-	private Gender gender;
+	private String gender;
 	@Column(name = "comment")
 	private String comment;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
@@ -315,11 +312,11 @@ public class Employee extends AbstractEntity implements UserDetails {
 		this.department = department;
 	}
 
-	public Gender getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(Gender gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 

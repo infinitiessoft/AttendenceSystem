@@ -113,8 +113,8 @@ angular
 						function($http) {
 							var serviceBase = 'rest/employee/';
 							var obj = {};
-							obj.list = function(page, pageSize, sort, dir) {
-								return $http.get(serviceBase, {params:{"page": page, "pageSize": pageSize, "sort" : sort, "dir" : dir}});
+							obj.list = function(queries) {
+								return $http.get(serviceBase, {params:queries});
 							}
 
 							obj.get = function(id) {

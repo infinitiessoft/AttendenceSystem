@@ -18,6 +18,15 @@
 				<th st-sort="gender">gender</th>
 				<th st-sort="department">department</th>
 			</tr>
+			<tr>
+				<th></th>
+				<th><input st-search="name" /></th>
+				<th><input st-search="username" /></th>
+				<th></th>
+				<th></th>
+				<th><input st-search="gender" /></th>
+				<th><input st-search="department" /></th>
+			</tr>
 		</thead>
 		<tbody ng-show="!isLoading">
 			<tr ng-repeat="row in displayed">
