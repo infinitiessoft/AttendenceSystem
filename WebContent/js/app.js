@@ -170,10 +170,7 @@ angular
 							}
 
 							obj.insert = function(employee) {
-								return $http.post(serviceBase, employee).then(
-										function(results) {
-											return results;
-										});
+								return $http.post(serviceBase, employee);
 							};
 
 							obj.update = function(id, employee) {

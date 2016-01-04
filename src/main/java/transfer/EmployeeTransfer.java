@@ -1,10 +1,58 @@
 package transfer;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlTransient;
 
 public class EmployeeTransfer {
+
+	public static class Role {
+
+		private Long id;
+		private String name;
+
+		private boolean isIdSet;
+
+		public Role() {
+			super();
+		}
+
+		public Role(Long id, String name) {
+			super();
+			this.id = id;
+			this.name = name;
+		}
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			setIdSet(true);
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		@XmlTransient
+		public boolean isIdSet() {
+			return isIdSet;
+		}
+
+		@XmlTransient
+		public void setIdSet(boolean isIdSet) {
+			this.isIdSet = isIdSet;
+		}
+
+	}
 
 	public static class Department {
 
@@ -60,6 +108,7 @@ public class EmployeeTransfer {
 	private String gender;
 	private Department department;
 	private String password;
+	private List<Role> roles = new ArrayList<Role>(0);
 
 	private boolean isNameSet;
 	private boolean isUsernameSet;
@@ -212,6 +261,14 @@ public class EmployeeTransfer {
 	@XmlTransient
 	public void setPasswordSet(boolean isPasswordSet) {
 		this.isPasswordSet = isPasswordSet;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 }
