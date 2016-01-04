@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -93,14 +93,17 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@Column(name = "official_used")
 	private float official_used;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "employee", cascade = CascadeType.REMOVE)
 	private Set<EmployeeRole> employeeRoles = new HashSet<EmployeeRole>(0);
 
 	@Column(name = "lastlogin")
 	private Date lastLogin;
 
-	@OneToMany(mappedBy = "employee")
-	private List<Leavesetting> leavesettings;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+	private Set<Leavesetting> leavesettings = new HashSet<Leavesetting>(0);
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+	private Set<AttendRecord> attendRecords = new HashSet<AttendRecord>(0);
 
 	@Override
 	@Transient
@@ -113,7 +116,8 @@ public class Employee extends AbstractEntity implements UserDetails {
 
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 		for (EmployeeRole role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role.getRole().getName()));
+			authorities
+					.add(new SimpleGrantedAuthority(role.getRole().getName()));
 		}
 
 		return authorities;
@@ -321,21 +325,30 @@ public class Employee extends AbstractEntity implements UserDetails {
 	}
 
 	@XmlTransient
-	public List<Leavesetting> getLeavesettings() {
-		return leavesettings;
-	}
-
-	public void setLeavesettings(List<Leavesetting> leavesettings) {
-		this.leavesettings = leavesettings;
-	}
-
-	@XmlTransient
 	public Set<EmployeeRole> getEmployeeRoles() {
 		return employeeRoles;
 	}
 
 	public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
 		this.employeeRoles = employeeRoles;
+	}
+
+	@XmlTransient
+	public Set<Leavesetting> getLeavesettings() {
+		return leavesettings;
+	}
+
+	public void setLeavesettings(Set<Leavesetting> leavesettings) {
+		this.leavesettings = leavesettings;
+	}
+
+	@XmlTransient
+	public Set<AttendRecord> getAttendRecords() {
+		return attendRecords;
+	}
+
+	public void setAttendRecords(Set<AttendRecord> attendRecords) {
+		this.attendRecords = attendRecords;
 	}
 
 }

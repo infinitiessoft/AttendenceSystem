@@ -19,13 +19,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 
-import resources.specification.EmployeeRoleSpecification;
 import resources.specification.EmployeeSpecification;
 import resources.specification.SimplePageRequest;
-import service.EmployeeRoleService;
 import service.EmployeeService;
 import transfer.EmployeeTransfer;
-import transfer.RoleTransfer;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
@@ -35,9 +32,6 @@ public class EmployeesResource {
 
 	@Autowired
 	private EmployeeService employeeService;
-
-	@Autowired
-	private EmployeeRoleService employeeRoleService;
 
 	@Autowired
 	@Qualifier("authenticationManager")
@@ -84,45 +78,13 @@ public class EmployeesResource {
 		return employeeService.findAll(spec, pageRequest);
 	}
 
-	@GET
-	@Path(value = "{employeeid}/roles/")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Page<RoleTransfer> findAllRole(@PathParam("employeeid") long id,
-			@BeanParam SimplePageRequest pageRequest) {
-		EmployeeRoleSpecification spec = new EmployeeRoleSpecification();
-		spec.setEmployeeId(id);
-		return employeeRoleService.findAll(spec, pageRequest);
+	@Path("{id}/roles")
+	public Class<EmployeeRolesResource> getEmployeeRolesResource() {
+		return EmployeeRolesResource.class;
 	}
 
-	@GET
-	@Path(value = "{employeeid}/roles/{roleid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public RoleTransfer findRole(@PathParam("employeeid") long employeeId,
-			@PathParam("roleid") long roleId) {
-		return employeeRoleService
-				.findByEmployeeIdAndRoleId(employeeId, roleId);
+	@Path("{id}/records")
+	public Class<EmployeeRecordsResource> getEmployeeRecordsResource() {
+		return EmployeeRecordsResource.class;
 	}
-
-	@PUT
-	@Path(value = "{employeeid}/roles/{roleid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response assignRoleToEmployee(
-			@PathParam("employeeid") long employeeId,
-			@PathParam("roleid") long roleId) {
-		employeeRoleService.assignRoleToEmployee(employeeId, roleId);
-		return Response.status(Status.NO_CONTENT)
-				.type(MediaType.APPLICATION_JSON).build();
-	}
-
-	@DELETE
-	@Path(value = "{employeeid}/roles/{roleid}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response revokeRoleToEmployee(
-			@PathParam("employeeid") long employeeId,
-			@PathParam("roleid") long roleId) {
-		employeeRoleService.delete(employeeId, roleId);
-		return Response.status(Status.NO_CONTENT)
-				.type(MediaType.APPLICATION_JSON).build();
-	}
-
 }

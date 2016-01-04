@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,24 +33,24 @@ public class Leavesetting extends AbstractEntity {
 
 	@Column(name = "personal", nullable = false)
 	private Long personal;
-	
+
 	@Column(name = "personalUsed", nullable = false)
 	private Long personalUsed;
 
 	@Column(name = "sick", nullable = false)
 	private Long sick;
-	
+
 	@Column(name = "sickUsed", nullable = false)
 	private Long sickUsed;
 
 	@Column(name = "annual", nullable = false)
 	private Long annual;
-	
+
 	@Column(name = "annualUsed", nullable = false)
 	private Long annualUsed;
-	
-	@ManyToOne
-	@JoinColumn(name = "employee")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
 
 	public Long getId() {
