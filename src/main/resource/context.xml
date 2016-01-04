@@ -75,6 +75,12 @@
 		<constructor-arg ref="employeeRoleDao" />
 	</bean>
 
+	<bean id="attendRecordService" class="service.AttendRecordServiceImpl">
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="attendRecordTypeDao" />
+		<constructor-arg ref="attendRecordDao" />
+	</bean>
+
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
 	<!-- INIT REST COMPONENTS -->
