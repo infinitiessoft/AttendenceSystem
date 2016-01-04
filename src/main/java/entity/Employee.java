@@ -116,8 +116,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 		for (EmployeeRole role : roles) {
-			authorities
-					.add(new SimpleGrantedAuthority(role.getRole().getName()));
+			authorities.add(new SimpleGrantedAuthority(role.getRole().getName()));
 		}
 
 		return authorities;
