@@ -33,22 +33,22 @@ public class Leavesetting extends AbstractEntity {
 
 	@Column(name = "personal", nullable = false)
 	private Long personal;
-	
+
 	@Column(name = "personalUsed", nullable = false)
 	private Long personalUsed;
 
 	@Column(name = "sick", nullable = false)
 	private Long sick;
-	
+
 	@Column(name = "sickUsed", nullable = false)
 	private Long sickUsed;
 
 	@Column(name = "annual", nullable = false)
 	private Long annual;
-	
+
 	@Column(name = "annualUsed", nullable = false)
 	private Long annualUsed;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "employee", nullable = false)
 	private Employee employee;

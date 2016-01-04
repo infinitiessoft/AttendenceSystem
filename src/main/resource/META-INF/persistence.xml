@@ -10,6 +10,7 @@
 		<class>entity.JobType</class>
 		<class>entity.AttendRecordType</class>
 		<class>entity.Leavesetting</class>
+		<class>entity.AttendRecord</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 	</persistence-unit>
 </persistence>

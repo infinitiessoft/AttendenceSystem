@@ -1,20 +1,27 @@
-//package service;
-//
-//import java.util.Collection;
-//
-//import transfer.AttendRecordTransfer;
-//import entity.AttendRecord;
-//
-//public interface AttendRecordService {
-//
-//	public AttendRecordTransfer retrieve(long id);
-//
-//	public void delete(long id);
-//
-//	public AttendRecordTransfer save(AttendRecord attendrecord);
-//
-//	public Collection<AttendRecordTransfer> findAll();
-//
-//	public AttendRecordTransfer update(long id, AttendRecord attendrecord);
-//
-//}
+package service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import resources.specification.AttendRecordSpecification;
+import transfer.AttendRecordTransfer;
+
+/**
+ * An interface that defines what a AttendRecord Services looks like in general
+ *
+ */
+public interface AttendRecordService {
+
+	public AttendRecordTransfer retrieve(long id);
+
+	public void delete(long id);
+
+	public AttendRecordTransfer save(AttendRecordTransfer attendRecord);
+
+	public Page<AttendRecordTransfer> findAll(AttendRecordSpecification spec,
+			Pageable pageable);
+
+	public AttendRecordTransfer update(long id,
+			AttendRecordTransfer attendRecord);
+
+}

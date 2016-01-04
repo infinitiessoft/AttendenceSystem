@@ -1,123 +1,132 @@
 package transfer;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AttendRecordTransfer {
+import javax.xml.bind.annotation.XmlTransient;
 
-	private long id;
+public class AttendRecordTransfer implements Serializable {
 
-	private Date modify_end_date;
-	private Date modify_start_date;
-	private Date modify_date;
-	private Long employee_id;
-	private String permit;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public static class Employee implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private Long id;
+		private String name;
+
+		private boolean isIdSet;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			isIdSet = true;
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		@XmlTransient
+		public boolean isIdSet() {
+			return isIdSet;
+		}
+
+		@XmlTransient
+		public void setIdSet(boolean isIdSet) {
+			this.isIdSet = isIdSet;
+		}
+
+	}
+
+	public static class Type implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private Long id;
+		private String name;
+
+		private boolean isIdSet;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			isIdSet = true;
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		@XmlTransient
+		public boolean isIdSet() {
+			return isIdSet;
+		}
+
+		@XmlTransient
+		public void setIdSet(boolean isIdSet) {
+			this.isIdSet = isIdSet;
+		}
+
+	}
+
+	private Long id;
+	private Employee employee;
 	private String reason;
-	private Date duration;
-	private Date end_date;
-	private Date book_date;
-	private Date start_date;
-	private Long permic_person_id;
-	private Date dateinterval;
-	private Date endperiod;
-	private Date modifyendperiod;
-	private Date modifystartperiod;
-	private String modifypermit;
-	private Date startperiod;
-	private Date period;
-	private String permit2;
-	private String modifypermit2;
-	private String modifyreason;
-	private String modifytype;
-	private Long permic_person_id2;
-	private Date modifydateinterval;
+	private Double duration;
+	private Date endDate;
+	private Date bookDate;
+	private Date startDate;
+	private Type type;
+
+	private boolean isEmployeeSet;
+	private boolean isReasonSet;
+	private boolean isDurationSet;
+	private boolean isEndDateSet;
+	private boolean isBookDateSet;
+	private boolean isStartDateSet;
+	private boolean isTypeSet;
 
 	public AttendRecordTransfer() {
 		super();
 
 	}
 
-	public AttendRecordTransfer(long id, String name, Date modify_end_date, Date modify_start_date, Date modify_date,
-			Long employee_id, String permit, String reason, Date duration, Date end_date, Date book_date,
-			Date start_date, Long permic_person_id, Date dateinterval, Date endperiod, Date modifyendperiod,
-			Date modifystartperiod, String modifypermit, Date startperiod, Date period, String permit2,
-			String modifypermit2, String modifyreason, String modifytype, Long permic_person_id2,
-			Date modifydateinterval) {
-
-		super();
-		this.id = id;
-
-		this.modify_end_date = modify_end_date;
-		this.modify_start_date = modify_start_date;
-		this.modify_date = modify_date;
-		this.employee_id = employee_id;
-		this.permit = permit;
-		this.reason = reason;
-		this.duration = duration;
-		this.end_date = end_date;
-		this.book_date = book_date;
-		this.start_date = start_date;
-		this.permic_person_id = permic_person_id;
-		this.dateinterval = dateinterval;
-		this.endperiod = endperiod;
-		this.modifyendperiod = modifyendperiod;
-		this.modifystartperiod = modifystartperiod;
-		this.modifypermit = modifypermit;
-		this.startperiod = startperiod;
-		this.period = period;
-		this.permit2 = permit2;
-		this.modifypermit2 = modifypermit2;
-		this.modifyreason = modifyreason;
-		this.modifytype = modifytype;
-		this.permic_person_id2 = permic_person_id2;
-		this.modifydateinterval = modifydateinterval;
-	}
-
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Date getModify_end_date() {
-		return modify_end_date;
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setModify_end_date(Date modify_end_date) {
-		this.modify_end_date = modify_end_date;
-	}
-
-	public Date getModify_start_date() {
-		return modify_start_date;
-	}
-
-	public void setModify_start_date(Date modify_start_date) {
-		this.modify_start_date = modify_start_date;
-	}
-
-	public Date getModify_date() {
-		return modify_date;
-	}
-
-	public void setModify_date(Date modify_date) {
-		this.modify_date = modify_date;
-	}
-
-	public Long getEmployee_id() {
-		return employee_id;
-	}
-
-	public void setEmployee_id(Long employee_id) {
-		this.employee_id = employee_id;
-	}
-
-	public String getPermit() {
-		return permit;
-	}
-
-	public void setPermit(String permit) {
-		this.permit = permit;
+	public void setEmployee(Employee employee) {
+		this.isEmployeeSet = true;
+		this.employee = employee;
 	}
 
 	public String getReason() {
@@ -125,151 +134,123 @@ public class AttendRecordTransfer {
 	}
 
 	public void setReason(String reason) {
+		this.isReasonSet = true;
 		this.reason = reason;
 	}
 
-	public Date getDuration() {
+	public Double getDuration() {
 		return duration;
 	}
 
-	public void setDuration(Date duration) {
+	public void setDuration(Double duration) {
+		this.isDurationSet = true;
 		this.duration = duration;
 	}
 
-	public Date getEnd_date() {
-		return end_date;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setEnd_date(Date end_date) {
-		this.end_date = end_date;
+	public void setEndDate(Date endDate) {
+		this.isEndDateSet = true;
+		this.endDate = endDate;
 	}
 
-	public Date getBook_date() {
-		return book_date;
+	public Date getBookDate() {
+		return bookDate;
 	}
 
-	public void setBook_date(Date book_date) {
-		this.book_date = book_date;
+	public void setBookDate(Date bookDate) {
+		this.isBookDateSet = true;
+		this.bookDate = bookDate;
 	}
 
-	public Date getStart_date() {
-		return start_date;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setStart_date(Date start_date) {
-		this.start_date = start_date;
+	public void setStartDate(Date startDate) {
+		this.isStartDateSet = true;
+		this.startDate = startDate;
 	}
 
-	public Long getPermic_person_id() {
-		return permic_person_id;
+	public Type getType() {
+		return type;
 	}
 
-	public void setPermic_person_id(Long permic_person_id) {
-		this.permic_person_id = permic_person_id;
+	public void setType(Type type) {
+		this.isTypeSet = true;
+		this.type = type;
 	}
 
-	public Date getDateinterval() {
-		return dateinterval;
+	@XmlTransient
+	public boolean isEmployeeSet() {
+		return isEmployeeSet;
 	}
 
-	public void setDateinterval(Date dateinterval) {
-		this.dateinterval = dateinterval;
+	@XmlTransient
+	public void setEmployeeSet(boolean isEmployeeSet) {
+		this.isEmployeeSet = isEmployeeSet;
 	}
 
-	public Date getEndperiod() {
-		return endperiod;
+	@XmlTransient
+	public boolean isReasonSet() {
+		return isReasonSet;
 	}
 
-	public void setEndperiod(Date endperiod) {
-		this.endperiod = endperiod;
+	@XmlTransient
+	public void setReasonSet(boolean isReasonSet) {
+		this.isReasonSet = isReasonSet;
 	}
 
-	public Date getModifyendperiod() {
-		return modifyendperiod;
+	@XmlTransient
+	public boolean isDurationSet() {
+		return isDurationSet;
 	}
 
-	public void setModifyendperiod(Date modifyendperiod) {
-		this.modifyendperiod = modifyendperiod;
+	@XmlTransient
+	public void setDurationSet(boolean isDurationSet) {
+		this.isDurationSet = isDurationSet;
 	}
 
-	public Date getModifystartperiod() {
-		return modifystartperiod;
+	@XmlTransient
+	public boolean isEndDateSet() {
+		return isEndDateSet;
 	}
 
-	public void setModifystartperiod(Date modifystartperiod) {
-		this.modifystartperiod = modifystartperiod;
+	@XmlTransient
+	public void setEndDateSet(boolean isEndDateSet) {
+		this.isEndDateSet = isEndDateSet;
 	}
 
-	public String getModifypermit() {
-		return modifypermit;
+	@XmlTransient
+	public boolean isBookDateSet() {
+		return isBookDateSet;
 	}
 
-	public void setModifypermit(String modifypermit) {
-		this.modifypermit = modifypermit;
+	@XmlTransient
+	public void setBookDateSet(boolean isBookDateSet) {
+		this.isBookDateSet = isBookDateSet;
 	}
 
-	public Date getStartperiod() {
-		return startperiod;
+	@XmlTransient
+	public boolean isStartDateSet() {
+		return isStartDateSet;
 	}
 
-	public void setStartperiod(Date startperiod) {
-		this.startperiod = startperiod;
+	@XmlTransient
+	public void setStartDateSet(boolean isStartDateSet) {
+		this.isStartDateSet = isStartDateSet;
 	}
 
-	public Date getPeriod() {
-		return period;
+	@XmlTransient
+	public boolean isTypeSet() {
+		return isTypeSet;
 	}
 
-	public void setPeriod(Date period) {
-		this.period = period;
+	@XmlTransient
+	public void setTypeSet(boolean isTypeSet) {
+		this.isTypeSet = isTypeSet;
 	}
 
-	public String getPermit2() {
-		return permit2;
-	}
-
-	public void setPermit2(String permit2) {
-		this.permit2 = permit2;
-	}
-
-	public String getModifypermit2() {
-		return modifypermit2;
-	}
-
-	public void setModifypermit2(String modifypermit2) {
-		this.modifypermit2 = modifypermit2;
-	}
-
-	public String getModifyreason() {
-		return modifyreason;
-	}
-
-	public void setModifyreason(String modifyreason) {
-		this.modifyreason = modifyreason;
-	}
-
-	public String getModifytype() {
-		return modifytype;
-	}
-
-	public void setModifytype(String modifytype) {
-		this.modifytype = modifytype;
-	}
-
-	public Long getPermic_person_id2() {
-		return permic_person_id2;
-	}
-
-	public void setPermic_person_id2(Long permic_person_id2) {
-		this.permic_person_id2 = permic_person_id2;
-	}
-
-	public void setModifydateinterval(Date modifydateinterval) {
-		this.modifydateinterval = modifydateinterval;
-
-	}
-
-	public Date getModifydateinterval() {
-		return modifydateinterval;
-	}
 }

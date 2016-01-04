@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -93,14 +93,17 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@Column(name = "official_used")
 	private float official_used;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "employee", cascade = CascadeType.REMOVE)
 	private Set<EmployeeRole> employeeRoles = new HashSet<EmployeeRole>(0);
 
 	@Column(name = "lastlogin")
 	private Date lastLogin;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
 	private Set<Leavesetting> leavesettings = new HashSet<Leavesetting>(0);
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+	private Set<AttendRecord> attendRecords = new HashSet<AttendRecord>(0);
 
 	@Override
 	@Transient
@@ -321,6 +324,15 @@ public class Employee extends AbstractEntity implements UserDetails {
 	}
 
 	@XmlTransient
+	public Set<EmployeeRole> getEmployeeRoles() {
+		return employeeRoles;
+	}
+
+	public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
+		this.employeeRoles = employeeRoles;
+	}
+
+	@XmlTransient
 	public Set<Leavesetting> getLeavesettings() {
 		return leavesettings;
 	}
@@ -330,12 +342,12 @@ public class Employee extends AbstractEntity implements UserDetails {
 	}
 
 	@XmlTransient
-	public Set<EmployeeRole> getEmployeeRoles() {
-		return employeeRoles;
+	public Set<AttendRecord> getAttendRecords() {
+		return attendRecords;
 	}
 
-	public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
-		this.employeeRoles = employeeRoles;
+	public void setAttendRecords(Set<AttendRecord> attendRecords) {
+		this.attendRecords = attendRecords;
 	}
 
 }

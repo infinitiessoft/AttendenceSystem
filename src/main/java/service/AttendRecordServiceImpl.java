@@ -1,85 +1,146 @@
-//package service;
-//
-//import java.util.ArrayList;
-//import java.util.Collection;
-//import java.util.List;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//
-//import transfer.AttendRecordTransfer;
-//import dao.AttendRecordDao;
-//import entity.AttendRecord;
-//
-//public class AttendRecordServiceImpl implements AttendRecordService {
-//
-//	@Autowired
-//	private AttendRecordDao attendrecordDao;
-//
-//	public AttendRecordServiceImpl(AttendRecordDao attendrecordDao) {
-//		this.attendrecordDao = attendrecordDao;
-//	}
-//
-//	@Override
-//	public AttendRecordTransfer retrieve(long id) {
-//		return toAttendRecordTransfer(attendrecordDao.findOne(id));
-//	}
-//
-//	@Override
-//	public void delete(long id) {
-//		attendrecordDao.delete(id);
-//	}
-//
-//	@Override
-//	public AttendRecordTransfer save(AttendRecord attendrecord) {
-//		return toAttendRecordTransfer(attendrecordDao.save(attendrecord));
-//	}
-//
-//	@Override
-//	public AttendRecordTransfer update(long id, AttendRecord attendrecord) {
-//		return toAttendRecordTransfer(attendrecordDao.save(attendrecord));
-//	}
-//
-//	@Override
-//	public Collection<AttendRecordTransfer> findAll() {
-//		List<AttendRecordTransfer> rets = new ArrayList<AttendRecordTransfer>();
-//		for (AttendRecord attendrecord : attendrecordDao.findAll()) {
-//			rets.add(toAttendRecordTransfer(attendrecord));
-//		}
-//		return rets;
-//	}
-//
-//	private AttendRecordTransfer toAttendRecordTransfer(
-//			AttendRecord attendrecord) {
-//		AttendRecordTransfer ret = new AttendRecordTransfer();
-//		ret.setId(attendrecord.getId());
-//		ret.setModifypermit(attendrecord.getModifypermit());
-//		ret.setBook_date(attendrecord.getBook_date());
-//		ret.setDateinterval(attendrecord.getDateinterval());
-//		ret.setDuration(attendrecord.getDuration());
-//		ret.setEmployee_id(attendrecord.getEmployee_id());
-//		ret.setEnd_date(attendrecord.getEnd_date());
-//		ret.setModify_end_date(attendrecord.getModify_end_date());
-//		ret.setModify_date(attendrecord.getModify_date());
-//		ret.setModify_start_date(attendrecord.getModify_start_date());
-//		ret.setReason(attendrecord.getReason());
-//		ret.setPeriod(attendrecord.getPeriod());
-//		ret.setPermic_person_id(attendrecord.getPermic_person_id());
-//		ret.setPermic_person_id2(attendrecord.getPermic_person_id2());
-//		ret.setPermit(attendrecord.getPermit());
-//		ret.setPermit2(attendrecord.getPermit2());
-//		ret.setStart_date(attendrecord.getStart_date());
-//		ret.setEnd_date(attendrecord.getEnd_date());
-//		ret.setEndperiod(attendrecord.getEndperiod());
-//		ret.setModifyendperiod(attendrecord.getModifyendperiod());
-//		ret.setModifypermit2(attendrecord.getModifypermit2());
-//		ret.setModifyreason(attendrecord.getModifyreason());
-//		ret.setModifytype(attendrecord.getModifytype());
-//		ret.setStartperiod(attendrecord.getStartperiod());
-//		ret.setModifystartperiod(attendrecord.getModifystartperiod());
-//		ret.setModifydateinterval(attendrecord.getModifydateinterval());
-//
-//		return ret;
-//
-//	}
-//
-//}
+package service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
+import resources.specification.AttendRecordSpecification;
+import transfer.AttendRecordTransfer;
+import dao.AttendRecordDao;
+import dao.AttendRecordTypeDao;
+import dao.EmployeeDao;
+import entity.AttendRecord;
+import exceptions.AttendRecordNotFoundException;
+import exceptions.AttendRecordTypeNotFoundException;
+import exceptions.EmployeeNotFoundException;
+
+public class AttendRecordServiceImpl implements AttendRecordService {
+
+	private AttendRecordDao attendRecordDao;
+	private AttendRecordTypeDao attendRecordTypeDao;
+	private EmployeeDao employeeDao;
+
+	public AttendRecordServiceImpl(AttendRecordDao attendRecordDao,
+			AttendRecordTypeDao attendRecordTypeDao, EmployeeDao employeeDao) {
+		this.attendRecordDao = attendRecordDao;
+		this.attendRecordTypeDao = attendRecordTypeDao;
+		this.employeeDao = employeeDao;
+	}
+
+	@Override
+	public AttendRecordTransfer retrieve(long id) {
+		AttendRecord record = attendRecordDao.findOne(id);
+		if (record == null) {
+			throw new AttendRecordNotFoundException(id);
+		}
+		return toAttendRecordTransfer(record);
+	}
+
+	@Override
+	public void delete(long id) {
+		try {
+			attendRecordDao.delete(id);
+		} catch (NullPointerException e) {
+			throw new AttendRecordNotFoundException(id);
+		}
+	}
+
+	@Override
+	public AttendRecordTransfer save(AttendRecordTransfer attendRecord) {
+		attendRecord.setId(null);
+		AttendRecord dep = new AttendRecord();
+		setUpAttendRecord(attendRecord, dep);
+		return toAttendRecordTransfer(attendRecordDao.save(dep));
+	}
+
+	@Override
+	public AttendRecordTransfer update(long id, AttendRecordTransfer updated) {
+		AttendRecord attendRecord = attendRecordDao.findOne(id);
+		if (attendRecord == null) {
+			throw new AttendRecordNotFoundException(id);
+		}
+		setUpAttendRecord(updated, attendRecord);
+		return toAttendRecordTransfer(attendRecordDao.save(attendRecord));
+	}
+
+	@Override
+	public Page<AttendRecordTransfer> findAll(AttendRecordSpecification spec,
+			Pageable pageable) {
+		List<AttendRecordTransfer> transfers = new ArrayList<AttendRecordTransfer>();
+		Page<AttendRecord> attendRecords = attendRecordDao.findAll(spec,
+				pageable);
+		for (AttendRecord attendRecord : attendRecords) {
+			transfers.add(toAttendRecordTransfer(attendRecord));
+		}
+		Page<AttendRecordTransfer> rets = new PageImpl<AttendRecordTransfer>(
+				transfers, pageable, attendRecords.getTotalElements());
+		return rets;
+	}
+
+	private void setUpAttendRecord(AttendRecordTransfer transfer,
+			AttendRecord newEntry) {
+		if (transfer.isStartDateSet()) {
+			newEntry.setStartDate(transfer.getStartDate());
+		}
+		if (transfer.isEndDateSet()) {
+			newEntry.setEndDate(transfer.getEndDate());
+		}
+		if (transfer.isBookDateSet()) {
+			newEntry.setBookDate(transfer.getBookDate());
+		}
+		if (transfer.isReasonSet()) {
+			newEntry.setReason(transfer.getReason());
+		}
+		if (transfer.isDurationSet()) {
+			newEntry.setDuration(transfer.getDuration());
+		}
+		if (transfer.isTypeSet()) {
+			if (transfer.getType().isIdSet()) {
+				entity.AttendRecordType type = attendRecordTypeDao
+						.findOne(transfer.getType().getId());
+				if (type == null) {
+					throw new AttendRecordTypeNotFoundException(transfer
+							.getType().getId());
+				}
+				newEntry.setType(type);
+			}
+		}
+		if (transfer.isEmployeeSet()) {
+			if (transfer.getEmployee().isIdSet()) {
+				entity.Employee employee = employeeDao.findOne(transfer
+						.getEmployee().getId());
+				if (employee == null) {
+					throw new EmployeeNotFoundException(transfer.getEmployee()
+							.getId());
+				}
+				newEntry.setEmployee(employee);
+			}
+		}
+	}
+
+	private AttendRecordTransfer toAttendRecordTransfer(
+			AttendRecord attendRecord) {
+		AttendRecordTransfer ret = new AttendRecordTransfer();
+		ret.setId(attendRecord.getId());
+		AttendRecordTransfer.Employee employee = new AttendRecordTransfer.Employee();
+		employee.setId(attendRecord.getEmployee().getId());
+		employee.setName(attendRecord.getEmployee().getName());
+		AttendRecordTransfer.Type type = new AttendRecordTransfer.Type();
+		type.setId(attendRecord.getType().getId());
+		type.setName(attendRecord.getType().getName());
+		ret.setType(type);
+		ret.setBookDate(attendRecord.getBookDate());
+		ret.setDuration(attendRecord.getDuration());
+		ret.setEmployee(employee);
+		ret.setReason(attendRecord.getReason());
+		ret.setStartDate(attendRecord.getStartDate());
+		ret.setEndDate(attendRecord.getEndDate());
+
+		return ret;
+
+	}
+
+}
