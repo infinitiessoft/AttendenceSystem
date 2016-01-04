@@ -1,12 +1,16 @@
 package service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import transfer.LeavesettingTransfer;
 import dao.LeavesettingDao;
 import entity.Leavesetting;
+import exceptions.LeavesettingNotFoundException;
 
 public class LeavesettingServiceImpl implements LeavesettingService {
 
@@ -18,31 +22,72 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 
 	@Override
 	public LeavesettingTransfer retrieve(long id) {
-		return toLeavesettingTransfer(leavesettingDao.find(id));
+		Leavesetting leavesetting = leavesettingDao.findOne(id);
+		if (leavesetting == null) {
+			throw new LeavesettingNotFoundException(id);
+		}
+		return toLeavesettingTransfer(leavesetting);
 	}
 
 	@Override
 	public void delete(long id) {
-		leavesettingDao.delete(id);
-	}
-
-	@Override
-	public LeavesettingTransfer save(Leavesetting leavesetting) {
-		return toLeavesettingTransfer(leavesettingDao.save(leavesetting));
-	}
-
-	@Override
-	public LeavesettingTransfer update(long id, Leavesetting leavesetting) {
-		return toLeavesettingTransfer(leavesettingDao.save(leavesetting));
-	}
-
-	@Override
-	public Collection<LeavesettingTransfer> findAll() {
-		List<LeavesettingTransfer> rets = new ArrayList<LeavesettingTransfer>();
-
-		for (Leavesetting leavesetting : leavesettingDao.findAll()) {
-			rets.add(toLeavesettingTransfer(leavesetting));
+		try {
+			leavesettingDao.delete(id);
+		} catch (NullPointerException e) {
+			throw new LeavesettingNotFoundException(id);
 		}
+	}
+
+	@Override
+	public LeavesettingTransfer save(LeavesettingTransfer leavesetting) {
+		leavesetting.setId(null);
+		Leavesetting newEntry = new Leavesetting();
+		setUpLeavesetting(leavesetting, newEntry);
+		return toLeavesettingTransfer(leavesettingDao.save(newEntry));
+	}
+	
+	private void setUpLeavesetting(LeavesettingTransfer transfer, Leavesetting newLeavesetting) {
+		if (transfer.isNameSet()) {
+			newLeavesetting.setName(transfer.getName());
+		}
+		if (transfer.isPersonalSet()) {
+			newLeavesetting.setPersonal(transfer.getPersonal());
+		}
+		if (transfer.isPersonalUsedSet()) {
+			newLeavesetting.setPersonalUsed(transfer.getPersonalUsed());
+		}
+		if (transfer.isSickSet()) {
+			newLeavesetting.setSick(transfer.getSick());
+		}
+		if (transfer.isSickUsedSet()) {
+			newLeavesetting.setSickUsed(transfer.getSickUsed());
+		}
+		if (transfer.isAnnualSet()) {
+			newLeavesetting.setAnnual(transfer.getAnnual());
+		}
+		if (transfer.isAnnualUsedSet()) {
+			newLeavesetting.setAnnualUsed(transfer.getAnnualUsed());
+		}
+	}
+
+	@Override
+	public LeavesettingTransfer update(long id, LeavesettingTransfer updated) {
+		Leavesetting leavesetting = leavesettingDao.findOne(id);
+		if (leavesetting == null) {
+			throw new LeavesettingNotFoundException(id);
+		}
+		setUpLeavesetting(updated, leavesetting);
+		return toLeavesettingTransfer(leavesettingDao.save(leavesetting));
+	}
+
+	@Override
+	public Page<LeavesettingTransfer> findAll(Pageable pageable) {
+		List<LeavesettingTransfer> transfers = new ArrayList<LeavesettingTransfer>();
+		Page<Leavesetting> leavesettings = leavesettingDao.findAll(pageable);
+		for (Leavesetting leavesetting : leavesettings) {
+			transfers.add(toLeavesettingTransfer(leavesetting));
+		}
+		Page<LeavesettingTransfer> rets = new PageImpl<LeavesettingTransfer>(transfers, pageable, leavesettings.getTotalElements());
 		return rets;
 	}
 
@@ -51,7 +96,12 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 		LeavesettingTransfer ret = new LeavesettingTransfer();
 		ret.setId(leavesetting.getId());
 		ret.setName(leavesetting.getName());
-
+		ret.setPersonal(leavesetting.getPersonal());
+		ret.setPersonalUsed(leavesetting.getPersonalUsed());
+		ret.setSick(leavesetting.getSick());
+		ret.setSickUsed(leavesetting.getSickUsed());
+		ret.setAnnual(leavesetting.getAnnual());
+		ret.setAnnualUsed(leavesetting.getAnnualUsed());
 		return ret;
 	}
 

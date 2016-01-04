@@ -1,9 +1,9 @@
 package service;
 
-import java.util.Collection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import transfer.LeavesettingTransfer;
-import entity.Leavesetting;
 
 public interface LeavesettingService {
 
@@ -11,10 +11,10 @@ public interface LeavesettingService {
 
 	public void delete(long id);
 
-	public LeavesettingTransfer save(Leavesetting leavesetting);
+	public LeavesettingTransfer save(LeavesettingTransfer leavesetting);
 
-	public Collection<LeavesettingTransfer> findAll();
+	public Page<LeavesettingTransfer> findAll(Pageable pageable);
 
-	public LeavesettingTransfer update(long id, Leavesetting leavesetting);
+	public LeavesettingTransfer update(long id, LeavesettingTransfer leavesetting);
 
 }
