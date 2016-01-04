@@ -74,6 +74,10 @@
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="employeeRoleDao" />
 	</bean>
+	
+	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
+		<constructor-arg ref="leavesettingDao" />
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
@@ -104,6 +108,7 @@
 		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="employeeRoleDao" />
 		<constructor-arg ref="passwordEncoder" />
+		<constructor-arg ref="leavesettingDao" />
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">

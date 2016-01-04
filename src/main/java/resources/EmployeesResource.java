@@ -19,7 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 
-import resources.specification.EmployeeRoleSpecification;
 import resources.specification.EmployeeSpecification;
 import resources.specification.SimplePageRequest;
 import service.EmployeeRoleService;

@@ -99,8 +99,8 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@Column(name = "lastlogin")
 	private Date lastLogin;
 
-	@OneToMany(mappedBy = "employee")
-	private List<Leavesetting> leavesettings;
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+	private Set<Leavesetting> leavesettings = new HashSet<Leavesetting>(0);
 
 	@Override
 	@Transient
@@ -321,11 +321,11 @@ public class Employee extends AbstractEntity implements UserDetails {
 	}
 
 	@XmlTransient
-	public List<Leavesetting> getLeavesettings() {
+	public Set<Leavesetting> getLeavesettings() {
 		return leavesettings;
 	}
 
-	public void setLeavesettings(List<Leavesetting> leavesettings) {
+	public void setLeavesettings(Set<Leavesetting> leavesettings) {
 		this.leavesettings = leavesettings;
 	}
 

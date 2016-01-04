@@ -1,10 +1,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
 			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
@@ -45,34 +46,39 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
 
-	<bean id="employeeDao" class="dao.jpa.JpaEmployeeDao">
-	</bean>
+	<jpa:repositories base-package="dao" />
 
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
-	</bean>
-
-	<bean id="departmentDao" class="dao.jpa.JpaDepartmentDao">
+		<constructor-arg ref="departmentDao" />
+		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
 	<bean id="departmentService" class="service.DepartmentServiceImpl">
 		<constructor-arg ref="departmentDao" />
 	</bean>
 
-	<bean id="jobTypeDao" class="dao.jpa.JpaJobTypeDao">
-	</bean>
-
-	<bean id="jobTypeService" class="service.JobTypeServiceImpl">
-		<constructor-arg ref="jobTypeDao" />
-	</bean>
-
-	<bean id="roleDao" class="dao.jpa.JpaRoleDao">
-	</bean>
-
 	<bean id="roleService" class="service.RoleServiceImpl">
 		<constructor-arg ref="roleDao" />
 	</bean>
 
+	<bean id="userDetailDao" class="dao.jpa.JpaUserDetailDao">
+		<constructor-arg ref="employeeDao" />
+	</bean>
+
+	<bean id="attendRecordTypeService" class="service.AttendRecordTypeServiceImpl">
+		<constructor-arg ref="attendRecordTypeDao" />
+	</bean>
+
+	<bean id="employeeRoleService" class="service.EmployeeRoleServiceImpl">
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="roleDao" />
+		<constructor-arg ref="employeeRoleDao" />
+	</bean>
+
+	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
+		<constructor-arg ref="leavesettingDao" />
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
