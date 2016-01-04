@@ -8,5 +8,6 @@ import entity.EmployeeRole;
 public interface EmployeeRoleDao extends
 		PagingAndSortingRepository<EmployeeRole, Long>,
 		JpaSpecificationExecutor<EmployeeRole> {
+	EmployeeRole findByEmployeeIdAndRoleId(Long employeeId, Long roleId);
 
 }

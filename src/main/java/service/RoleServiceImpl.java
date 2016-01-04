@@ -70,7 +70,7 @@ public class RoleServiceImpl implements RoleService {
 		return rets;
 	}
 
-	private RoleTransfer toRoleTransfer(Role role) {
+	public static RoleTransfer toRoleTransfer(Role role) {
 		RoleTransfer ret = new RoleTransfer();
 		ret.setId(role.getId());
 		ret.setName(role.getName());

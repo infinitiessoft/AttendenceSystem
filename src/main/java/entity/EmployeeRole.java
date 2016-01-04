@@ -11,9 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "employee_role")
+@Table(name = "employee_role", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"role_id", "employee_id" }))
 public class EmployeeRole implements Serializable {
 	private static final long serialVersionUID = 7711505597348200997L;
 

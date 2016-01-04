@@ -64,9 +64,15 @@
 	<bean id="userDetailDao" class="dao.jpa.JpaUserDetailDao">
 		<constructor-arg ref="employeeDao" />
 	</bean>
-	
+
 	<bean id="attendRecordTypeService" class="service.AttendRecordTypeServiceImpl">
 		<constructor-arg ref="attendRecordTypeDao" />
+	</bean>
+
+	<bean id="employeeRoleService" class="service.EmployeeRoleServiceImpl">
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="roleDao" />
+		<constructor-arg ref="employeeRoleDao" />
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
@@ -108,8 +114,7 @@
 	</security:authentication-manager>
 
 	<security:http realm="Protected API" use-expressions="true"
-		auto-config="true"
-		authentication-manager-ref="authenticationManager">
+		auto-config="true" authentication-manager-ref="authenticationManager">
 		<security:intercept-url pattern="/" access="permitAll" />
 		<security:intercept-url pattern="/index.html"
 			access="permitAll" />
@@ -118,6 +123,8 @@
 		<security:intercept-url pattern="/list-employees"
 			access="permitAll" />
 		<security:intercept-url pattern="/edit-employee"
+			access="permitAll" />
+		<security:intercept-url pattern="/edit-profile"
 			access="permitAll" />
 		<security:intercept-url pattern="/list-departments"
 			access="permitAll" />

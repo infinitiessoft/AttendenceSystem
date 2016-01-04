@@ -19,10 +19,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 
+import resources.specification.EmployeeRoleSpecification;
 import resources.specification.EmployeeSpecification;
 import resources.specification.SimplePageRequest;
+import service.EmployeeRoleService;
 import service.EmployeeService;
 import transfer.EmployeeTransfer;
+import transfer.RoleTransfer;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,6 +35,9 @@ public class EmployeesResource {
 
 	@Autowired
 	private EmployeeService employeeService;
+
+	@Autowired
+	private EmployeeRoleService employeeRoleService;
 
 	@Autowired
 	@Qualifier("authenticationManager")
@@ -72,33 +78,51 @@ public class EmployeesResource {
 	// ** Method to find All the employees in the list
 
 	@GET
-	public Page<EmployeeTransfer> findallEmployee(
+	public Page<EmployeeTransfer> findAllEmployee(
 			@BeanParam SimplePageRequest pageRequest,
 			@BeanParam EmployeeSpecification spec) {
 		return employeeService.findAll(spec, pageRequest);
 	}
 
-	// @GET
-	// public UserTransfer getEmployee() {
-	// Authentication authentication = SecurityContextHolder.getContext()
-	// .getAuthentication();
-	// Object principal = authentication.getPrincipal();
-	// if (principal instanceof String
-	// && ((String) principal).equals("anonymousUser")) {
-	// throw new WebApplicationException(401);
-	// }
-	// UserDetails userDetails = (UserDetails) principal;
-	//
-	// return new UserTransfer(userDetails.getUsername(),
-	// this.createRoleMap(userDetails));
-	// }
+	@GET
+	@Path(value = "{employeeid}/roles/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Page<RoleTransfer> findAllRole(@PathParam("employeeid") long id,
+			@BeanParam SimplePageRequest pageRequest) {
+		EmployeeRoleSpecification spec = new EmployeeRoleSpecification();
+		spec.setEmployeeId(id);
+		return employeeRoleService.findAll(spec, pageRequest);
+	}
 
-	// private Map<String, Boolean> createRoleMap(UserDetails userDetails) {
-	// Map<String, Boolean> roles = new HashMap<String, Boolean>();
-	// for (GrantedAuthority authority : userDetails.getAuthorities()) {
-	// roles.put(authority.getAuthority(), Boolean.TRUE);
-	// }
-	// return roles;
-	// }
+	@GET
+	@Path(value = "{employeeid}/roles/{roleid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public RoleTransfer findRole(@PathParam("employeeid") long employeeId,
+			@PathParam("roleid") long roleId) {
+		return employeeRoleService
+				.findByEmployeeIdAndRoleId(employeeId, roleId);
+	}
+
+	@PUT
+	@Path(value = "{employeeid}/roles/{roleid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response assignRoleToEmployee(
+			@PathParam("employeeid") long employeeId,
+			@PathParam("roleid") long roleId) {
+		employeeRoleService.assignRoleToEmployee(employeeId, roleId);
+		return Response.status(Status.NO_CONTENT)
+				.type(MediaType.APPLICATION_JSON).build();
+	}
+
+	@DELETE
+	@Path(value = "{employeeid}/roles/{roleid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response revokeRoleToEmployee(
+			@PathParam("employeeid") long employeeId,
+			@PathParam("roleid") long roleId) {
+		employeeRoleService.delete(employeeId, roleId);
+		return Response.status(Status.NO_CONTENT)
+				.type(MediaType.APPLICATION_JSON).build();
+	}
 
 }

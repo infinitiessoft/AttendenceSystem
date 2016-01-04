@@ -3,7 +3,7 @@ angular
 				'attendance',
 				[ 'ngRoute', 'ngCookies',
 						'formly', 'formlyBootstrap', 'ui.bootstrap',
-						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ])
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ])
 		.config(
 				[
 						'$routeProvider',
@@ -35,6 +35,24 @@ angular
 													}
 												}
 											});
+							$routeProvider
+							.when(
+									'/edit-profile/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-profile',
+										resolve : {
+											employee : function(
+													employeeService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return employeeService.get(id);
+											}
+										}
+									});
 
 							$routeProvider.when('/login', {
 								templateUrl : 'partials/login.html',
@@ -163,11 +181,11 @@ angular
 							var obj = {};
 							obj.list = function(queries) {
 								return $http.get(serviceBase, {params:queries});
-							}
+							};
 
 							obj.get = function(id) {
 								return $http.get(serviceBase  + id);
-							}
+							};
 
 							obj.insert = function(employee) {
 								return $http.post(serviceBase, employee);
@@ -196,11 +214,11 @@ angular
 											var obj = {};
 											obj.list = function(queries) {
 												return $http.get(serviceBase, {params:queries});
-											}
+											};
 
 											obj.get = function(id) {
 												return $http.get(serviceBase  + id);
-											}
+											};
 
 											obj.insert = function(department) {
 												return $http.post(serviceBase, department).then(
@@ -225,42 +243,66 @@ angular
 											return obj;
 										} ])
 										.factory(
-								'roleService',
+								'employeeRoleService',
 								[
 										'$http',
 										function($http) {
-											var serviceBase = 'rest/role/';
+											var serviceBase = 'rest/employee/';
 											var obj = {};
-											obj.list = function(queries) {
-												return $http.get(serviceBase, {params:queries});
-											}
-
-											obj.get = function(id) {
-												return $http.get(serviceBase  + id);
-											}
-
-											obj.insert = function(role) {
-												return $http.post(serviceBase, role).then(
-														function(results) {
-															return results;
-														});
+											obj.list = function(employeeid) {
+												return $http.get(serviceBase+employeeid+"/roles");
 											};
 
-											obj.update = function(id, role) {
-												return $http.put(serviceBase  + id,
-														role).then(function(results) {
-													return results;
-												});
+											obj.get = function(employeeid,roleid) {
+												return $http.get(serviceBase+employeeid+"/roles/"+roleid);
+											};
+
+											obj.insert = function(employeeid,roleid) {
+												return $http.put(serviceBase+employeeid+"/roles/"+roleid);
 											};
 											
 											obj.remove = function(id) {
-												return $http.delete(serviceBase + id).then(function(status) {
-													return status;
-												});
+												return $http.delete(serviceBase+employeeid+"/roles/"+roleid);
 											};
 
 											return obj;
 										} ]).factory(
+												'roleService',
+												[
+														'$http',
+														function($http) {
+															var serviceBase = 'rest/role/';
+															var obj = {};
+															obj.list = function(queries) {
+																return $http.get(serviceBase, {params:queries});
+															};
+
+															obj.get = function(id) {
+																return $http.get(serviceBase  + id);
+															};
+
+															obj.insert = function(role) {
+																return $http.post(serviceBase, role).then(
+																		function(results) {
+																			return results;
+																		});
+															};
+
+															obj.update = function(id, role) {
+																return $http.put(serviceBase  + id,
+																		role).then(function(results) {
+																	return results;
+																});
+															};
+															
+															obj.remove = function(id) {
+																return $http.delete(serviceBase + id).then(function(status) {
+																	return status;
+																});
+															};
+
+															return obj;
+														} ]).factory(
 												'recordtypeService',
 												[
 														'$http',
@@ -269,11 +311,11 @@ angular
 															var obj = {};
 															obj.list = function(queries) {
 																return $http.get(serviceBase, {params:queries});
-															}
+															};
 
 															obj.get = function(id) {
 																return $http.get(serviceBase  + id);
-															}
+															};
 
 															obj.insert = function(recordtype) {
 																return $http.post(serviceBase, recordtype).then(

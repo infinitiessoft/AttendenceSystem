@@ -1,5 +1,5 @@
 angular
-		.module('edit-employee', [ 'formly', 'formlyBootstrap' ])
+		.module('edit-profile', [ 'formly', 'formlyBootstrap' ])
 		.constant('formlyExampleApiCheck', apiCheck())
 		.config(
 				function config(formlyConfigProvider, formlyExampleApiCheck) {
@@ -75,16 +75,14 @@ angular
 								}
 							});
 				}).controller(
-				'edit-employee',
+				'edit-profile',
 				function($rootScope, $scope, $routeParams, $location,
 						formlyVersion, employee, employeeService,
 						departmentService, roleService, employeeRoleService) {
 					var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
-					$rootScope.title = (id > 0) ? 'Edit Employee'
-							: 'Add Employee';
-					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
+					$rootScope.title = 'Profile'
+					$rootScope.buttonText = 'Update';
 					$scope.departments = [];
-					$scope.roles = [];
 					var vm = this;
 					$scope.vm = vm;
 					vm.onSubmit = onSubmit;
@@ -99,27 +97,7 @@ angular
 
 					vm.model = employee.data;
 					vm.confirmationModel = {};
-					vm.roles = {
-						role : {}
-					};
 
-					roleService.list().then(function(status) {
-						var deps = status.data.content;
-						angular.forEach(deps, function(dep) {
-							$scope.roles.push({
-								name : dep.name,
-								value : dep.id
-							});
-						});
-					});
-					if (id > 0) {
-						employeeRoleService.list(id).then(function(status) {
-							var roles = status.data.content;
-							angular.forEach(roles, function(role) {
-								vm.roles.role = role;
-							});
-						});
-					}
 					departmentService.list().then(function(status) {
 						var deps = status.data.content;
 						angular.forEach(deps, function(dep) {
@@ -173,16 +151,7 @@ angular
 							fieldToMatch : 'password',
 							modelToMatch : vm.model
 						}
-					}, {
-						key : 'dateOfJoined',
-						type : 'datepicker',
-						templateOptions : {
-							label : 'Date of joined',
-							type : 'text',
-							datepickerPopup : 'dd-MMMM-yyyy',
-							required : true
-						}
-					}, {
+					},{
 						key : 'email',
 						type : 'input',
 						templateOptions : {
@@ -206,42 +175,9 @@ angular
 								value : 'male'
 							} ]
 						}
-					}, {
-						key : 'department',
-						fieldGroup : [ {
-							key : 'id',
-							type : 'select',
-							templateOptions : {
-								required : true,
-								label : 'Department',
-								options : $scope.departments
-							}
-						} ],
-					}, {
-						key : 'role',
-						model : vm.roles,
-						fieldGroup : [ {
-							key : 'id',
-							type : 'radio',
-							templateOptions : {
-								label : 'Role',
-								required : true,
-								options : $scope.roles
-							}
-						} ]
-					} ];
+					}];
 					function onSubmit() {
-						if (id > 0) {
-							employeeService.update(id, vm.model);
-						} else {
-							employeeService.insert(vm.model).success(
-									function(status) {
-										var employeeid = status.id;
-										var roleid = vm.roles.role.id;
-										employeeRoleService.insert(employeeid,
-												roleid);
-									});
-						}
+						employeeService.update(id, vm.model);
 						$location.path('/list-employees');
 					}
 
