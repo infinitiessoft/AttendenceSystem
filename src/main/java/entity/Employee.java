@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -102,6 +103,9 @@ public class Employee extends AbstractEntity implements UserDetails {
 	private Set<Role> roles = new HashSet<Role>();
 	@Column(name = "lastlogin")
 	private Date lastLogin;
+	
+	@OneToMany(mappedBy = "employee")
+	private List<Leavesetting> leavesettings;
 
 	@Override
 	@Transient
@@ -327,6 +331,15 @@ public class Employee extends AbstractEntity implements UserDetails {
 
 	public void setEmployees(Set<Employee> employees) {
 		this.employees = employees;
+	}
+
+	@XmlTransient
+	public List<Leavesetting> getLeavesettings() {
+		return leavesettings;
+	}
+
+	public void setLeavesettings(List<Leavesetting> leavesettings) {
+		this.leavesettings = leavesettings;
 	}
 
 }

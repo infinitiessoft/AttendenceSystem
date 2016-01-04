@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -28,17 +30,27 @@ public class Leavesetting extends AbstractEntity {
 	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "official", nullable = false)
-	private Long official;
-
 	@Column(name = "personal", nullable = false)
 	private Long personal;
+	
+	@Column(name = "personalUsed", nullable = false)
+	private Long personalUsed;
 
 	@Column(name = "sick", nullable = false)
 	private Long sick;
+	
+	@Column(name = "sickUsed", nullable = false)
+	private Long sickUsed;
 
-	@Column(name = "special", nullable = false)
-	private Long special;
+	@Column(name = "annual", nullable = false)
+	private Long annual;
+	
+	@Column(name = "annualUsed", nullable = false)
+	private Long annualUsed;
+	
+	@ManyToOne
+	@JoinColumn(name = "employee")
+	private Employee employee;
 
 	public Long getId() {
 		return id;
@@ -54,14 +66,6 @@ public class Leavesetting extends AbstractEntity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Long getOfficial() {
-		return official;
-	}
-
-	public void setOfficial(Long official) {
-		this.official = official;
 	}
 
 	public Long getPersonal() {
@@ -80,77 +84,48 @@ public class Leavesetting extends AbstractEntity {
 		this.sick = sick;
 	}
 
-	public Long getSpecial() {
-		return special;
+	public Long getAnnual() {
+		return annual;
 	}
 
-	public void setSpecial(Long special) {
-		this.special = special;
+	public void setAnnual(Long annual) {
+		this.annual = annual;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
+	public Long getPersonalUsed() {
+		return personalUsed;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Leavesetting other = (Leavesetting) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (official == null) {
-			if (other.official != null)
-				return false;
-		} else if (!official.equals(other.official))
-			return false;
-		if (personal == null) {
-			if (other.personal != null)
-				return false;
-		} else if (!personal.equals(other.personal))
-			return false;
-		if (sick == null) {
-			if (other.sick != null)
-				return false;
-		} else if (!sick.equals(other.sick))
-			return false;
-		if (special == null) {
-			if (other.special != null)
-				return false;
-		} else if (!special.equals(other.special))
-			return false;
-		return true;
+	public void setPersonalUsed(Long personalUsed) {
+		this.personalUsed = personalUsed;
 	}
 
-	public Leavesetting(Long id, String name, Long official, Long personal, Long sick, Long special) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.official = official;
-		this.personal = personal;
-		this.sick = sick;
-		this.special = special;
+	public Long getSickUsed() {
+		return sickUsed;
+	}
+
+	public void setSickUsed(Long sickUsed) {
+		this.sickUsed = sickUsed;
+	}
+
+	public Long getAnnualUsed() {
+		return annualUsed;
+	}
+
+	public void setAnnualUsed(Long annualUsed) {
+		this.annualUsed = annualUsed;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 	public Leavesetting() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }
