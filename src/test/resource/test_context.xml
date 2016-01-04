@@ -75,6 +75,12 @@
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="employeeRoleDao" />
 	</bean>
+	
+	<bean id="attendRecordService" class="service.AttendRecordServiceImpl">
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="attendRecordDao" />
+		<constructor-arg ref="attendRecordTypeDao" />
+	</bean>
 
 	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
 		<constructor-arg ref="leavesettingDao" />
@@ -88,7 +94,7 @@
 
 	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
 
-	<!-- SPRING SECURITY SETUP -->
+		<!-- SPRING SECURITY SETUP -->
 
 	<bean id="passwordEncoder" class="security.SHA1PasswordEncoder">
 	</bean>
@@ -103,10 +109,44 @@
 
 	<security:authentication-manager id="authenticationManager">
 		<security:authentication-provider
-			user-service-ref="employeeDao">
+			user-service-ref="userDetailDao">
 			<security:password-encoder ref="passwordEncoder"></security:password-encoder>
 		</security:authentication-provider>
 	</security:authentication-manager>
+
+	<security:http realm="Protected API" use-expressions="true"
+		auto-config="true" authentication-manager-ref="authenticationManager">
+		<security:intercept-url pattern="/" access="permitAll" />
+		<security:intercept-url pattern="/index.html"
+			access="permitAll" />
+		<security:intercept-url pattern="/login"
+			access="permitAll" />
+		<security:intercept-url pattern="/list-employees"
+			access="permitAll" />
+		<security:intercept-url pattern="/edit-employee"
+			access="permitAll" />
+		<security:intercept-url pattern="/edit-profile"
+			access="permitAll" />
+		<security:intercept-url pattern="/list-departments"
+			access="permitAll" />
+		<security:intercept-url pattern="/edit-department"
+			access="permitAll" />
+		<security:intercept-url pattern="/rest/auth"
+			access="permitAll" />
+		<security:intercept-url pattern="/rest/**"
+			access="isAuthenticated()" />
+
+		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
+			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
+			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 
+			/> <security:intercept-url method="DELETE" pattern="/rest/news/**" access="hasRole('admin')" 
+			/> -->
+		<security:csrf token-repository-ref="csrfTokenRepository" />
+		<security:custom-filter ref="csrfHeaderFilter"
+			after="CSRF_FILTER" />
+		<security:http-basic />
+		<security:logout />
+	</security:http>
 
 
 </beans>

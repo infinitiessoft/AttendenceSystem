@@ -50,7 +50,7 @@ public class Leavesetting extends AbstractEntity {
 	private Long annualUsed;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "employee", nullable = false)
+	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
 
 	public Long getId() {
