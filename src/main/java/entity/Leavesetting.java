@@ -150,7 +150,6 @@ public class Leavesetting extends AbstractEntity {
 
 	public Leavesetting() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

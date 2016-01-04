@@ -96,6 +96,7 @@
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="departmentDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
+		<constructor-arg ref="employeeRoleDao" />
 		<constructor-arg ref="passwordEncoder" />
 	</bean>
 

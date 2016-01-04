@@ -5,6 +5,7 @@
 		transaction-type="RESOURCE_LOCAL">
 		<class>entity.Employee</class>
 		<class>entity.Role</class>
+		<class>entity.EmployeeRole</class>
 		<class>entity.Department</class>
 		<class>entity.JobType</class>
 		<class>entity.AttendRecordType</class>

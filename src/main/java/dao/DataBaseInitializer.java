@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import entity.AttendRecordType;
 import entity.Department;
 import entity.Employee;
+import entity.EmployeeRole;
 import entity.Gender;
 import entity.Role;
 
@@ -16,16 +17,18 @@ public class DataBaseInitializer {
 	private RoleDao roleDao;
 	private DepartmentDao depDao;
 	private AttendRecordTypeDao recordTypeDao;
+	private EmployeeRoleDao employeeRoleDao;
 	private PasswordEncoder passwordEncoder;
 
 	public DataBaseInitializer(EmployeeDao employeeDao, RoleDao roleDao,
 			DepartmentDao depDao, AttendRecordTypeDao recordTypeDao,
-			PasswordEncoder passwordEncoder) {
+			EmployeeRoleDao employeeRoleDao, PasswordEncoder passwordEncoder) {
 		super();
 		this.employeeDao = employeeDao;
 		this.roleDao = roleDao;
 		this.depDao = depDao;
 		this.recordTypeDao = recordTypeDao;
+		this.employeeRoleDao = employeeRoleDao;
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -33,19 +36,19 @@ public class DataBaseInitializer {
 		AttendRecordType annual = new AttendRecordType();
 		annual.setName("annual");
 		recordTypeDao.save(annual);
-		
+
 		AttendRecordType sick = new AttendRecordType();
 		sick.setName("sick");
 		recordTypeDao.save(sick);
-		
+
 		AttendRecordType personal = new AttendRecordType();
 		personal.setName("personal");
 		recordTypeDao.save(personal);
-		
+
 		AttendRecordType official = new AttendRecordType();
 		official.setName("official");
 		recordTypeDao.save(official);
-		
+
 		AttendRecordType other = new AttendRecordType();
 		other.setName("other");
 		recordTypeDao.save(other);
@@ -69,12 +72,14 @@ public class DataBaseInitializer {
 		admin.setGender(Gender.male.name());
 		role = roleDao.save(role);
 		user = roleDao.save(user);
-		admin.getRoles().add(role);
-		admin.getRoles().add(user);
-		// dep = depDao.find(dep.getId());
 		admin.setDepartment(dep);
 		this.employeeDao.save(admin);
-		dep.getEmployees().add(admin);
+
+		EmployeeRole adminEmployee = new EmployeeRole();
+		adminEmployee.setEmployee(admin);
+		adminEmployee.setRole(role);
+		employeeRoleDao.save(adminEmployee);
+
 	}
 
 }

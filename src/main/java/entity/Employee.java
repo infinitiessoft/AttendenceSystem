@@ -13,8 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -94,12 +92,9 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@Column(name = "official_used")
 	private float official_used;
 
-	// @ManyToOne(fetch = FetchType.LAZY)
-	// @JoinColumn(name = "leaveSetting")
-	// private LeaveSetting leaveSetting;
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "employee_role", joinColumns = @JoinColumn(name = "employee_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles = new HashSet<Role>();
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "employee")
+	private Set<EmployeeRole> employeeRoles = new HashSet<EmployeeRole>(0);
+
 	@Column(name = "lastlogin")
 	private Date lastLogin;
 
@@ -107,14 +102,15 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@Transient
 	@XmlTransient
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<Role> roles = this.getRoles();
+		Set<EmployeeRole> roles = this.getEmployeeRoles();
 		if (roles == null) {
 			return Collections.emptyList();
 		}
 
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-		for (Role role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		for (EmployeeRole role : roles) {
+			authorities
+					.add(new SimpleGrantedAuthority(role.getRole().getName()));
 		}
 
 		return authorities;
@@ -279,14 +275,6 @@ public class Employee extends AbstractEntity implements UserDetails {
 		this.official_used = official_used;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
 	public Date getLastLogin() {
 		return lastLogin;
 	}
@@ -327,6 +315,15 @@ public class Employee extends AbstractEntity implements UserDetails {
 
 	public void setEmployees(Set<Employee> employees) {
 		this.employees = employees;
+	}
+
+	@XmlTransient
+	public Set<EmployeeRole> getEmployeeRoles() {
+		return employeeRoles;
+	}
+
+	public void setEmployeeRoles(Set<EmployeeRole> employeeRoles) {
+		this.employeeRoles = employeeRoles;
 	}
 
 }
