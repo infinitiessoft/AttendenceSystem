@@ -84,6 +84,13 @@
 
 	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
 		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="attendRecordTypeDao" />
+	</bean>
+	
+	<bean id="employeeLeaveService" class="service.EmployeeLeaveServiceImpl">
+		<constructor-arg ref="employeeLeaveDao" />
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="leavesettingDao" />
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />

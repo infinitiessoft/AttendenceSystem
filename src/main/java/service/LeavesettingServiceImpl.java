@@ -1,23 +1,33 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import transfer.LeavesettingTransfer;
+import transfer.LeavesettingTransfer.Type;
+import dao.AttendRecordTypeDao;
 import dao.LeavesettingDao;
+import entity.AttendRecordType;
 import entity.Leavesetting;
+import exceptions.AttendRecordTypeNotFoundException;
 import exceptions.LeavesettingNotFoundException;
+import resources.specification.LeavesettingSpecification;
 
 public class LeavesettingServiceImpl implements LeavesettingService {
 
 	private LeavesettingDao leavesettingDao;
+	private AttendRecordTypeDao attendRecordTypeDao;
 
-	public LeavesettingServiceImpl(LeavesettingDao leavesettingDao) {
+	public LeavesettingServiceImpl(LeavesettingDao leavesettingDao, AttendRecordTypeDao attendRecordTypeDao) {
 		this.leavesettingDao = leavesettingDao;
+		this.attendRecordTypeDao = attendRecordTypeDao;
 	}
 
 	@Override
@@ -33,7 +43,7 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 	public void delete(long id) {
 		try {
 			leavesettingDao.delete(id);
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			throw new LeavesettingNotFoundException(id);
 		}
 	}
@@ -44,30 +54,6 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 		Leavesetting newEntry = new Leavesetting();
 		setUpLeavesetting(leavesetting, newEntry);
 		return toLeavesettingTransfer(leavesettingDao.save(newEntry));
-	}
-	
-	private void setUpLeavesetting(LeavesettingTransfer transfer, Leavesetting newLeavesetting) {
-		if (transfer.isNameSet()) {
-			newLeavesetting.setName(transfer.getName());
-		}
-		if (transfer.isPersonalSet()) {
-			newLeavesetting.setPersonal(transfer.getPersonal());
-		}
-		if (transfer.isPersonalUsedSet()) {
-			newLeavesetting.setPersonalUsed(transfer.getPersonalUsed());
-		}
-		if (transfer.isSickSet()) {
-			newLeavesetting.setSick(transfer.getSick());
-		}
-		if (transfer.isSickUsedSet()) {
-			newLeavesetting.setSickUsed(transfer.getSickUsed());
-		}
-		if (transfer.isAnnualSet()) {
-			newLeavesetting.setAnnual(transfer.getAnnual());
-		}
-		if (transfer.isAnnualUsedSet()) {
-			newLeavesetting.setAnnualUsed(transfer.getAnnualUsed());
-		}
 	}
 
 	@Override
@@ -81,28 +67,46 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 	}
 
 	@Override
-	public Page<LeavesettingTransfer> findAll(Pageable pageable) {
+	public Page<LeavesettingTransfer> findAll(LeavesettingSpecification spec, Pageable pageable) {
 		List<LeavesettingTransfer> transfers = new ArrayList<LeavesettingTransfer>();
-		Page<Leavesetting> leavesettings = leavesettingDao.findAll(pageable);
-		for (Leavesetting leavesetting : leavesettings) {
+		Page<Leavesetting> leavesettings = leavesettingDao.findAll(spec, pageable);
+		for(Leavesetting leavesetting : leavesettings) {
 			transfers.add(toLeavesettingTransfer(leavesetting));
 		}
 		Page<LeavesettingTransfer> rets = new PageImpl<LeavesettingTransfer>(transfers, pageable, leavesettings.getTotalElements());
 		return rets;
 	}
-
-	private LeavesettingTransfer toLeavesettingTransfer(
-			Leavesetting leavesetting) {
-		LeavesettingTransfer ret = new LeavesettingTransfer();
-		ret.setId(leavesetting.getId());
-		ret.setName(leavesetting.getName());
-		ret.setPersonal(leavesetting.getPersonal());
-		ret.setPersonalUsed(leavesetting.getPersonalUsed());
-		ret.setSick(leavesetting.getSick());
-		ret.setSickUsed(leavesetting.getSickUsed());
-		ret.setAnnual(leavesetting.getAnnual());
-		ret.setAnnualUsed(leavesetting.getAnnualUsed());
-		return ret;
+	
+	private void setUpLeavesetting(LeavesettingTransfer transfer, Leavesetting newEntry) {
+		if (transfer.isTypeSet()) {
+			if (transfer.getType().isIdSet()) {
+				entity.AttendRecordType type = attendRecordTypeDao.findOne(transfer.getType().getId());
+				if (type == null) {
+					throw new AttendRecordTypeNotFoundException(transfer.getType().getId());
+				}
+				newEntry.setType(type);
+			}
+		}
+		if (transfer.isYearSet()) {
+			newEntry.setYear(transfer.getYear());
+		}
+		if (transfer.isDaysSet()) {
+			newEntry.setDays(transfer.getDays());
+		}
 	}
 
+	private LeavesettingTransfer toLeavesettingTransfer(Leavesetting leavesetting) {
+		LeavesettingTransfer ret = new LeavesettingTransfer();
+		ret.setId(leavesetting.getId());
+		ret.setYear(leavesetting.getYear());
+		ret.setDays(leavesetting.getDays());
+		
+		AttendRecordType attendRecordType = leavesetting.getType();
+		Type type = new LeavesettingTransfer.Type();
+		type.setId(attendRecordType.getId());
+		type.setName(attendRecordType.getName());
+		ret.setType(type);
+		
+		return ret;
+	}
 }
