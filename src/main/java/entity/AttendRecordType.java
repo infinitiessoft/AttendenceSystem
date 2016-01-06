@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "record_type", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
@@ -30,6 +31,9 @@ public class AttendRecordType extends AbstractEntity {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "type")
 	private Set<AttendRecord> attendRecords = new HashSet<AttendRecord>(0);
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "type")
+	private Set<Leavesetting> leavesettings = new HashSet<Leavesetting>(0);
 
 	public Long getId() {
 		return id;
@@ -47,12 +51,22 @@ public class AttendRecordType extends AbstractEntity {
 		this.name = name;
 	}
 
+	@XmlTransient
 	public Set<AttendRecord> getAttendRecords() {
 		return attendRecords;
 	}
 
 	public void setAttendRecords(Set<AttendRecord> attendRecords) {
 		this.attendRecords = attendRecords;
+	}
+
+	@XmlTransient
+	public Set<Leavesetting> getLeavesettings() {
+		return leavesettings;
+	}
+
+	public void setLeavesettings(Set<Leavesetting> leavesettings) {
+		this.leavesettings = leavesettings;
 	}
 
 }

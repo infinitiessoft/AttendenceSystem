@@ -2,4 +2,6 @@ role
 department
 employee
 employee_role
-leavesetting
+record_type
+leave_setting
+employee_leave
