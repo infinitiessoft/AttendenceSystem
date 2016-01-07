@@ -61,7 +61,7 @@ public class EmployeesResourceTest extends ResourceTest {
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
-		admin.setGender(Gender.male);
+		admin.setGender(Gender.male.name());
 		Department dep = new Department();
 		dep.setId(1L);
 		admin.setDepartment(dep);
@@ -97,7 +97,7 @@ public class EmployeesResourceTest extends ResourceTest {
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
-		admin.setGender(Gender.male);
+		admin.setGender(Gender.male.name());
 		Department dep = new Department();
 		dep.setId(1L);
 		admin.setDepartment(dep);

@@ -1,25 +1,58 @@
 package transfer;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlTransient;
 
-public class LeavesettingTransfer {
+
+public class LeavesettingTransfer implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
+	public static class Type implements Serializable {
+		
+		private static final long serialVersionUID = 1L;
+		private Long id;
+		private String name;
+		
+		private boolean isIdSet;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			isIdSet = true;
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		@XmlTransient
+		public boolean isIdSet() {
+			return isIdSet;
+		}
+
+		@XmlTransient
+		public void setIdSet(boolean isIdSet) {
+			this.isIdSet = isIdSet;
+		}
+	}
 
 	private Long id;
-	private String name;
-	private Long personal;
-	private Long sick;
-	private Long annual;
-	private Long personalUsed;
-	private Long sickUsed;
-	private Long annualUsed;
+	private Type type;
+	private Long year;
+	private Long days;
 
-	private boolean isNameSet;
-	private boolean isPersonalSet;
-	private boolean isSickSet;
-	private boolean isAnnualSet;
-	private boolean isPersonalUsedSet;
-	private boolean isSickUsedSet;
-	private boolean isAnnualUsedSet;
+	private boolean isTypeSet;
+	private boolean isYearSet;
+	private boolean isDaysSet;
 
 	public LeavesettingTransfer() {
 		super();
@@ -33,130 +66,61 @@ public class LeavesettingTransfer {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Type getType() {
+		return type;
 	}
 
-	public void setName(String name) {
-		isNameSet = true;
-		this.name = name;
+	public void setType(Type type) {
+		this.isTypeSet = true;
+		this.type = type;
 	}
 
-	public Long getPersonal() {
-		return personal;
+	public Long getYear() {
+		return year;
 	}
 
-	public void setPersonal(Long personal) {
-		isPersonalSet = true;
-		this.personal = personal;
+	public void setYear(Long year) {
+		this.isYearSet = true;
+		this.year = year;
 	}
 
-	public Long getSick() {
-		return sick;
+	public Long getDays() {
+		return days;
 	}
 
-	public void setSick(Long sick) {
-		isSickSet = true;
-		this.sick = sick;
-	}
-
-	public Long getAnnual() {
-		return annual;
-	}
-
-	public void setAnnual(Long annual) {
-		isAnnualSet = true;
-		this.annual = annual;
-	}
-
-	public Long getPersonalUsed() {
-		return personalUsed;
-	}
-
-	public void setPersonalUsed(Long personalUsed) {
-		isPersonalUsedSet = true;
-		this.personalUsed = personalUsed;
-	}
-
-	public Long getSickUsed() {
-		return sickUsed;
-	}
-
-	public void setSickUsed(Long sickUsed) {
-		isSickUsedSet = true;
-		this.sickUsed = sickUsed;
-	}
-
-	public Long getAnnualUsed() {
-		return annualUsed;
-	}
-
-	public void setAnnualUsed(Long annualUsed) {
-		isAnnualUsedSet = true;
-		this.annualUsed = annualUsed;
+	public void setDays(Long days) {
+		this.isDaysSet = true;
+		this.days = days;
 	}
 
 	@XmlTransient
-	public boolean isNameSet() {
-		return isNameSet;
-	}
-
-	public void setNameSet(boolean isNameSet) {
-		this.isNameSet = isNameSet;
-	}
-
-	@XmlTransient
-	public boolean isPersonalSet() {
-		return isPersonalSet;
-	}
-
-	public void setPersonalSet(boolean isPersonalSet) {
-		this.isPersonalSet = isPersonalSet;
-	}
-
-	@XmlTransient
-	public boolean isSickSet() {
-		return isSickSet;
-	}
-
-	public void setSickSet(boolean isSickSet) {
-		this.isSickSet = isSickSet;
-	}
-
-	@XmlTransient
-	public boolean isAnnualSet() {
-		return isAnnualSet;
-	}
-
-	public void setAnnualSet(boolean isAnnualSet) {
-		this.isAnnualSet = isAnnualSet;
-	}
-
-	@XmlTransient
-	public boolean isPersonalUsedSet() {
-		return isPersonalUsedSet;
-	}
-
-	public void setPersonalUsedSet(boolean isPersonalUsedSet) {
-		this.isPersonalUsedSet = isPersonalUsedSet;
-	}
-
-	@XmlTransient
-	public boolean isSickUsedSet() {
-		return isSickUsedSet;
-	}
-
-	public void setSickUsedSet(boolean isSickUsedSet) {
-		this.isSickUsedSet = isSickUsedSet;
-	}
-
-	@XmlTransient
-	public boolean isAnnualUsedSet() {
-		return isAnnualUsedSet;
-	}
-
-	public void setAnnualUsedSet(boolean isAnnualUsedSet) {
-		this.isAnnualUsedSet = isAnnualUsedSet;
+	public boolean isTypeSet() {
+		return isTypeSet;
 	}
 	
+	@XmlTransient
+	public void setTypeSet(boolean isTypeSet) {
+		this.isTypeSet = isTypeSet;
+	}
+
+	@XmlTransient
+	public boolean isYearSet() {
+		return isYearSet;
+	}
+
+	@XmlTransient
+	public void setYearSet(boolean isYearSet) {
+		this.isYearSet = isYearSet;
+	}
+
+	@XmlTransient
+	public boolean isDaysSet() {
+		return isDaysSet;
+	}
+
+	@XmlTransient
+	public void setDaysSet(boolean isDaysSet) {
+		this.isDaysSet = isDaysSet;
+	}
+
 }

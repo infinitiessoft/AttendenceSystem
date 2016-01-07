@@ -55,7 +55,7 @@ public class DepartmentServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(departmentDao).find(1L);
+				exactly(1).of(departmentDao).findOne(1L);
 				will(returnValue(department));
 			}
 		});

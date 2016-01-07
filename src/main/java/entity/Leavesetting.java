@@ -1,5 +1,6 @@
 package entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,51 +9,34 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-/**
- * In this example we will use Employee as entity.Id, firstname, lastname,
- * birthdate, cellphone, jobtitle, username, createddate, email, password and
- * gender are the attributes of this entity. It contains default constructor,
- * setter and getter methods of those attributes.
- * 
- */
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
-@Table(name = "leavesetting")
+@Table(name = "leave_setting")
 public class Leavesetting extends AbstractEntity {
-	private static final long serialVersionUID = 7711505597348200997L;
+	
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "name", nullable = false)
-	private String name;
+	@Column(name = "year", nullable = false)
+	private Long year;
 
-	@Column(name = "personal", nullable = false)
-	private Long personal;
+	@Column(name = "days", nullable = false)
+	private Long days;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "type_id")
+	private AttendRecordType type;
 
-	@Column(name = "personalUsed", nullable = false)
-	private Long personalUsed;
-
-	@Column(name = "sick", nullable = false)
-	private Long sick;
-
-	@Column(name = "sickUsed", nullable = false)
-	private Long sickUsed;
-
-	@Column(name = "annual", nullable = false)
-	private Long annual;
-
-	@Column(name = "annualUsed", nullable = false)
-	private Long annualUsed;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "employee_id", nullable = false)
-	private Employee employee;
-
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "leavesetting")
+	private EmployeeLeave employeeLeave;
+	
 	public Long getId() {
 		return id;
 	}
@@ -61,72 +45,36 @@ public class Leavesetting extends AbstractEntity {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public AttendRecordType getType() {
+		return type;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setType(AttendRecordType type) {
+		this.type = type;
 	}
 
-	public Long getPersonal() {
-		return personal;
+	public Long getYear() {
+		return year;
 	}
 
-	public void setPersonal(Long personal) {
-		this.personal = personal;
+	public void setYear(Long year) {
+		this.year = year;
 	}
 
-	public Long getSick() {
-		return sick;
+	public Long getDays() {
+		return days;
 	}
 
-	public void setSick(Long sick) {
-		this.sick = sick;
+	public void setDays(Long days) {
+		this.days = days;
 	}
 
-	public Long getAnnual() {
-		return annual;
+	public EmployeeLeave getEmployeeLeave() {
+		return employeeLeave;
 	}
 
-	public void setAnnual(Long annual) {
-		this.annual = annual;
-	}
-
-	public Long getPersonalUsed() {
-		return personalUsed;
-	}
-
-	public void setPersonalUsed(Long personalUsed) {
-		this.personalUsed = personalUsed;
-	}
-
-	public Long getSickUsed() {
-		return sickUsed;
-	}
-
-	public void setSickUsed(Long sickUsed) {
-		this.sickUsed = sickUsed;
-	}
-
-	public Long getAnnualUsed() {
-		return annualUsed;
-	}
-
-	public void setAnnualUsed(Long annualUsed) {
-		this.annualUsed = annualUsed;
-	}
-
-	public Employee getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
-
-	public Leavesetting() {
-		super();
+	public void setEmployeeLeave(EmployeeLeave employeeLeave) {
+		this.employeeLeave = employeeLeave;
 	}
 
 }

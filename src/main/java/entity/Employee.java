@@ -110,7 +110,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 	private Date lastLogin;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
-	private Set<Leavesetting> leavesettings = new HashSet<Leavesetting>(0);
+	private Set<EmployeeLeave> employeeLeaves = new HashSet<EmployeeLeave>(0);
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
 	private Set<AttendRecord> attendRecords = new HashSet<AttendRecord>(0);
@@ -170,6 +170,7 @@ public class Employee extends AbstractEntity implements UserDetails {
 		return true;
 	}
 
+	@XmlTransient
 	public Long getId() {
 		return id;
 	}
@@ -218,14 +219,6 @@ public class Employee extends AbstractEntity implements UserDetails {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	// public Set<Employee> getEmployees() {
-	// return employees;
-	// }
-	//
-	// public void setEmployees(Set<Employee> employees) {
-	// this.employees = employees;
-	// }
 
 	public String getColor() {
 		return color;
@@ -343,21 +336,21 @@ public class Employee extends AbstractEntity implements UserDetails {
 	}
 
 	@XmlTransient
-	public Set<Leavesetting> getLeavesettings() {
-		return leavesettings;
-	}
-
-	public void setLeavesettings(Set<Leavesetting> leavesettings) {
-		this.leavesettings = leavesettings;
-	}
-
-	@XmlTransient
 	public Set<AttendRecord> getAttendRecords() {
 		return attendRecords;
 	}
 
 	public void setAttendRecords(Set<AttendRecord> attendRecords) {
 		this.attendRecords = attendRecords;
+	}
+
+	@XmlTransient
+	public Set<EmployeeLeave> getEmployeeLeaves() {
+		return employeeLeaves;
+	}
+
+	public void setEmployeeLeaves(Set<EmployeeLeave> employeeLeaves) {
+		this.employeeLeaves = employeeLeaves;
 	}
 
 }
