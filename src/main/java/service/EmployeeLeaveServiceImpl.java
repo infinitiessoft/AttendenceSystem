@@ -85,6 +85,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService{
 				if (employee == null) {
 					throw new EmployeeNotFoundException(transfer.getEmployee().getId());
 				}
+				System.out.println("************ id : " + employee.getId());
 				newEntry.setEmployee(employee);
 			}
 		}
@@ -94,6 +95,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService{
 				if (leavesetting == null) {
 					throw new LeavesettingNotFoundException(transfer.getLeavesetting().getId());
 				}
+				System.out.println("************ id : " + leavesetting.getId());
 				newEntry.setLeavesetting(leavesetting);
 			}
 		}
