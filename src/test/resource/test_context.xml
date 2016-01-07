@@ -92,6 +92,10 @@
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="leavesettingDao" />
 	</bean>
+	
+	<bean id="userDetailService" class="service.UserDetailServiceImpl">
+		<constructor-arg ref="employeeDao" />
+	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
@@ -116,7 +120,7 @@
 
 	<security:authentication-manager id="authenticationManager">
 		<security:authentication-provider
-			user-service-ref="userDetailDao">
+			user-service-ref="userDetailService">
 			<security:password-encoder ref="passwordEncoder"></security:password-encoder>
 		</security:authentication-provider>
 	</security:authentication-manager>

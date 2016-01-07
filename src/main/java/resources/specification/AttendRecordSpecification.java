@@ -30,16 +30,16 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 	private Date bookDate;
 	@QueryParam("startDate")
 	private Date startDate;
-	@QueryParam("type")
-	private String type;
+	@QueryParam("typeName")
+	private String typeName;
 
 	@Override
 	public Predicate toPredicate(Root<AttendRecord> root,
 			CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> predicates = new ArrayList<Predicate>();
-		if (!Strings.isNullOrEmpty(type)) {
+		if (!Strings.isNullOrEmpty(typeName)) {
 			predicates.add(cb.like(root.<AttendRecordType> get("type")
-					.<String> get("name"), "%" + type + "%"));
+					.<String> get("name"), "%" + typeName + "%"));
 		}
 		if (startDate != null) {
 			predicates.add(cb.greaterThanOrEqualTo(
@@ -104,12 +104,12 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 		this.startDate = startDate;
 	}
 
-	public String getType() {
-		return type;
+	public String getTypeName() {
+		return typeName;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
 	}
 
 }

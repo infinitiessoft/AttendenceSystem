@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "attend_record")
@@ -22,15 +24,18 @@ public class AttendRecord extends AbstractEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "end_date", nullable = false)
 	private Date endDate;
 
 	@Column(name = "reason", nullable = false)
 	private String reason;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "book_date", nullable = false)
 	private Date bookDate;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "start_date", nullable = false)
 	private Date startDate;
 

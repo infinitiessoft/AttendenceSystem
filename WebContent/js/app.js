@@ -3,14 +3,15 @@ angular
 				'attendance',
 				[ 'ngRoute', 'ngCookies',
 						'formly', 'formlyBootstrap', 'ui.bootstrap',
-						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave'])
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave'])
 		.config(
 				[
 						'$routeProvider',
 						'$locationProvider',
 						'$httpProvider',
+						'formlyConfigProvider',
 						function($routeProvider, $locationProvider,
-								$httpProvider) {
+								$httpProvider,formlyConfigProvider) {
 
 							$routeProvider.when('/', {
 								templateUrl : 'partials/list-employees.html',
@@ -183,8 +184,19 @@ angular
 											}
 										}
 									});
+							$routeProvider.when('/list-records', {
+								templateUrl : 'partials/list-records.html',
+								controller : 'list-records'
+							});
 
 							$routeProvider.otherwise('/');
+							
+							formlyConfigProvider.setWrapper({
+								name : 'validation',
+								types : [ 'input', 'datepicker', 'select','timepicker' ],
+								templateUrl : 'error-messages.html'
+							});
+
 
 							$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 							$locationProvider.hashPrefix('!');
@@ -461,8 +473,13 @@ angular
 																						} ])
 		.run(
 				function($rootScope, $location, $cookieStore, $http,
-						formlyConfig, auth) {
+						formlyConfig, auth, formlyConfig, formlyValidationMessages) {
 
+					formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'fc.$touched || form.$submitted';
+
+					formlyValidationMessages.addStringMessage('required',
+							'This field is required');
+					
 					auth.init('/', '/login', 'logout');
 					
 					/* Reset error when a new view is loaded */
@@ -498,9 +515,13 @@ angular
 							'datepicker-popup', 'show-button-bar',
 							'current-text', 'clear-text', 'close-text',
 							'close-on-date-selection',
-							'datepicker-append-to-body' ];
+							'datepicker-append-to-body' ,'meridians',
+						    'readonly-input',
+						    'mousewheel',
+						    'arrowkeys'];
 
-					var bindings = [ 'datepicker-mode', 'min-date', 'max-date' ];
+					var bindings = [ 'datepicker-mode', 'min-date', 'max-date', 'hour-step',
+									    'minute-step','show-meridian' ];
 
 					var ngModelAttrs = {};
 
@@ -529,16 +550,57 @@ angular
 								}
 							}
 						},
-						controller : [ '$scope', function($scope) {
-							$scope.datepicker = {};
+						  controller: [
+						               '$scope', function ($scope) {
+						                 $scope.datepicker = {};
 
-							$scope.datepicker.opened = false;
+						                 // make sure the initial value is of
+											// type DATE!
+						                 var currentModelVal = $scope.model[$scope.options.key];
+						                 if (typeof (currentModelVal) == 'string'){
+						                   $scope.model[$scope.options.key] = new Date(currentModelVal);
+						                 }
 
-							$scope.datepicker.open = function($event) {
-								$scope.datepicker.opened = true;
-							};
-						} ]
+
+						                 $scope.datepicker.opened = false;
+
+						                 $scope.datepicker.open = function ($event) {
+						                   $scope.datepicker.opened = true;
+						                 };
+						               }
+						             ]
 					});
+					
+					  formlyConfig.setType({
+					    name: 'timepicker',
+					    template: '<timepicker ng-model="model[options.key]"></timepicker>',
+					    wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+					    defaultOptions: {
+					      ngModelAttrs: ngModelAttrs,
+					      templateOptions: {
+					        datepickerOptions: {}
+					      }
+					    },
+						  controller: [
+						               '$scope', function ($scope) {
+						                 $scope.datepicker = {};
+
+						                 // make sure the initial value is of
+											// type DATE!
+						                 var currentModelVal = $scope.model[$scope.options.key];
+						                 if (typeof (currentModelVal) == 'string'){
+						                   $scope.model[$scope.options.key] = new Date(currentModelVal);
+						                 }
+
+
+						                 $scope.datepicker.opened = false;
+
+						                 $scope.datepicker.open = function ($event) {
+						                   $scope.datepicker.opened = true;
+						                 };
+						               }
+						             ]
+					  });
 
 					function camelize(string) {
 						string = string.replace(/[\-_\s]+(.)?/g, function(

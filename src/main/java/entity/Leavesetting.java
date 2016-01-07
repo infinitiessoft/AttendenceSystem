@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "leave_setting")
 public class Leavesetting extends AbstractEntity {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -29,14 +29,14 @@ public class Leavesetting extends AbstractEntity {
 
 	@Column(name = "days", nullable = false)
 	private Long days;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "type_id")
 	private AttendRecordType type;
 
 	@OneToOne(cascade = CascadeType.REMOVE, mappedBy = "leavesetting")
 	private EmployeeLeave employeeLeave;
-	
+
 	@Column(name = "name")
 	private String name ;
 

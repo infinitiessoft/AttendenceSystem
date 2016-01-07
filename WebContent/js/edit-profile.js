@@ -151,7 +151,7 @@ angular
 							fieldToMatch : 'password',
 							modelToMatch : vm.model
 						}
-					},{
+					}, {
 						key : 'email',
 						type : 'input',
 						templateOptions : {
@@ -175,10 +175,12 @@ angular
 								value : 'male'
 							} ]
 						}
-					}];
+					} ];
 					function onSubmit() {
-						employeeService.update(id, vm.model);
-						$location.path('/list-employees');
+						if (vm.form.$valid) {
+							employeeService.update(id, vm.model);
+							$location.path('/list-employees');
+						}
 					}
 
 				});
