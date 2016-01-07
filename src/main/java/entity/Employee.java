@@ -38,27 +38,37 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "responseto")
 	private Employee employee;
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "department_id", nullable = false)
 	private Department department;
+
 	@Column(name = "name", nullable = false, length = 20)
 	private String name;
+
 	@Temporal(TemporalType.DATE)
 	@Column(name = "dateofjoined", nullable = false, length = 13)
 	private Date dateofjoined;
+
 	@Column(name = "password", nullable = false, length = 100)
 	private String password;
+
 	@Column(name = "username", unique = true, nullable = false, length = 20)
 	private String username;
+
 	@Column(name = "email", unique = true, nullable = false, length = 40)
 	private String email;
+
 	@Column(name = "gender", nullable = false, length = 6)
 	private String gender;
+
 	@Column(name = "comment")
 	private String comment;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
 	private Set<Employee> employees = new HashSet<Employee>(0);
 	// @OneToMany(fetch = FetchType.LAZY, mappedBy = "employeeByPermicPersonId")
