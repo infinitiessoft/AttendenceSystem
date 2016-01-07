@@ -38,11 +38,13 @@ angular.module('edit-recordtype', []).controller(
 				}
 			} ];
 			function onSubmit() {
-				if (id > 0) {
-					recordtypeService.update(id, vm.model);
-				} else {
-					recordtypeService.insert(vm.model);
+				if (vm.form.$valid) {
+					if (id > 0) {
+						recordtypeService.update(id, vm.model);
+					} else {
+						recordtypeService.insert(vm.model);
+					}
+					$location.path('/list-recordtypes');
 				}
-				$location.path('/list-recordtypes');
 			}
 		});

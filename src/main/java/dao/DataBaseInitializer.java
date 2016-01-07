@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import entity.AttendRecord;
 import entity.AttendRecordType;
 import entity.Department;
 import entity.Employee;
@@ -17,12 +18,15 @@ public class DataBaseInitializer {
 	private RoleDao roleDao;
 	private DepartmentDao depDao;
 	private AttendRecordTypeDao recordTypeDao;
+	private AttendRecordDao recordDao;
 	private EmployeeRoleDao employeeRoleDao;
+	private LeavesettingDao leavesettingDao;
 	private PasswordEncoder passwordEncoder;
 
 	public DataBaseInitializer(EmployeeDao employeeDao, RoleDao roleDao,
 			DepartmentDao depDao, AttendRecordTypeDao recordTypeDao,
-			EmployeeRoleDao employeeRoleDao, PasswordEncoder passwordEncoder) {
+			EmployeeRoleDao employeeRoleDao, LeavesettingDao leavesettingDao,
+			AttendRecordDao recordDao, PasswordEncoder passwordEncoder) {
 		super();
 		this.employeeDao = employeeDao;
 		this.roleDao = roleDao;
@@ -30,6 +34,8 @@ public class DataBaseInitializer {
 		this.recordTypeDao = recordTypeDao;
 		this.employeeRoleDao = employeeRoleDao;
 		this.passwordEncoder = passwordEncoder;
+		this.leavesettingDao = leavesettingDao;
+		this.recordDao = recordDao;
 	}
 
 	public void initDataBase() {
@@ -79,6 +85,36 @@ public class DataBaseInitializer {
 		adminEmployee.setEmployee(admin);
 		adminEmployee.setRole(role);
 		employeeRoleDao.save(adminEmployee);
+
+		AttendRecord record = new AttendRecord();
+		record.setBookDate(new Date());
+		record.setDuration(1D);
+		record.setEmployee(admin);
+		record.setEndDate(new Date());
+		record.setReason("reason");
+		record.setStartDate(new Date());
+		record.setType(annual);
+		recordDao.save(record);
+		
+		AttendRecord record2 = new AttendRecord();
+		record2.setBookDate(new Date());
+		record2.setDuration(1D);
+		record2.setEmployee(admin);
+		record2.setEndDate(new Date());
+		record2.setReason("reason");
+		record2.setStartDate(new Date());
+		record2.setType(sick);
+		recordDao.save(record2);
+		
+		AttendRecord record3 = new AttendRecord();
+		record3.setBookDate(new Date());
+		record3.setDuration(1D);
+		record3.setEmployee(admin);
+		record3.setEndDate(new Date());
+		record3.setReason("reason");
+		record3.setStartDate(new Date());
+		record3.setType(personal);
+		recordDao.save(record3);
 
 	}
 

@@ -1,11 +1,13 @@
 package service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.AttendRecordSpecification;
 import transfer.AttendRecordTransfer;
@@ -16,6 +18,8 @@ import entity.AttendRecord;
 import exceptions.AttendRecordNotFoundException;
 import exceptions.AttendRecordTypeNotFoundException;
 import exceptions.EmployeeNotFoundException;
+import exceptions.InvalidEndDateException;
+import exceptions.InvalidStartAndEndDateException;
 
 public class AttendRecordServiceImpl implements AttendRecordService {
 
@@ -30,6 +34,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		this.employeeDao = employeeDao;
 	}
 
+	@Transactional
 	@Override
 	public AttendRecordTransfer retrieve(long id) {
 		AttendRecord record = attendRecordDao.findOne(id);
@@ -53,7 +58,20 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		attendRecord.setId(null);
 		AttendRecord dep = new AttendRecord();
 		setUpAttendRecord(attendRecord, dep);
+		dep.setBookDate(new Date());
+		assetEndDateAfterStartDate(dep.getStartDate(), dep.getEndDate());
+		assetIsBusinessDays(dep.getStartDate(), dep.getEndDate());
 		return toAttendRecordTransfer(attendRecordDao.save(dep));
+	}
+
+	private void assetEndDateAfterStartDate(Date startDate, Date endDate) {
+		if (!endDate.after(startDate)) {
+			throw new InvalidEndDateException();
+		}
+	}
+
+	private void assetIsBusinessDays(Date startDate, Date endDate) {
+
 	}
 
 	@Override
@@ -66,6 +84,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		return toAttendRecordTransfer(attendRecordDao.save(attendRecord));
 	}
 
+	@Transactional
 	@Override
 	public Page<AttendRecordTransfer> findAll(AttendRecordSpecification spec,
 			Pageable pageable) {
@@ -88,15 +107,18 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		if (transfer.isEndDateSet()) {
 			newEntry.setEndDate(transfer.getEndDate());
 		}
-		if (transfer.isBookDateSet()) {
-			newEntry.setBookDate(transfer.getBookDate());
-		}
+		// ignore update bookdate
+		// if (transfer.isBookDateSet()) {
+		// newEntry.setBookDate(transfer.getBookDate());
+		// }
 		if (transfer.isReasonSet()) {
 			newEntry.setReason(transfer.getReason());
 		}
-		if (transfer.isDurationSet()) {
-			newEntry.setDuration(transfer.getDuration());
+		if (newEntry.getStartDate() == null || newEntry.getEndDate() == null) {
+			throw new InvalidStartAndEndDateException();
 		}
+		newEntry.setDuration(countDuration(newEntry.getStartDate(),
+				newEntry.getEndDate()));
 		if (transfer.isTypeSet()) {
 			if (transfer.getType().isIdSet()) {
 				entity.AttendRecordType type = attendRecordTypeDao
@@ -119,6 +141,10 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				newEntry.setEmployee(employee);
 			}
 		}
+	}
+
+	private Double countDuration(Date startDate, Date endDate) {
+		return 2D;
 	}
 
 	private AttendRecordTransfer toAttendRecordTransfer(

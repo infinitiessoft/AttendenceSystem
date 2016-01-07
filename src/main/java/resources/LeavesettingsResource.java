@@ -1,6 +1,5 @@
 package resources;
 
-import javax.persistence.GeneratedValue;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import exceptions.LeavesettingNotFoundException;
 import resources.specification.LeavesettingSpecification;
 import resources.specification.SimplePageRequest;
 import service.LeavesettingService;
@@ -39,29 +37,34 @@ public class LeavesettingsResource {
 	public LeavesettingTransfer getLeavesetting(@PathParam("id") long id) {
 		return leavesettingService.retrieve(id);
 	}
-	
+
 	@DELETE
 	@Path(value = "{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteLeavesetting(@PathParam("id") long id) {
 		leavesettingService.delete(id);
-		return Response.status(Status.OK).entity("leavesetting has been successfully deleted").type(MediaType.APPLICATION_JSON).build();
+		return Response.status(Status.OK)
+				.entity("leavesetting has been successfully deleted")
+				.type(MediaType.APPLICATION_JSON).build();
 	}
-	
+
 	@PUT
 	@Path(value = "{id}")
-	public LeavesettingTransfer updateLeavesetting(@PathParam("id") long id, LeavesettingTransfer leavesetting) {
+	public LeavesettingTransfer updateLeavesetting(@PathParam("id") long id,
+			LeavesettingTransfer leavesetting) {
 		return leavesettingService.update(id, leavesetting);
 	}
-	
+
 	@POST
 	public LeavesettingTransfer saveLeavesetting(LeavesettingTransfer transfer) {
 		return leavesettingService.save(transfer);
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Page<LeavesettingTransfer> findAllLeavesetting(@BeanParam SimplePageRequest pageRequest, @BeanParam LeavesettingSpecification spec) {
+	public Page<LeavesettingTransfer> findAllLeavesetting(
+			@BeanParam SimplePageRequest pageRequest,
+			@BeanParam LeavesettingSpecification spec) {
 		return leavesettingService.findAll(spec, pageRequest);
 	}
 

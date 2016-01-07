@@ -27,39 +27,45 @@ import transfer.EmployeeLeaveTransfer;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/employeeleave")
 public class EmployeeLeaveResource {
-	
+
 	@Autowired
 	private EmployeeLeaveService employeeLeaveService;
-	
+
 	@GET
 	@Path(value = "{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public EmployeeLeaveTransfer getEmployeeLeave(@PathParam("id") long id) {
 		return employeeLeaveService.retrieve(id);
 	}
-	
+
 	@DELETE
 	@Path(value = "{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteEmployeeLeave(@PathParam("id") long id) {
 		employeeLeaveService.delete(id);
-		return Response.status(Status.OK).entity("employeeleave has been successfully deleted").type(MediaType.APPLICATION_JSON).build();
+		return Response.status(Status.OK)
+				.entity("employeeleave has been successfully deleted")
+				.type(MediaType.APPLICATION_JSON).build();
 	}
-	
+
 	@PUT
 	@Path(value = "{id}")
-	public EmployeeLeaveTransfer updateEmployeeLeave(@PathParam("id") long id, EmployeeLeaveTransfer transfer) {
+	public EmployeeLeaveTransfer updateEmployeeLeave(@PathParam("id") long id,
+			EmployeeLeaveTransfer transfer) {
 		return employeeLeaveService.update(id, transfer);
 	}
-	
+
 	@POST
-	public EmployeeLeaveTransfer saveEmployeeLeave(EmployeeLeaveTransfer transfer) {
+	public EmployeeLeaveTransfer saveEmployeeLeave(
+			EmployeeLeaveTransfer transfer) {
 		return employeeLeaveService.save(transfer);
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Page<EmployeeLeaveTransfer> findAllEmployeeLeave(@BeanParam SimplePageRequest pageRequest, @BeanParam EmployeeLeaveSpecification spec) {
+	public Page<EmployeeLeaveTransfer> findAllEmployeeLeave(
+			@BeanParam SimplePageRequest pageRequest,
+			@BeanParam EmployeeLeaveSpecification spec) {
 		return employeeLeaveService.findAll(spec, pageRequest);
 	}
 

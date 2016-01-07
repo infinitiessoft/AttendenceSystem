@@ -11,12 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "leave_setting")
 public class Leavesetting extends AbstractEntity {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -29,14 +28,14 @@ public class Leavesetting extends AbstractEntity {
 
 	@Column(name = "days", nullable = false)
 	private Long days;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "type_id")
 	private AttendRecordType type;
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "leavesetting")
 	private EmployeeLeave employeeLeave;
-	
+
 	public Long getId() {
 		return id;
 	}

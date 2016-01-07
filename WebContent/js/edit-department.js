@@ -37,11 +37,13 @@ angular.module('edit-department', []).controller(
 				}
 			} ];
 			function onSubmit() {
-				if (id > 0) {
-					departmentService.update(id, vm.model);
-				} else {
-					departmentService.insert(vm.model);
+				if (vm.form.$valid) {
+					if (id > 0) {
+						departmentService.update(id, vm.model);
+					} else {
+						departmentService.insert(vm.model);
+					}
+					$location.path('/list-departments');
 				}
-				$location.path('/list-departments');
 			}
 		});
