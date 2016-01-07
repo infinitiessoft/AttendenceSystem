@@ -1,0 +1,54 @@
+<div class="pull-right">
+	<a href="#!/edit-employeeleave/0" class="btn btn-sm btn-success" title="Create"><i
+		class="glyphicon glyphicon-plus"> </i></a>
+</div>
+<div class="page-header">
+	<h3>EmployeeLeave</h3>
+</div>
+<div>
+	<table st-pipe="callServer" st-table="displayed"
+		class="table table-striped">
+		<thead>
+			<tr>
+				<th st-sort="id">id</th>
+				<th st-sort="employee">employee</th>
+				<th st-sort="leavesetting">leavesetting</th>
+				<th st-sort="usedDays">usedDays</th>
+			</tr>
+			<tr>
+				<th></th>
+				<th><input st-search="employee" /></th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody ng-show="!isLoading">
+			<tr ng-repeat="row in displayed">
+				<td>{{row.id}}</td>
+				<td>{{row.employee.name}}</td>
+				<td>{{row.leavesetting.name}}</td>
+				<td>{{row.usedDays}}</td>
+				<td><a href="#!/edit-employeeleave/{{row.id}}"
+					class="btn btn-sm btn-primary"> <i
+						class="glyphicon glyphicon-pencil"> </i>
+				</a>
+					<button type="button" ng-click="removeEntry(row)"
+						class="btn btn-sm btn-danger">
+						<i class="glyphicon glyphicon-remove"> </i>
+					</button></td>
+			</tr>
+		</tbody>
+		<tbody ng-show="isLoading">
+			<tr>
+				<td colspan="3" class="text-center">Loading ...</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td class="text-center" st-pagination="" st-items-by-page="10"
+					colspan="3"></td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+<hr />

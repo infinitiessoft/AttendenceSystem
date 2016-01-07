@@ -46,10 +46,12 @@ public class LeavesettingTransfer implements Serializable {
 	}
 
 	private Long id;
+	private String name;
 	private Type type;
 	private Long year;
 	private Long days;
 
+	private boolean isNameSet;
 	private boolean isTypeSet;
 	private boolean isYearSet;
 	private boolean isDaysSet;
@@ -64,6 +66,15 @@ public class LeavesettingTransfer implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.isNameSet = true;
+		this.name = name;
 	}
 
 	public Type getType() {
@@ -122,5 +133,16 @@ public class LeavesettingTransfer implements Serializable {
 	public void setDaysSet(boolean isDaysSet) {
 		this.isDaysSet = isDaysSet;
 	}
+	
+	@XmlTransient
+	public boolean isNameSet() {
+		return isNameSet;
+	}
+
+	@XmlTransient
+	public void setNameSet(boolean isNameSet) {
+		this.isNameSet = isNameSet;
+	}
+
 
 }

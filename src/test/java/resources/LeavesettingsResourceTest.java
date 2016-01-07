@@ -62,6 +62,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		LeavesettingTransfer transfer = response.readEntity(LeavesettingTransfer.class);
 		assertEquals(2L, transfer.getId().longValue());
 		assertEquals(leavesetting.getType().getId(), type.getId());
+		assertEquals(transfer.getType().getName() + "_" + leavesetting.getYear() + "_" + leavesetting.getDays(), transfer.getName());
 	}
 
 	@Test
