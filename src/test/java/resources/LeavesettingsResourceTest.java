@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import entity.AttendRecordType;
 import entity.Leavesetting;
@@ -100,11 +101,11 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		Response response = target("leavesetting").register(JacksonFeature.class)
 				.request().get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
-		Page<LeavesettingTransfer> rets = response
-				.readEntity(new GenericType<Page<LeavesettingTransfer>>() {
+		PageModel<LeavesettingTransfer> rets = response
+				.readEntity(new GenericType<PageModel<LeavesettingTransfer>>() {
 				});
-		assertEquals(1, rets.getSize());
-		LeavesettingTransfer transfer = rets.iterator().next();
+		assertEquals(1, rets.getTotalElements());
+		LeavesettingTransfer transfer = rets.getContent().get(0);
 		assertEquals(1L, transfer.getId().longValue());
 	}
 

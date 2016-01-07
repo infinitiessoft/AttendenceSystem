@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "employee_leave")
@@ -25,7 +26,7 @@ public class EmployeeLeave extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "leavesetting_id", nullable = false)
 	private Leavesetting leavesetting;
 	@Column(name = "used_days", nullable = false)
@@ -39,6 +40,7 @@ public class EmployeeLeave extends AbstractEntity {
 		this.id = id;
 	}
 
+	@XmlTransient
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -47,6 +49,7 @@ public class EmployeeLeave extends AbstractEntity {
 		this.employee = employee;
 	}
 
+	@XmlTransient
 	public Leavesetting getLeavesetting() {
 		return leavesetting;
 	}
