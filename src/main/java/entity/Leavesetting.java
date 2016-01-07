@@ -33,7 +33,7 @@ public class Leavesetting extends AbstractEntity {
 	@JoinColumn(name = "type_id")
 	private AttendRecordType type;
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "leavesetting")
+	@OneToOne(cascade = CascadeType.REMOVE, mappedBy = "leavesetting")
 	private EmployeeLeave employeeLeave;
 
 	public Long getId() {
@@ -68,6 +68,7 @@ public class Leavesetting extends AbstractEntity {
 		this.days = days;
 	}
 
+	@XmlTransient
 	public EmployeeLeave getEmployeeLeave() {
 		return employeeLeave;
 	}
