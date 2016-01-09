@@ -119,6 +119,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService{
 		entity.Leavesetting leave = employeeLeave.getLeavesetting();
 		Leavesetting leavesetting = new EmployeeLeaveTransfer.Leavesetting();
 		leavesetting.setId(leave.getId());
+		leavesetting.setName(leave.getName());
 		leavesetting.setDays(leave.getDays());
 		ret.setLeavesetting(leavesetting);
 		return ret;

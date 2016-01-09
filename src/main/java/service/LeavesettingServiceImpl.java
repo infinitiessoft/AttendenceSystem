@@ -91,12 +91,15 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 				newEntry.setType(type);
 			}
 		}
+		
 		if (transfer.isYearSet()) {
 			newEntry.setYear(transfer.getYear());
 		}
 		if (transfer.isDaysSet()) {
 			newEntry.setDays(transfer.getDays());
 		}
+		
+		newEntry.setName(transfer.getName());
 	}
 
 	private LeavesettingTransfer toLeavesettingTransfer(
@@ -105,6 +108,7 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 		ret.setId(leavesetting.getId());
 		ret.setYear(leavesetting.getYear());
 		ret.setDays(leavesetting.getDays());
+		ret.setName(leavesetting.getName());
 
 		AttendRecordType attendRecordType = leavesetting.getType();
 		Type type = new LeavesettingTransfer.Type();

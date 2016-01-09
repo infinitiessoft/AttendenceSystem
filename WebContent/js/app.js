@@ -3,7 +3,7 @@ angular
 				'attendance',
 				[ 'ngRoute', 'ngCookies',
 						'formly', 'formlyBootstrap', 'ui.bootstrap',
-						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype','list-records','edit-record' ])
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave'])
 		.config(
 				[
 						'$routeProvider',
@@ -137,25 +137,53 @@ angular
 										}
 									});
 							
+							$routeProvider.when('/list-leavesettings', {
+								templateUrl : 'partials/list-leavesettings.html',
+								controller : 'list-leavesettings'
+							});
+							
 							$routeProvider
 							.when(
-									'/edit-record/:id',
+									'/edit-leavesetting/:id',
 									{
 										templateUrl : 'partials/edit.html',
-										controller : 'edit-record',
+										controller : 'edit-leavesetting',
 										resolve : {
-											record : function(
-													recordService,
+											leavesetting : function(
+													leavesettingService,
 													$route) {
 												var id = $route.current.params.id;
 												if(id == 0){
 													return {data:{}};
 												}
-												return recordService.get(id);
+												return leavesettingService.get(id);
 											}
 										}
 									});
 							
+							$routeProvider.when('/list-employeeleaves', {
+								templateUrl : 'partials/list-employeeleaves.html',
+								controller : 'list-employeeleaves'
+							});
+							
+							$routeProvider
+							.when(
+									'/edit-employeeleave/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-employeeleave',
+										resolve : {
+											employeeleave : function(
+													employeeleaveService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return employeeleaveService.get(id);
+											}
+										}
+									});
 							$routeProvider.when('/list-records', {
 								templateUrl : 'partials/list-records.html',
 								controller : 'list-records'
@@ -370,7 +398,79 @@ angular
 															};
 
 															return obj;
-														} ])
+														} ]).factory(
+																'leavesettingService',
+																[
+																		'$http',
+																		function($http) {
+																			var serviceBase = 'rest/leavesetting/';
+																			var obj = {};
+																			obj.list = function(queries) {
+																				return $http.get(serviceBase, {params:queries});
+																			};
+
+																			obj.get = function(id) {
+																				return $http.get(serviceBase  + id);
+																			};
+																			
+																			obj.insert = function(leavesetting) {
+																				return $http.post(serviceBase, leavesetting).then(
+																						function(results) {
+																							return results;
+																						});
+																			};
+
+																			obj.update = function(id, leavesetting) {
+																				return $http.put(serviceBase  + id,
+																						leavesetting).then(function(results) {
+																					return results;
+																				});
+																			};
+																			
+																			obj.remove = function(id) {
+																				return $http.delete(serviceBase + id).then(function(status) {
+																					return status;
+																				});
+																			};
+
+																			return obj;
+																		} ]).factory(
+																				'employeeleaveService',
+																				[
+																						'$http',
+																						function($http) {
+																							var serviceBase = 'rest/employeeleave/';
+																							var obj = {};
+																							obj.list = function(queries) {
+																								return $http.get(serviceBase, {params:queries});
+																							};
+
+																							obj.get = function(id) {
+																								return $http.get(serviceBase  + id);
+																							};
+																							
+																							obj.insert = function(employeeleave) {
+																								return $http.post(serviceBase, employeeleave).then(
+																										function(results) {
+																											return results;
+																										});
+																							};
+
+																							obj.update = function(id, employeeleave) {
+																								return $http.put(serviceBase  + id,
+																										employeeleave).then(function(results) {
+																									return results;
+																								});
+																							};
+																							
+																							obj.remove = function(id) {
+																								return $http.delete(serviceBase + id).then(function(status) {
+																									return status;
+																								});
+																							};
+
+																							return obj;
+																						} ])
 		.run(
 				function($rootScope, $location, $cookieStore, $http,
 						formlyConfig, auth, formlyConfig, formlyValidationMessages) {

@@ -87,11 +87,11 @@
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
 	</bean>
-
+	
 	<bean id="employeeLeaveService" class="service.EmployeeLeaveServiceImpl">
+		<constructor-arg ref="employeeLeaveDao" />
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="leavesettingDao" />
-		<constructor-arg ref="employeeLeaveDao" />
 	</bean>
 
 	<bean id="userDetailService" class="service.UserDetailServiceImpl">
@@ -125,8 +125,8 @@
 		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="employeeRoleDao" />
-		<constructor-arg ref="passwordEncoder" />
 		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">
