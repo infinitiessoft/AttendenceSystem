@@ -10,6 +10,8 @@ import java.util.Set;
 
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.api.services.calendar.model.Event;
 
@@ -17,18 +19,9 @@ import exceptions.InvalidStartAndEndDateException;
 
 public class CalendarUtil {
 
+	private final static Logger logger = LoggerFactory
+			.getLogger(CalendarUtil.class);
 	private final static String ADJUSTED_WORKING_DAY = "\u88dc\u73ed";
-
-	private final static Interval WORKING_HOURS;
-
-	static {
-		Calendar start = Calendar.getInstance();
-		start.set(Calendar.HOUR_OF_DAY, 10);
-		Calendar end = Calendar.getInstance();
-		end.set(Calendar.HOUR_OF_DAY, 18);
-		WORKING_HOURS = new Interval(start.getTimeInMillis(),
-				end.getTimeInMillis());
-	}
 
 	private CalendarUtil() {
 
@@ -105,20 +98,26 @@ public class CalendarUtil {
 		startC.setTime(start);
 		Calendar endC = Calendar.getInstance();
 		endC.setTime(end);
-
+		logger.debug("start:{}, end:{}", new Object[] { start, end });
+		long days = getDaysInvolve(startC, endC);
 		Interval interval = new Interval(start.getTime(), end.getTime());
+		logger.debug("interval days:{}, hours:{}", new Object[] { days,
+				interval.toPeriod().getHours() });
 		double duration = 0d;
 
-		if (interval.toPeriod().getHours() < 24) {
+		Duration halfDay = Duration.standardMinutes(241);
+		if (days <= 1) {
 			// 4 hours is the minimum leave unit and can be count as 0.5 day
 			// leave
-			if (interval.toPeriod().getHours() > 4) {
+			if (interval.toDuration().isLongerThan(halfDay)) {
+				logger.debug("full day");
 				duration += 1d;
 			} else {
+				logger.debug("half day");
 				duration += 0.5d;
 			}
 		} else {
-			duration = interval.toPeriod().getDays();
+			duration = days;
 			Calendar closingTime = Calendar.getInstance();
 			closingTime.setTime(start);
 			closingTime.set(Calendar.HOUR_OF_DAY, 18);
@@ -130,24 +129,48 @@ public class CalendarUtil {
 			// if there are less than 4 hours between the closing
 			// time(18:00) and start leave time then it can be count as a half
 			// day leave
-			if (diff.getStandardHours() <= 4) {
+			if (diff.isShorterThan(halfDay)) {
 				duration -= 0.5d;
 			}
 			Calendar workingTime = Calendar.getInstance();
-			workingTime.setTime(start);
+			workingTime.setTime(end);
 			workingTime.set(Calendar.HOUR_OF_DAY, 10);
 			workingTime.set(Calendar.MINUTE, 0);
 			workingTime.set(Calendar.SECOND, 0);
-			diff = new Duration(endC.getTimeInMillis(),
-					workingTime.getTimeInMillis());
+			diff = new Duration(workingTime.getTimeInMillis(),
+					endC.getTimeInMillis());
 
 			// if there are less than 4 hours between the working
 			// time(10:00) and end leave time then it can be count as a half
-			if (diff.getStandardHours() <= 4) {
+			if (diff.isShorterThan(halfDay)) {
 				duration -= 0.5d;
 			}
 		}
-
+		logger.debug("duration:{}", duration);
 		return duration;
+	}
+
+	private static long getDaysInvolve(Calendar startDate, Calendar endDate) {
+		if (startDate.after(endDate)) {
+			throw new IllegalArgumentException(
+					"End date should always greater than start date.");
+		}
+		Calendar date = (Calendar) startDate.clone();
+		date.set(Calendar.HOUR_OF_DAY, 0);
+		date.set(Calendar.MINUTE, 0);
+		date.set(Calendar.SECOND, 0);
+
+		Calendar end = (Calendar) endDate.clone();
+		end.set(Calendar.HOUR_OF_DAY, 0);
+		end.set(Calendar.MINUTE, 0);
+		end.set(Calendar.SECOND, 0);
+		long daysBetween = 1;
+		while (end.get(Calendar.YEAR) != date.get(Calendar.YEAR)
+				|| end.get(Calendar.DAY_OF_YEAR) != date
+						.get(Calendar.DAY_OF_YEAR)) {
+			date.add(Calendar.DAY_OF_YEAR, 1);
+			daysBetween++;
+		}
+		return daysBetween;
 	}
 }

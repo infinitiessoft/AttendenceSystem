@@ -1,5 +1,7 @@
 package calendar;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -34,7 +36,7 @@ public class CalendarUtilTest {
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 1);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 1);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -44,7 +46,7 @@ public class CalendarUtilTest {
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -69,7 +71,7 @@ public class CalendarUtilTest {
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 2);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 2);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -79,7 +81,7 @@ public class CalendarUtilTest {
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -93,8 +95,8 @@ public class CalendarUtilTest {
 		event1.setStart(start);
 		event1.setEnd(end);
 		events.add(event1);
-		startCalendar.set(Calendar.HOUR, 1);
-		endCalendar.set(Calendar.HOUR, 9);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 1);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 9);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
 		CalendarUtil.checkNotOverlaps(interval, events);
@@ -106,7 +108,7 @@ public class CalendarUtilTest {
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 2);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 2);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -116,7 +118,7 @@ public class CalendarUtilTest {
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -130,8 +132,8 @@ public class CalendarUtilTest {
 		event1.setStart(start);
 		event1.setEnd(end);
 		events.add(event1);
-		startCalendar.set(Calendar.HOUR, 3);
-		endCalendar.set(Calendar.HOUR, 7);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 3);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 7);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
 		CalendarUtil.checkNotOverlaps(interval, events);
@@ -143,7 +145,7 @@ public class CalendarUtilTest {
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 1);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 1);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -153,7 +155,7 @@ public class CalendarUtilTest {
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -178,7 +180,7 @@ public class CalendarUtilTest {
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 1);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 1);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -188,7 +190,7 @@ public class CalendarUtilTest {
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -214,14 +216,14 @@ public class CalendarUtilTest {
 				endCalendar.getTimeInMillis());
 		CalendarUtil.checkNotOverlaps(interval, events);
 	}
-	
+
 	@Test(expected = InvalidStartAndEndDateException.class)
 	public void testOverlapsWithMultipleEvent() {
 		Event event = new Event();
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 1);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 1);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -231,7 +233,7 @@ public class CalendarUtilTest {
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -263,7 +265,7 @@ public class CalendarUtilTest {
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 2);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 2);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -272,7 +274,7 @@ public class CalendarUtilTest {
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -283,8 +285,8 @@ public class CalendarUtilTest {
 		event1.setStart(start);
 		event1.setEnd(end);
 		events.add(event1);
-		startCalendar.set(Calendar.HOUR, 1);
-		endCalendar.set(Calendar.HOUR, 9);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 1);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 9);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
 		CalendarUtil.checkNotOverlaps(interval, events);
@@ -294,8 +296,7 @@ public class CalendarUtilTest {
 	public void testOverlapsWithSmallInterval() {
 		EventDateTime start = new EventDateTime();
 		Calendar startCalendar = Calendar.getInstance();
-		startCalendar.set(Calendar.AM_PM, Calendar.AM);
-		startCalendar.set(Calendar.HOUR, 2);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 2);
 		startCalendar.set(Calendar.MINUTE, 0);
 		startCalendar.set(Calendar.SECOND, 0);
 		DateTime startDateTime = new DateTime(startCalendar.getTime());
@@ -303,8 +304,7 @@ public class CalendarUtilTest {
 
 		EventDateTime end = new EventDateTime();
 		Calendar endCalendar = Calendar.getInstance();
-		endCalendar.set(Calendar.AM_PM, Calendar.AM);
-		endCalendar.set(Calendar.HOUR, 8);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 8);
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 		DateTime endDateTime = new DateTime(endCalendar.getTime());
@@ -315,11 +315,109 @@ public class CalendarUtilTest {
 		event1.setStart(start);
 		event1.setEnd(end);
 		events.add(event1);
-		startCalendar.set(Calendar.HOUR, 3);
-		endCalendar.set(Calendar.HOUR, 7);
+		startCalendar.set(Calendar.HOUR_OF_DAY, 3);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 7);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
 		CalendarUtil.checkNotOverlaps(interval, events);
 	}
 
+	@Test
+	public void testCountDurationHalfDay() {
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(Calendar.HOUR_OF_DAY, 9);
+		startCalendar.set(Calendar.MINUTE, 0);
+		startCalendar.set(Calendar.SECOND, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.set(Calendar.HOUR_OF_DAY, 13);
+		endCalendar.set(Calendar.MINUTE, 0);
+		endCalendar.set(Calendar.SECOND, 0);
+
+		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+				endCalendar.getTime());
+		assertEquals(0.5d, duration, 0.01d);
+	}
+
+	@Test
+	public void testCountDurationFullDay() {
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(Calendar.HOUR_OF_DAY, 8);
+		startCalendar.set(Calendar.MINUTE, 30);
+		startCalendar.set(Calendar.SECOND, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.set(Calendar.HOUR_OF_DAY, 13);
+		endCalendar.set(Calendar.MINUTE, 0);
+		endCalendar.set(Calendar.SECOND, 0);
+
+		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+				endCalendar.getTime());
+		assertEquals(1d, duration, 0.01d);
+	}
+
+	@Test
+	public void testCountDurationLargeFullDay() {
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(Calendar.HOUR_OF_DAY, 8);
+		startCalendar.set(Calendar.MINUTE, 0);
+		startCalendar.set(Calendar.SECOND, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.set(Calendar.HOUR_OF_DAY, 20);
+		endCalendar.set(Calendar.MINUTE, 0);
+		endCalendar.set(Calendar.SECOND, 0);
+
+		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+				endCalendar.getTime());
+		assertEquals(1d, duration, 0.01d);
+	}
+
+	@Test
+	public void testCountDurationCrossDay() {
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(Calendar.HOUR_OF_DAY, 14);
+		startCalendar.set(Calendar.MINUTE, 0);
+		startCalendar.set(Calendar.SECOND, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.add(Calendar.DAY_OF_YEAR, 1);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 14);
+		endCalendar.set(Calendar.MINUTE, 0);
+		endCalendar.set(Calendar.SECOND, 0);
+
+		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+				endCalendar.getTime());
+		assertEquals(1d, duration, 0.01d);
+	}
+
+	@Test
+	public void testCountDurationThreeAndHalfDay() {
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(Calendar.HOUR_OF_DAY, 10);
+		startCalendar.set(Calendar.MINUTE, 0);
+		startCalendar.set(Calendar.SECOND, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.add(Calendar.DAY_OF_YEAR, 3);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 14);
+		endCalendar.set(Calendar.MINUTE, 0);
+		endCalendar.set(Calendar.SECOND, 0);
+
+		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+				endCalendar.getTime());
+		assertEquals(3.5d, duration, 0.01d);
+	}
+	
+	@Test
+	public void testCountDurationHalfAndThreeDay() {
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(Calendar.HOUR_OF_DAY, 14);
+		startCalendar.set(Calendar.MINUTE, 0);
+		startCalendar.set(Calendar.SECOND, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.add(Calendar.DAY_OF_YEAR, 3);
+		endCalendar.set(Calendar.HOUR_OF_DAY, 18);
+		endCalendar.set(Calendar.MINUTE, 0);
+		endCalendar.set(Calendar.SECOND, 0);
+
+		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+				endCalendar.getTime());
+		assertEquals(3.5d, duration, 0.01d);
+	}
 }
