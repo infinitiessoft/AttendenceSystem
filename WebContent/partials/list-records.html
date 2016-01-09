@@ -13,7 +13,7 @@
 				<th st-sort="id">id</th>
 				<th st-sort="employeeName">author</th>
 				<th st-sort="typeName">type</th>
-				<th st-sort="bookDate">book date</th>
+				<th st-sort="status">status</th>
 				<th st-sort="startDate">start date</th>
 				<th st-sort="endDate">end date</th>
 				<th st-sort="duration">duration</th>
@@ -22,7 +22,7 @@
 				<th></th>
 				<th><input st-search="employeeName" /></th>
 				<th><input st-search="typeName" /></th>
-				<th><input st-search="bookDate" /></th>
+				<th><input st-search="status" /></th>
 				<th><input st-search="startDate" /></th>
 				<th><input st-search="endDate" /></th>
 				<th></th>
@@ -33,7 +33,7 @@
 				<td>{{row.id}}</td>
 				<td>{{row.employee.name}}</td>
 				<td>{{row.type.name}}</td>
-				<td>{{row.bookDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
+				<td>{{row.status}}</td>
 				<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 				<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 				<td>{{row.duration}}</td>

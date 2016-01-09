@@ -184,10 +184,29 @@ angular
 											}
 										}
 									});
+							
 							$routeProvider.when('/list-records', {
 								templateUrl : 'partials/list-records.html',
 								controller : 'list-records'
 							});
+							$routeProvider
+							.when(
+									'/edit-record/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-record',
+										resolve : {
+											record : function(
+													recordService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return recordService.get(id);
+											}
+										}
+									});
 
 							$routeProvider.otherwise('/');
 							
