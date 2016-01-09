@@ -98,6 +98,9 @@ public class Employee extends AbstractEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
 	private Set<AttendRecord> attendRecords = new HashSet<AttendRecord>(0);
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+	private Set<Event> events = new HashSet<Event>(0);
+
 	public String getPassword() {
 		return password;
 	}
