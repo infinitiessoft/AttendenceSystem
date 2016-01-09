@@ -1,20 +1,31 @@
 package service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.AttendRecordSpecification;
+import resources.specification.CalendarEventSpecification;
 import transfer.AttendRecordTransfer;
+import calendar.CalendarEventDao;
+import calendar.CalendarUtil;
+
+import com.google.api.services.calendar.model.Event;
+
 import dao.AttendRecordDao;
 import dao.AttendRecordTypeDao;
 import dao.EmployeeDao;
+import dao.EventDao;
 import entity.AttendRecord;
+import entity.AttendRecordType;
 import exceptions.AttendRecordNotFoundException;
 import exceptions.AttendRecordTypeNotFoundException;
 import exceptions.EmployeeNotFoundException;
@@ -23,15 +34,21 @@ import exceptions.InvalidStartAndEndDateException;
 
 public class AttendRecordServiceImpl implements AttendRecordService {
 
+	private final static String OFFICIAL_LEAVE_NAME = "official";
 	private AttendRecordDao attendRecordDao;
 	private AttendRecordTypeDao attendRecordTypeDao;
 	private EmployeeDao employeeDao;
+	private EventDao eventDao;
+	private CalendarEventDao calendarEventDao;
 
 	public AttendRecordServiceImpl(AttendRecordDao attendRecordDao,
-			AttendRecordTypeDao attendRecordTypeDao, EmployeeDao employeeDao) {
+			AttendRecordTypeDao attendRecordTypeDao, EmployeeDao employeeDao,
+			EventDao eventDao, CalendarEventDao calendarEventDao) {
 		this.attendRecordDao = attendRecordDao;
 		this.attendRecordTypeDao = attendRecordTypeDao;
 		this.employeeDao = employeeDao;
+		this.eventDao = eventDao;
+		this.calendarEventDao = calendarEventDao;
 	}
 
 	@Transactional
@@ -53,6 +70,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public AttendRecordTransfer save(AttendRecordTransfer attendRecord) {
 		attendRecord.setId(null);
@@ -60,8 +78,11 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		setUpAttendRecord(attendRecord, dep);
 		dep.setBookDate(new Date());
 		assetEndDateAfterStartDate(dep.getStartDate(), dep.getEndDate());
-		assetIsBusinessDays(dep.getStartDate(), dep.getEndDate());
-		return toAttendRecordTransfer(attendRecordDao.save(dep));
+		assertIsBusinessDays(dep.getType(), dep.getStartDate(),
+				dep.getEndDate());
+		dep = attendRecordDao.save(dep);
+		entity.Event event = new entity.Event();
+		return toAttendRecordTransfer(dep);
 	}
 
 	private void assetEndDateAfterStartDate(Date startDate, Date endDate) {
@@ -70,8 +91,27 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		}
 	}
 
-	private void assetIsBusinessDays(Date startDate, Date endDate) {
+	private void assertIsBusinessDays(AttendRecordType type, Date startDate,
+			Date endDate) {
+		if (OFFICIAL_LEAVE_NAME.equals(type.getName())) {
+			return;
+		}
+		DateTime start = new DateTime(startDate);
+		DateTime end = new DateTime(endDate);
+		Interval interval = new Interval(start, end);
 
+		List<Event> events = new ArrayList<Event>();
+
+		CalendarEventSpecification startSpec = new CalendarEventSpecification();
+		startSpec.setTimeMin(startDate);
+		startSpec.setTimeMax(endDate);
+		try {
+			events.addAll(calendarEventDao.findAll(startSpec, null));
+		} catch (IOException e) {
+			throw new RuntimeException("calendar api error", e);
+		}
+
+		CalendarUtil.checkNotOverlaps(interval, events);
 	}
 
 	@Override
@@ -81,6 +121,11 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			throw new AttendRecordNotFoundException(id);
 		}
 		setUpAttendRecord(updated, attendRecord);
+		attendRecord.setBookDate(new Date());
+		assetEndDateAfterStartDate(attendRecord.getStartDate(),
+				attendRecord.getEndDate());
+		assertIsBusinessDays(attendRecord.getType(),
+				attendRecord.getStartDate(), attendRecord.getEndDate());
 		return toAttendRecordTransfer(attendRecordDao.save(attendRecord));
 	}
 
@@ -143,8 +188,8 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		}
 	}
 
-	private Double countDuration(Date startDate, Date endDate) {
-		return 2D;
+	private double countDuration(Date startDate, Date endDate) {
+		return CalendarUtil.countDuration(startDate, endDate);
 	}
 
 	private AttendRecordTransfer toAttendRecordTransfer(

@@ -11,4 +11,8 @@ public class InvalidStartAndEndDateException extends BadRequestException {
 		super("Invalid startDate and endDate");
 	}
 
+	public InvalidStartAndEndDateException(String msg) {
+		super(msg);
+	}
+
 }

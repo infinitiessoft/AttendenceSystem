@@ -47,6 +47,9 @@
 
 	<jpa:repositories base-package="dao" />
 
+	<bean id="calendarDao" class="calendar.CalendarEventDao">
+	</bean>
+
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="departmentDao" />
@@ -76,6 +79,8 @@
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
+		<constructor-arg ref="eventDao" />
+		<constructor-arg ref="calendarDao" />
 	</bean>
 
 	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
