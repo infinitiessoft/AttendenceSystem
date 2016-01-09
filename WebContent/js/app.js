@@ -14,8 +14,8 @@ angular
 								$httpProvider,formlyConfigProvider) {
 
 							$routeProvider.when('/', {
-								templateUrl : 'partials/list-employees.html',
-								controller : 'list-employees'
+								templateUrl : 'partials/calendar.html',
+								controller : 'navigation'
 							});
 
 							$routeProvider
