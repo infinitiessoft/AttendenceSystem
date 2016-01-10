@@ -22,7 +22,6 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
-import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
@@ -38,11 +37,11 @@ public class CalendarEventDao {
 	private static final String SERVICE_ACCOUNT_EMAIL = "attendance@attendance-1183.iam.gserviceaccount.com";
 
 	/** Directory to store user credentials for this application. */
-	private static final java.io.File DATA_STORE_DIR = new java.io.File(
-			".credentials/attendance");
+	// private static final java.io.File DATA_STORE_DIR = new java.io.File(
+	// ".credentials/attendance");
 
-	/** Global instance of the {@link FileDataStoreFactory}. */
-	private static FileDataStoreFactory DATA_STORE_FACTORY;
+	// /** Global instance of the {@link FileDataStoreFactory}. */
+	// private static FileDataStoreFactory DATA_STORE_FACTORY;
 
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory
@@ -58,7 +57,7 @@ public class CalendarEventDao {
 	static {
 		try {
 			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
+			// DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
 		} catch (Throwable t) {
 			logger.warn("fail to access google calendar", t);
 		}
