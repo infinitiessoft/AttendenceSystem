@@ -22,7 +22,7 @@ import transfer.EventTransfer;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/event")
-public class EventResource {
+public class EventsResource {
 
 	@Autowired
 	private EventService eventService;
