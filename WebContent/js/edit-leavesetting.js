@@ -1,5 +1,5 @@
 angular
-		.module('edit-leavesetting', ['formly', 'formlyBootstrap'])
+		.module('edit-leavesetting', [ 'formly', 'formlyBootstrap' ])
 		.constant('formlyExampleApiCheck', apiCheck())
 		.config(
 				function config(formlyConfigProvider, formlyExampleApiCheck) {
@@ -76,8 +76,9 @@ angular
 							});
 				}).controller(
 				'edit-leavesetting',
-				function($rootScope, $scope, $routeParams, $location, formlyVersion,
-						leavesetting, leavesettingService, recordtypeService) {
+				function($rootScope, $scope, $routeParams, $location,
+						formlyVersion, leavesetting, leavesettingService,
+						recordtypeService) {
 					var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit Leavesetting'
 							: 'Add Leavesetting';
@@ -118,7 +119,7 @@ angular
 								label : 'Type',
 								options : $scope.types
 							}
-						}]
+						} ]
 					}, {
 						key : 'year',
 						type : 'input',
@@ -142,12 +143,17 @@ angular
 						console.log("Id : " + id);
 						if (id > 0) {
 							console.log("Update");
-							leavesettingService.update(id, vm.model);
+							leavesettingService.update(id, vm.model).then(
+									function(status) {
+										$location.path('/list-leavesettings');
+									});
 						} else {
 							console.log("Insert");
-							leavesettingService.insert(vm.model);
+							leavesettingService.insert(vm.model).then(
+									function(status) {
+										$location.path('/list-leavesettings');
+									});
 						}
-						$location.path('/list-leavesettings');
 					}
 
 				});

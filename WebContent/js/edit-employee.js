@@ -74,7 +74,8 @@ angular
 									}
 								}
 							});
-				}).controller(
+				})
+		.controller(
 				'edit-employee',
 				function($rootScope, $scope, $routeParams, $location,
 						formlyVersion, employee, employeeService,
@@ -233,17 +234,28 @@ angular
 					function onSubmit() {
 						if (vm.form.$valid) {
 							if (id > 0) {
-								employeeService.update(id, vm.model);
-							} else {
-								employeeService.insert(vm.model).success(
+								employeeService.update(id, vm.model).then(
 										function(status) {
-											var employeeid = status.id;
-											var roleid = vm.roles.role.id;
-											employeeRoleService.insert(
-													employeeid, roleid);
+											$location.path('/list-employees');
 										});
+							} else {
+								employeeService
+										.insert(vm.model)
+										.success(
+												function(status) {
+													var employeeid = status.id;
+													var roleid = vm.roles.role.id;
+													employeeRoleService
+															.insert(employeeid,
+																	roleid)
+															.then(
+																	function(
+																			status) {
+																		$location
+																				.path('/list-employees');
+																	});
+												});
 							}
-							$location.path('/list-employees');
 						}
 					}
 

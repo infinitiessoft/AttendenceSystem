@@ -11,7 +11,7 @@
 		<thead>
 			<tr>
 				<th st-sort="id">id</th>
-				<th st-sort="employeeName">author</th>
+				<th st-sort="applicantName">applicant</th>
 				<th st-sort="typeName">type</th>
 				<th st-sort="status">status</th>
 				<th st-sort="startDate">start date</th>
@@ -20,7 +20,7 @@
 			</tr>
 			<tr>
 				<th></th>
-				<th><input st-search="employeeName" /></th>
+				<th><input st-search="applicantName" /></th>
 				<th><input st-search="typeName" /></th>
 				<th><input st-search="status" /></th>
 				<th><input st-search="startDate" /></th>
@@ -31,7 +31,7 @@
 		<tbody ng-show="!isLoading">
 			<tr ng-repeat="row in displayed">
 				<td>{{row.id}}</td>
-				<td>{{row.employee.name}}</td>
+				<td>{{row.applicant.name}}</td>
 				<td>{{row.type.name}}</td>
 				<td>{{row.status}}</td>
 				<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>

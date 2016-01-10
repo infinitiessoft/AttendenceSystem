@@ -40,11 +40,16 @@ angular.module('edit-recordtype', []).controller(
 			function onSubmit() {
 				if (vm.form.$valid) {
 					if (id > 0) {
-						recordtypeService.update(id, vm.model);
+						recordtypeService.update(id, vm.model).then(
+								function(status) {
+									$location.path('/list-recordtypes');
+								});
 					} else {
-						recordtypeService.insert(vm.model);
+						recordtypeService.insert(vm.model).then(
+								function(status) {
+									$location.path('/list-recordtypes');
+								});
 					}
-					$location.path('/list-recordtypes');
 				}
 			}
 		});

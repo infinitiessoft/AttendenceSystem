@@ -39,11 +39,14 @@ angular.module('edit-role', []).controller(
 			function onSubmit() {
 				if (vm.form.$valid) {
 					if (id > 0) {
-						roleService.update(id, vm.model);
+						roleService.update(id, vm.model).then(function(status) {
+							$location.path('/list-roles');
+						});
 					} else {
-						roleService.insert(vm.model);
+						roleService.insert(vm.model).then(function(status) {
+							$location.path('/list-roles');
+						});
 					}
-					$location.path('/list-roles');
 				}
 			}
 		});
