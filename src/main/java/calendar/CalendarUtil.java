@@ -13,6 +13,7 @@ import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 
 import exceptions.InvalidStartAndEndDateException;
@@ -32,6 +33,8 @@ public class CalendarUtil {
 
 		// looking for adjusted working days in list
 		for (Event event : events) {
+			logger.debug("event: {} ({})", new Object[] { event.getSummary(),
+					event.getStart() });
 			if (event.getSummary().contains(ADJUSTED_WORKING_DAY)) {
 				long eventStart = event.getStart() != null ? event.getStart()
 						.getDate().getValue() : event.getStart().getDateTime()
@@ -59,18 +62,22 @@ public class CalendarUtil {
 		}
 
 		for (Event event : events) {
-			long eventStart = event.getStart() != null ? event.getStart()
-					.getDate().getValue() : event.getStart().getDateTime()
+			long eventStart = event.getStart().getDate() != null ? event
+					.getStart().getDate().getValue() : event.getStart()
+					.getDateTime().getValue();
+			long eventEnd = event.getEnd().getDate() != null ? event.getEnd()
+					.getDate().getValue() : event.getEnd().getDateTime()
 					.getValue();
-			long eventEnd = event.getEnd() != null ? event.getEnd().getDate()
-					.getValue() : event.getEnd().getDateTime().getValue();
 			Interval eventInterval = new Interval(eventStart, eventEnd);
 
 			for (Interval removed : removedOverlaps) {
 				if (removed.overlaps(eventInterval)) {
+					DateTime date = event.getStart().getDate() != null ? event
+							.getStart().getDate() : event.getStart()
+							.getDateTime();
 					String msg = String.format(
-							"Invalid interval, it overlap %s %s", new Object[] {
-									event.getSummary(), event.getStart() });
+							"Invalid interval, it overlap %s(%s)",
+							new Object[] { event.getSummary(), date });
 					throw new InvalidStartAndEndDateException(msg);
 				}
 			}

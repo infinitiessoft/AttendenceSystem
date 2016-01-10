@@ -2,10 +2,10 @@ package calendar;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,10 +16,7 @@ import org.springframework.data.domain.Sort.Order;
 import resources.specification.CalendarEventSpecification;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -28,6 +25,7 @@ import com.google.api.client.util.DateTime;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
 public class CalendarEventDao {
@@ -36,6 +34,8 @@ public class CalendarEventDao {
 			.getLogger(CalendarEventDao.class);
 	/** Application name. */
 	private static final String APPLICATION_NAME = "Attendance System2.0 with Google Calendar API";
+
+	private static final String SERVICE_ACCOUNT_EMAIL = "attendance@attendance-1183.iam.gserviceaccount.com";
 
 	/** Directory to store user credentials for this application. */
 	private static final java.io.File DATA_STORE_DIR = new java.io.File(
@@ -70,7 +70,21 @@ public class CalendarEventDao {
 	}
 
 	public CalendarEventDao() {
-		this("primary");
+		this("attendance@infinitiessoft.com");
+	}
+
+	public static void main(String args[]) throws IOException,
+			GeneralSecurityException {
+		CalendarEventDao dao = new CalendarEventDao();
+		List<Event> es = dao.findAll(null, null);
+		System.err.println(es.size());
+		Event event = new Event();
+		EventDateTime start = new EventDateTime();
+		start.setDateTime(new DateTime(new Date()));
+		event.setStart(start);
+		event.setEnd(start);
+		event.setSummary("demo");
+		dao.save(event);
 	}
 
 	/**
@@ -78,24 +92,22 @@ public class CalendarEventDao {
 	 * 
 	 * @return an authorized Credential object.
 	 * @throws IOException
+	 * @throws GeneralSecurityException
 	 */
-	private Credential authorize() throws IOException {
+	private Credential authorize() throws GeneralSecurityException, IOException {
 		// Load client secrets.
-		InputStream in = new File(
-				"/Users/pohsun/Documents/workspace/attendance2.0/AttendenceSystem/src/main/resource/client_secret.json")
-				.toURL().openStream();
-		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-				JSON_FACTORY, new InputStreamReader(in));
 
-		// Build flow and trigger user authorization request.
-		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-				HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-				.setDataStoreFactory(DATA_STORE_FACTORY)
-				.setAccessType("offline").build();
-		Credential credential = new AuthorizationCodeInstalledApp(flow,
-				new LocalServerReceiver()).authorize("user");
-		logger.debug("Credentials saved to {}",
-				DATA_STORE_DIR.getAbsolutePath());
+		GoogleCredential credential = new GoogleCredential.Builder()
+				.setTransport(HTTP_TRANSPORT)
+				.setJsonFactory(JSON_FACTORY)
+				.setServiceAccountUser("attendance@infinitiessoft.com")
+				.setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
+				.setServiceAccountScopes(SCOPES)
+				.setServiceAccountPrivateKeyFromP12File(
+						new File(
+								"/Users/pohsun/Documents/workspace/attendance2.0/AttendenceSystem/src/main/resource/attendance-174d40e80c26.p12"))
+				.build();
+		credential.refreshToken();
 		return credential;
 	}
 
@@ -104,9 +116,10 @@ public class CalendarEventDao {
 	 * 
 	 * @return an authorized Calendar client service
 	 * @throws IOException
+	 * @throws GeneralSecurityException
 	 */
 	private com.google.api.services.calendar.Calendar getCalendarService()
-			throws IOException {
+			throws IOException, GeneralSecurityException {
 		Credential credential = authorize();
 		return new com.google.api.services.calendar.Calendar.Builder(
 				HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
@@ -114,7 +127,7 @@ public class CalendarEventDao {
 	}
 
 	public List<Event> findAll(CalendarEventSpecification spec,
-			Pageable pageable) throws IOException {
+			Pageable pageable) throws IOException, GeneralSecurityException {
 		// Build a new authorized API client service.
 		// Note: Do not confuse this class with the
 		// com.google.api.services.calendar.model.Calendar class.
@@ -138,6 +151,8 @@ public class CalendarEventDao {
 				orderBy = iterator.next().getProperty();
 			}
 		}
+		logger.debug("timeMin:{}, timeMax:{}",
+				new Object[] { timeMin, timeMax });
 
 		String pageToken = null;
 		List<Event> eventList = new ArrayList<Event>();
@@ -159,7 +174,7 @@ public class CalendarEventDao {
 		return eventList;
 	}
 
-	public Event save(Event event) throws IOException {
+	public Event save(Event event) throws IOException, GeneralSecurityException {
 		com.google.api.services.calendar.Calendar service = getCalendarService();
 		event = service.events().insert(calendarId, event).execute();
 		logger.debug("Event created: {}", event.getHtmlLink());

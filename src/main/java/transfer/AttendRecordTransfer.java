@@ -14,6 +14,10 @@ public class AttendRecordTransfer implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public static enum Status implements Serializable {
+		pending, permit, reject,
+	}
+
 	public static class Employee implements Serializable {
 		/**
 		 * 
@@ -93,7 +97,7 @@ public class AttendRecordTransfer implements Serializable {
 	}
 
 	private Long id;
-	private Employee employee;
+	private Employee applicant;
 	private String reason;
 	private Double duration;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
@@ -103,8 +107,9 @@ public class AttendRecordTransfer implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date startDate;
 	private Type type;
+	private Status status;
 
-	private boolean isEmployeeSet;
+	private boolean isApplicantSet;
 	private boolean isReasonSet;
 	private boolean isDurationSet;
 	private boolean isEndDateSet;
@@ -125,13 +130,13 @@ public class AttendRecordTransfer implements Serializable {
 		this.id = id;
 	}
 
-	public Employee getEmployee() {
-		return employee;
+	public Employee getApplicant() {
+		return applicant;
 	}
 
-	public void setEmployee(Employee employee) {
-		this.isEmployeeSet = true;
-		this.employee = employee;
+	public void setApplicant(Employee applicant) {
+		this.isApplicantSet = true;
+		this.applicant = applicant;
 	}
 
 	public String getReason() {
@@ -190,12 +195,12 @@ public class AttendRecordTransfer implements Serializable {
 
 	@XmlTransient
 	public boolean isEmployeeSet() {
-		return isEmployeeSet;
+		return isApplicantSet;
 	}
 
 	@XmlTransient
 	public void setEmployeeSet(boolean isEmployeeSet) {
-		this.isEmployeeSet = isEmployeeSet;
+		this.isApplicantSet = isEmployeeSet;
 	}
 
 	@XmlTransient
@@ -256,6 +261,14 @@ public class AttendRecordTransfer implements Serializable {
 	@XmlTransient
 	public void setTypeSet(boolean isTypeSet) {
 		this.isTypeSet = isTypeSet;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 }

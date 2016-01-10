@@ -72,7 +72,7 @@ public class AttendRecordsResource {
 				.getUserPrincipal().getName());
 		Employee e = new Employee();
 		e.setId(employee.getId());
-		attendRecord.setEmployee(e);
+		attendRecord.setApplicant(e);
 		return attendRecordService.save(attendRecord);
 	}
 
