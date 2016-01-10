@@ -87,12 +87,17 @@
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
 	</bean>
-	
+
 	<bean id="employeeLeaveService" class="service.EmployeeLeaveServiceImpl">
 		<constructor-arg ref="employeeLeaveDao" />
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="leavesettingDao" />
 	</bean>
+
+	<bean id="eventService" class="service.EventServiceImpl">
+		<constructor-arg ref="eventDao" />
+	</bean>
+
 
 	<bean id="userDetailService" class="service.UserDetailServiceImpl">
 		<constructor-arg ref="employeeDao" />

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import transfer.AttendRecordTransfer;
 import entity.AttendRecord;
 import entity.AttendRecordType;
 import entity.Department;
@@ -64,6 +65,22 @@ public class DataBaseInitializer {
 		dep.setResponseto(1l);
 		dep.setName("sale");
 		dep = depDao.save(dep);
+		
+		Employee demo = new Employee();
+		demo.setDateofjoined(new Date());
+		demo.setEmail("demo@gmail.com");
+		demo.setName("demo");
+		demo.setPassword(this.passwordEncoder.encode("demo"));
+		demo.setUsername("demo");
+		Role role = new Role();
+		role.setName("admin");
+		Role user = new Role();
+		user.setName("user");
+		demo.setGender(Gender.male.name());
+		role = roleDao.save(role);
+		user = roleDao.save(user);
+		demo.setDepartment(dep);
+		demo = this.employeeDao.save(demo);
 
 		Employee admin = new Employee();
 		admin.setDateofjoined(new Date());
@@ -71,20 +88,20 @@ public class DataBaseInitializer {
 		admin.setName("pohsun, Huang");
 		admin.setPassword(this.passwordEncoder.encode("2ggudoou"));
 		admin.setUsername("pohsun");
-		Role role = new Role();
-		role.setName("admin");
-		Role user = new Role();
-		user.setName("user");
 		admin.setGender(Gender.male.name());
-		role = roleDao.save(role);
-		user = roleDao.save(user);
 		admin.setDepartment(dep);
+		admin.setEmployee(demo);
 		this.employeeDao.save(admin);
 
 		EmployeeRole adminEmployee = new EmployeeRole();
 		adminEmployee.setEmployee(admin);
 		adminEmployee.setRole(role);
 		employeeRoleDao.save(adminEmployee);
+		
+		EmployeeRole demoEmployee = new EmployeeRole();
+		demoEmployee.setEmployee(demo);
+		demoEmployee.setRole(role);
+		employeeRoleDao.save(demoEmployee);
 
 		AttendRecord record = new AttendRecord();
 		record.setBookDate(new Date());
@@ -94,8 +111,9 @@ public class DataBaseInitializer {
 		record.setReason("reason");
 		record.setStartDate(new Date());
 		record.setType(annual);
+		record.setStatus(AttendRecordTransfer.Status.permit.name());
 		recordDao.save(record);
-		
+
 		AttendRecord record2 = new AttendRecord();
 		record2.setBookDate(new Date());
 		record2.setDuration(1D);
@@ -104,8 +122,9 @@ public class DataBaseInitializer {
 		record2.setReason("reason");
 		record2.setStartDate(new Date());
 		record2.setType(sick);
+		record2.setStatus(AttendRecordTransfer.Status.permit.name());
 		recordDao.save(record2);
-		
+
 		AttendRecord record3 = new AttendRecord();
 		record3.setBookDate(new Date());
 		record3.setDuration(1D);
@@ -114,6 +133,7 @@ public class DataBaseInitializer {
 		record3.setReason("reason");
 		record3.setStartDate(new Date());
 		record3.setType(personal);
+		record3.setStatus(AttendRecordTransfer.Status.permit.name());
 		recordDao.save(record3);
 
 	}

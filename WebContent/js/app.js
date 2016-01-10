@@ -3,7 +3,7 @@ angular
 				'attendance',
 				[ 'ngRoute', 'ngCookies',
 						'formly', 'formlyBootstrap', 'ui.bootstrap',
-						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave'])
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave','list-events'])
 		.config(
 				[
 						'$routeProvider',
@@ -207,6 +207,11 @@ angular
 											}
 										}
 									});
+							
+							$routeProvider.when('/list-events', {
+								templateUrl : 'partials/list-events.html',
+								controller : 'list-events'
+							});
 
 							$routeProvider.otherwise('/');
 							
@@ -229,6 +234,7 @@ angular
 									$rootScope, $location) {
 								return {
 									'responseError' : function(rejection) {
+										var data = rejection.data;
 										var status = rejection.status;
 										var config = rejection.config;
 										var method = config.method;
@@ -240,7 +246,7 @@ angular
 											$rootScope.error = method + " on "
 													+ url
 													+ " failed with status "
-													+ status;
+													+ status+", message: "+JSON.stringify(data);
 										}
 
 										return $q.reject(rejection);
