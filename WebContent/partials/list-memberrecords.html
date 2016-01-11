@@ -1,5 +1,5 @@
 <div class="pull-right">
-	<a href="#!/edit-record/0" class="btn btn-sm btn-success"
+	<a href="#!/edit-memberrecord" class="btn btn-sm btn-success"
 		title="Create"><i class="glyphicon glyphicon-plus"> </i></a>
 </div>
 <div class="page-header">
@@ -11,7 +11,6 @@
 		<thead>
 			<tr>
 				<th st-sort="id">id</th>
-				<th st-sort="applicantName">applicant</th>
 				<th st-sort="typeName">type</th>
 				<th st-sort="status">status</th>
 				<th st-sort="startDate">start date</th>
@@ -20,7 +19,6 @@
 			</tr>
 			<tr>
 				<th></th>
-				<th><input st-search="applicantName" /></th>
 				<th><input st-search="typeName" /></th>
 				<th><input st-search="status" /></th>
 				<th><input st-search="startDate" /></th>
@@ -31,20 +29,11 @@
 		<tbody ng-show="!isLoading">
 			<tr ng-repeat="row in displayed">
 				<td>{{row.id}}</td>
-				<td>{{row.applicant.name}}</td>
 				<td>{{row.type.name}}</td>
 				<td>{{row.status}}</td>
 				<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 				<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 				<td>{{row.duration}}</td>
-				<td><a href="#!/edit-record/{{row.id}}"
-					class="btn btn-sm btn-primary" ng-show="hasRole('admin')"> <i
-						class="glyphicon glyphicon-pencil"> </i>
-				</a>
-					<button type="button" ng-click="removeEntry(row)"
-						class="btn btn-sm btn-danger">
-						<i class="glyphicon glyphicon-remove"> </i>
-					</button></td>
 			</tr>
 		</tbody>
 		<tbody ng-show="isLoading">

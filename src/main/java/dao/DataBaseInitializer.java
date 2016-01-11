@@ -9,6 +9,7 @@ import entity.AttendRecord;
 import entity.AttendRecordType;
 import entity.Department;
 import entity.Employee;
+import entity.EmployeeLeave;
 import entity.EmployeeRole;
 import entity.Gender;
 import entity.Leavesetting;
@@ -23,12 +24,14 @@ public class DataBaseInitializer {
 	private AttendRecordDao recordDao;
 	private EmployeeRoleDao employeeRoleDao;
 	private LeavesettingDao leavesettingDao;
+	private EmployeeLeaveDao employeeLeaveDao;
 	private PasswordEncoder passwordEncoder;
 
 	public DataBaseInitializer(EmployeeDao employeeDao, RoleDao roleDao,
 			DepartmentDao depDao, AttendRecordTypeDao recordTypeDao,
 			EmployeeRoleDao employeeRoleDao, LeavesettingDao leavesettingDao,
-			AttendRecordDao recordDao, PasswordEncoder passwordEncoder) {
+			AttendRecordDao recordDao, EmployeeLeaveDao employeeLeaveDao,
+			PasswordEncoder passwordEncoder) {
 		super();
 		this.employeeDao = employeeDao;
 		this.roleDao = roleDao;
@@ -38,6 +41,7 @@ public class DataBaseInitializer {
 		this.passwordEncoder = passwordEncoder;
 		this.leavesettingDao = leavesettingDao;
 		this.recordDao = recordDao;
+		this.employeeLeaveDao = employeeLeaveDao;
 	}
 
 	public void initDataBase() {
@@ -152,6 +156,45 @@ public class DataBaseInitializer {
 		record3.setType(personal);
 		record3.setStatus(AttendRecordTransfer.Status.permit.name());
 		recordDao.save(record3);
+
+		Leavesetting annual1 = new Leavesetting();
+		annual1.setDays(3d);
+		annual1.setName("first_year_annual");
+		annual1.setYear(1l);
+		annual1.setType(annual);
+		annual1 = leavesettingDao.save(annual1);
+
+		Leavesetting personal1 = new Leavesetting();
+		personal1.setDays(3d);
+		personal1.setName("first_year_personal");
+		personal1.setYear(1l);
+		personal1.setType(personal);
+		personal1 = leavesettingDao.save(personal1);
+
+		Leavesetting sick1 = new Leavesetting();
+		sick1.setDays(3d);
+		sick1.setName("first_year_sick");
+		sick1.setYear(1l);
+		sick1.setType(sick);
+		sick1 = leavesettingDao.save(sick1);
+
+		EmployeeLeave adminAnnual = new EmployeeLeave();
+		adminAnnual.setEmployee(admin);
+		adminAnnual.setLeavesetting(annual1);
+		adminAnnual.setUsedDays(0d);
+		adminAnnual = employeeLeaveDao.save(adminAnnual);
+
+		EmployeeLeave adminSick = new EmployeeLeave();
+		adminSick.setEmployee(admin);
+		adminSick.setLeavesetting(sick1);
+		adminSick.setUsedDays(0d);
+		adminSick = employeeLeaveDao.save(adminSick);
+		
+		EmployeeLeave adminPersonal = new EmployeeLeave();
+		adminPersonal.setEmployee(admin);
+		adminPersonal.setLeavesetting(personal1);
+		adminPersonal.setUsedDays(0d);
+		adminPersonal = employeeLeaveDao.save(adminPersonal);
 	}
 
 }

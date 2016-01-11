@@ -3,7 +3,7 @@ angular
 				'attendance',
 				[ 'ngRoute', 'ngCookies',
 						'formly', 'formlyBootstrap', 'ui.bootstrap',
-						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave','list-events'])
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave','list-events','list-memberrecords','edit-memberrecord','list-memberevents'])
 		.config(
 				[
 						'$routeProvider',
@@ -207,10 +207,33 @@ angular
 											}
 										}
 									});
+							$routeProvider.when('/list-memberrecords', {
+								templateUrl : 'partials/list-memberrecords.html',
+								controller : 'list-memberrecords'
+							});
+							$routeProvider
+							.when(
+									'/edit-memberrecord',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-memberrecord',
+										resolve : {
+											record : function(
+													recordService,
+													$route) {
+													return {data:{}};
+											}
+										}
+									});
 							
 							$routeProvider.when('/list-events', {
 								templateUrl : 'partials/list-events.html',
 								controller : 'list-events'
+							});
+							
+							$routeProvider.when('/list-memberevents', {
+								templateUrl : 'partials/list-memberevents.html',
+								controller : 'list-memberevents'
 							});
 
 							$routeProvider.otherwise('/');

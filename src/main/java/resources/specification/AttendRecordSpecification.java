@@ -35,6 +35,8 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 	@QueryParam("status")
 	private String status;
 
+	private Long id;
+
 	@Override
 	public Predicate toPredicate(Root<AttendRecord> root,
 			CriteriaQuery<?> query, CriteriaBuilder cb) {
@@ -65,6 +67,11 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 					root.<Employee> get("employee").<Long> get("id"),
 					applicantId));
 		}
+
+		if (id != null) {
+			predicates.add(cb.equal(root.<Long> get("id"), id));
+		}
+
 		if (applicantName != null) {
 			predicates.add(cb.equal(
 					root.<Employee> get("employee").<Long> get("name"),
@@ -132,6 +139,14 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 
 	public void setApplicantName(String applicantName) {
 		this.applicantName = applicantName;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }

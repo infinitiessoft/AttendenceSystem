@@ -89,7 +89,7 @@ public class Leavesetting extends AbstractEntity {
 	}
 
 	public void setName(String name) {
-		this.name = type.getName() + "_" + year + "_" + days;
+		this.name = name;
 	}
 
 }

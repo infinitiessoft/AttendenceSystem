@@ -31,7 +31,7 @@ public class EmployeeRolesResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Page<RoleTransfer> findAllRole(@PathParam("employeeid") long id,
+	public Page<RoleTransfer> findAllRole(@PathParam("id") long id,
 			@BeanParam SimplePageRequest pageRequest) {
 		EmployeeRoleSpecification spec = new EmployeeRoleSpecification();
 		spec.setEmployeeId(id);
@@ -41,7 +41,7 @@ public class EmployeeRolesResource {
 	@GET
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RoleTransfer findRole(@PathParam("employeeid") long employeeId,
+	public RoleTransfer findRole(@PathParam("id") long employeeId,
 			@PathParam("roleid") long roleId) {
 		return employeeRoleService
 				.findByEmployeeIdAndRoleId(employeeId, roleId);
@@ -51,7 +51,7 @@ public class EmployeeRolesResource {
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response assignRoleToEmployee(
-			@PathParam("employeeid") long employeeId,
+			@PathParam("id") long employeeId,
 			@PathParam("roleid") long roleId) {
 		employeeRoleService.assignRoleToEmployee(employeeId, roleId);
 		return Response.status(Status.NO_CONTENT)
@@ -62,7 +62,7 @@ public class EmployeeRolesResource {
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response revokeRoleToEmployee(
-			@PathParam("employeeid") long employeeId,
+			@PathParam("id") long employeeId,
 			@PathParam("roleid") long roleId) {
 		employeeRoleService.delete(employeeId, roleId);
 		return Response.status(Status.NO_CONTENT)

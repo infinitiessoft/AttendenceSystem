@@ -36,6 +36,8 @@ public class EventSpecification implements Specification<Event> {
 	@QueryParam("action")
 	private String action;
 
+	private Long id;
+
 	@Override
 	public Predicate toPredicate(Root<Event> root, CriteriaQuery<?> query,
 			CriteriaBuilder cb) {
@@ -59,6 +61,10 @@ public class EventSpecification implements Specification<Event> {
 					root.<Employee> get("employee").<Long> get("id"),
 					approverId));
 		}
+		if (id != null) {
+			predicates.add(cb.equal(root.<Long> get("id"), id));
+		}
+
 		if (approverName != null) {
 			predicates.add(cb.equal(
 					root.<Employee> get("employee").<Long> get("name"),
@@ -136,6 +142,14 @@ public class EventSpecification implements Specification<Event> {
 
 	public void setRecordTypeName(String recordTypeName) {
 		this.recordTypeName = recordTypeName;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 }
