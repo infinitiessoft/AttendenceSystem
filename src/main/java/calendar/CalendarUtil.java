@@ -1,6 +1,7 @@
 package calendar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +16,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.Event.Organizer;
+import com.google.api.services.calendar.model.EventAttendee;
+import com.google.api.services.calendar.model.EventDateTime;
 
+import entity.AttendRecord;
+import entity.Employee;
 import exceptions.InvalidStartAndEndDateException;
 
 public class CalendarUtil {
@@ -23,6 +29,8 @@ public class CalendarUtil {
 	private final static Logger logger = LoggerFactory
 			.getLogger(CalendarUtil.class);
 	private final static String ADJUSTED_WORKING_DAY = "\u88dc\u73ed";
+	private static final String COLOR_ID = "4";
+	private static final String CONFIRMED = "confirmed";
 
 	private CalendarUtil() {
 
@@ -62,6 +70,9 @@ public class CalendarUtil {
 		}
 
 		for (Event event : events) {
+			if (COLOR_ID.equals(event.getColorId())) { // ignore leave event
+				continue;
+			}
 			long eventStart = event.getStart().getDate() != null ? event
 					.getStart().getDate().getValue() : event.getStart()
 					.getDateTime().getValue();
@@ -179,5 +190,32 @@ public class CalendarUtil {
 			daysBetween++;
 		}
 		return daysBetween;
+	}
+
+	public static Event toEvent(AttendRecord record) {
+		Event event = new Event();
+		EventDateTime start = new EventDateTime();
+		start.setDateTime(new DateTime(record.getStartDate()));
+		event.setStart(start);
+		EventDateTime end = new EventDateTime();
+		end.setDateTime(new DateTime(record.getEndDate()));
+		event.setEnd(end);
+		event.setStatus(CONFIRMED);
+		Employee employee = record.getEmployee();
+		Organizer organizer = new Organizer();
+		organizer.setDisplayName(String.format("%s(%s)", employee.getName(),
+				employee.getUsername()));
+		organizer.setEmail(employee.getEmail());
+		event.setOrganizer(organizer);
+		String title = String.format("%s %s(%s)", record.getType().getName(),
+				employee.getName(), employee.getUsername());
+		event.setSummary(title);
+		event.setColorId(COLOR_ID);
+		event.setDescription(record.getReason());
+
+		EventAttendee[] attendees = new EventAttendee[] { new EventAttendee()
+				.setEmail(employee.getEmail()) };
+		event.setAttendees(Arrays.asList(attendees));
+		return event;
 	}
 }

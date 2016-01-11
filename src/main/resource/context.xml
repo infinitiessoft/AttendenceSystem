@@ -96,6 +96,8 @@
 
 	<bean id="eventService" class="service.EventServiceImpl">
 		<constructor-arg ref="eventDao" />
+		<constructor-arg ref="attendRecordDao" />
+		<constructor-arg ref="calendarDao" />
 	</bean>
 
 

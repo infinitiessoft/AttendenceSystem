@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,9 @@ import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
 import transfer.AttendRecordTransfer.Type;
 import transfer.EventTransfer;
+import transfer.EventTransfer.Action;
+import calendar.CalendarEventDao;
+import calendar.CalendarUtil;
 
 import com.google.common.base.Strings;
 
@@ -28,12 +33,17 @@ import exceptions.InvalidActionException;
 
 public class EventServiceImpl implements EventService {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(EventServiceImpl.class);
 	private EventDao eventDao;
 	private AttendRecordDao attendRecordDao;
+	private CalendarEventDao calendarEventDao;
 
-	public EventServiceImpl(EventDao eventDao, AttendRecordDao attendRecordDao) {
+	public EventServiceImpl(EventDao eventDao, AttendRecordDao attendRecordDao,
+			CalendarEventDao calendarEventDao) {
 		this.eventDao = eventDao;
 		this.attendRecordDao = attendRecordDao;
+		this.calendarEventDao = calendarEventDao;
 	}
 
 	@Transactional
@@ -81,8 +91,9 @@ public class EventServiceImpl implements EventService {
 		if (!Strings.isNullOrEmpty(event.getAction())) {
 			throw new DuplicateApproveException();
 		}
+		Action action = null;
 		try {
-			EventTransfer.Action.valueOf(updated.getAction());
+			action = EventTransfer.Action.valueOf(updated.getAction());
 		} catch (IllegalArgumentException e) {
 			throw new InvalidActionException(updated.getAction());
 		}
@@ -93,33 +104,38 @@ public class EventServiceImpl implements EventService {
 		// there is a manager the employee's manager response to then send it an
 		// blank event too.
 		AttendRecord record = event.getAttendRecord();
-		if (EventTransfer.Action.permit.equals(event.getAction())) {
+		logger.debug("action:{}", event.getAction());
+		if (EventTransfer.Action.permit.equals(action)) {
 			Double duration = record.getDuration();
-			if (duration > 1.0d) {
-				int size = record.getEvents().size();
-				if (size <= 1) { // the second event have not been sent
-					Employee employee = event.getEmployee().getEmployee();
-					if (employee != null) {
-						entity.Event newEvent = new entity.Event();
-						newEvent.setAttendRecord(record);
-						newEvent.setEmployee(employee);
-						eventDao.save(newEvent);
-					} else { // no more higher manager
-						record.setStatus(AttendRecordTransfer.Status.permit
-								.name());
-						record = attendRecordDao.save(record);
-					}
-				} else { // the second event have been sent
-					record.setStatus(AttendRecordTransfer.Status.permit.name());
-					record = attendRecordDao.save(record);
-				}
+			int size = record.getEvents().size();
+			Employee employee = event.getEmployee().getEmployee();
+			logger.debug("duration:{}, size:{}",
+					new Object[] { duration, size });
+			if (duration > 1.0d && size <= 1 && employee != null) {
+				logger.debug("second event have not been sent, send it now");
+				entity.Event newEvent = new entity.Event();
+				newEvent.setAttendRecord(record);
+				newEvent.setEmployee(employee);
+				eventDao.save(newEvent);
+			} else { // duration less than or equal to 1 day
+				record = permit(record);
 			}
 		} else {
+			logger.debug("set record status to 'reject'");
 			record.setStatus(AttendRecordTransfer.Status.reject.name());
 			record = attendRecordDao.save(record);
 		}
 		event.setAttendRecord(record);
 		return toEventTransfer(event);
+	}
+
+	private AttendRecord permit(AttendRecord record) {
+		record.setStatus(AttendRecordTransfer.Status.permit.name());
+		record = attendRecordDao.save(record);
+		com.google.api.services.calendar.model.Event calendarEvent = CalendarUtil
+				.toEvent(record);
+		calendarEventDao.save(calendarEvent);
+		return record;
 	}
 
 	@Transactional

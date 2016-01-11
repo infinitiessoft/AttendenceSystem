@@ -4,17 +4,16 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlTransient;
 
-
 public class LeavesettingTransfer implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	public static class Type implements Serializable {
-		
+
 		private static final long serialVersionUID = 1L;
 		private Long id;
 		private String name;
-		
+
 		private boolean isIdSet;
 
 		public Long getId() {
@@ -49,7 +48,7 @@ public class LeavesettingTransfer implements Serializable {
 	private String name;
 	private Type type;
 	private Long year;
-	private Long days;
+	private Double days;
 
 	private boolean isNameSet;
 	private boolean isTypeSet;
@@ -95,11 +94,11 @@ public class LeavesettingTransfer implements Serializable {
 		this.year = year;
 	}
 
-	public Long getDays() {
+	public Double getDays() {
 		return days;
 	}
 
-	public void setDays(Long days) {
+	public void setDays(Double days) {
 		this.isDaysSet = true;
 		this.days = days;
 	}
@@ -108,7 +107,7 @@ public class LeavesettingTransfer implements Serializable {
 	public boolean isTypeSet() {
 		return isTypeSet;
 	}
-	
+
 	@XmlTransient
 	public void setTypeSet(boolean isTypeSet) {
 		this.isTypeSet = isTypeSet;
@@ -133,7 +132,7 @@ public class LeavesettingTransfer implements Serializable {
 	public void setDaysSet(boolean isDaysSet) {
 		this.isDaysSet = isDaysSet;
 	}
-	
+
 	@XmlTransient
 	public boolean isNameSet() {
 		return isNameSet;
@@ -143,6 +142,5 @@ public class LeavesettingTransfer implements Serializable {
 	public void setNameSet(boolean isNameSet) {
 		this.isNameSet = isNameSet;
 	}
-
 
 }

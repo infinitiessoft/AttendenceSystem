@@ -1,7 +1,5 @@
 package service;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,6 +100,8 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		} else {
 			newEntry.setStatus(Status.permit.name());
 			newEntry = attendRecordDao.save(newEntry);
+			Event event = CalendarUtil.toEvent(newEntry);
+			calendarEventDao.save(event);
 		}
 		return toAttendRecordTransfer(newEntry);
 	}
@@ -126,13 +126,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		CalendarEventSpecification startSpec = new CalendarEventSpecification();
 		startSpec.setTimeMin(startDate);
 		startSpec.setTimeMax(endDate);
-		try {
-			events.addAll(calendarEventDao.findAll(startSpec, null));
-		} catch (IOException e) {
-			throw new RuntimeException("calendar api error", e);
-		} catch (GeneralSecurityException e) {
-			throw new RuntimeException("calendar api authentication error", e);
-		}
+		events.addAll(calendarEventDao.findAll(startSpec, null));
 		logger.debug("events size: {}", events.size());
 
 		CalendarUtil.checkNotOverlaps(interval, events);
@@ -239,55 +233,56 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		return ret;
 	}
 
-//	private void setUpStatus(AttendRecord attendRecord, AttendRecordTransfer ret) {
-//		if (isFinish(attendRecord)) {
-//			ret.setStatus(Status.permit);
-//			for (entity.Event event : attendRecord.getEvents()) {
-//				if (Status.reject.equals(event.getAction())) {
-//					ret.setStatus(Status.reject);
-//					return;
-//				}
-//			}
-//		} else {
-//			ret.setStatus(Status.pending);
-//		}
-//
-//	}
+	// private void setUpStatus(AttendRecord attendRecord, AttendRecordTransfer
+	// ret) {
+	// if (isFinish(attendRecord)) {
+	// ret.setStatus(Status.permit);
+	// for (entity.Event event : attendRecord.getEvents()) {
+	// if (Status.reject.equals(event.getAction())) {
+	// ret.setStatus(Status.reject);
+	// return;
+	// }
+	// }
+	// } else {
+	// ret.setStatus(Status.pending);
+	// }
+	//
+	// }
 
-//	private boolean isFinish(AttendRecord attendRecord) {
-//		int permitNum = 0;
-//
-//		// if there is no one the employee have to response to then the
-//		// leaves being permit automatically
-//		if (attendRecord.getEmployee().getEmployee() == null) {
-//			return true;
-//		}
-//
-//		// if the leaves is less than 1 day then it have to get 1 permit.
-//		if (attendRecord.getDuration() <= 1d) {
-//			permitNum = 1;
-//		}
-//
-//		// if the leaves is more than 2 days and there is someone the employee's
-//		// manager have to response to then it have to get 2 permit.
-//		if (attendRecord.getEmployee().getEmployee().getEmployee() == null) {
-//			permitNum = 1;
-//		} else {
-//			permitNum = 2;
-//		}
-//
-//		for (entity.Event event : attendRecord.getEvents()) {
-//			if (Status.reject.equals(event.getAction())) {
-//				return true;
-//			}
-//			if (Status.permit.equals(event.getAction())) {
-//				permitNum--;
-//			}
-//			if (permitNum == 0) {
-//				return true;
-//			}
-//		}
-//
-//		return false;
-//	}
+	// private boolean isFinish(AttendRecord attendRecord) {
+	// int permitNum = 0;
+	//
+	// // if there is no one the employee have to response to then the
+	// // leaves being permit automatically
+	// if (attendRecord.getEmployee().getEmployee() == null) {
+	// return true;
+	// }
+	//
+	// // if the leaves is less than 1 day then it have to get 1 permit.
+	// if (attendRecord.getDuration() <= 1d) {
+	// permitNum = 1;
+	// }
+	//
+	// // if the leaves is more than 2 days and there is someone the employee's
+	// // manager have to response to then it have to get 2 permit.
+	// if (attendRecord.getEmployee().getEmployee().getEmployee() == null) {
+	// permitNum = 1;
+	// } else {
+	// permitNum = 2;
+	// }
+	//
+	// for (entity.Event event : attendRecord.getEvents()) {
+	// if (Status.reject.equals(event.getAction())) {
+	// return true;
+	// }
+	// if (Status.permit.equals(event.getAction())) {
+	// permitNum--;
+	// }
+	// if (permitNum == 0) {
+	// return true;
+	// }
+	// }
+	//
+	// return false;
+	// }
 }

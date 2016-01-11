@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,10 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.CalendarList;
+import com.google.api.services.calendar.model.CalendarListEntry;
+import com.google.api.services.calendar.model.ColorDefinition;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
 public class CalendarEventDao {
@@ -75,15 +77,21 @@ public class CalendarEventDao {
 	public static void main(String args[]) throws IOException,
 			GeneralSecurityException {
 		CalendarEventDao dao = new CalendarEventDao();
-		List<Event> es = dao.findAll(null, null);
-		System.err.println(es.size());
-		Event event = new Event();
-		EventDateTime start = new EventDateTime();
-		start.setDateTime(new DateTime(new Date()));
-		event.setStart(start);
-		event.setEnd(start);
-		event.setSummary("demo");
-		dao.save(event);
+		dao.findCalendars();
+//		List<Event> events = dao.findAll(null, null);
+//		for (Event event : events) {
+//			System.err.println(event.getColorId() + "  " + event.getSummary()
+//					+ "  " + event.getStatus() + "  " + event.getOrganizer()
+//					+ "  " + event.getKind() + "  ");
+//		}
+		// System.err.println(es.size());
+		// Event event = new Event();
+		// EventDateTime start = new EventDateTime();
+		// start.setDateTime(new DateTime(new Date()));
+		// event.setStart(start);
+		// event.setEnd(start);
+		// event.setSummary("demo");
+		// dao.save(event);
 	}
 
 	/**
@@ -126,57 +134,114 @@ public class CalendarEventDao {
 	}
 
 	public List<Event> findAll(CalendarEventSpecification spec,
-			Pageable pageable) throws IOException, GeneralSecurityException {
+			Pageable pageable) {
+		try {
+			// Build a new authorized API client service.
+			// Note: Do not confuse this class with the
+			// com.google.api.services.calendar.model.Calendar class.
+			com.google.api.services.calendar.Calendar service = getCalendarService();
+
+			// List the next 10 events from the primary calendar.
+			DateTime timeMin = null;
+			if (spec != null && spec.getTimeMin() != null) {
+				timeMin = new DateTime(spec.getTimeMin());
+			}
+
+			DateTime timeMax = null;
+			if (spec != null && spec.getTimeMax() != null) {
+				timeMax = new DateTime(spec.getTimeMax());
+			}
+
+			String orderBy = "startTime";
+			if (pageable != null && pageable.getSort() != null) {
+				java.util.Iterator<Order> iterator = pageable.getSort()
+						.iterator();
+				if (iterator != null && iterator.hasNext()) {
+					orderBy = iterator.next().getProperty();
+				}
+			}
+			logger.debug("timeMin:{}, timeMax:{}", new Object[] { timeMin,
+					timeMax });
+
+			String pageToken = null;
+			List<Event> eventList = new ArrayList<Event>();
+			do {
+				com.google.api.services.calendar.Calendar.Events.List list = service
+						.events().list(calendarId).setPageToken(pageToken)
+						.setOrderBy(orderBy).setSingleEvents(true);
+				if (timeMin != null) {
+					list.setTimeMin(timeMin);
+				}
+				if (timeMax != null) {
+					list.setTimeMax(timeMax);
+				}
+				Events events = list.execute();
+				eventList.addAll(events.getItems());
+				pageToken = events.getNextPageToken();
+			} while (pageToken != null);
+
+			return eventList;
+		} catch (IOException e) {
+			throw new RuntimeException("calendar api error", e);
+		} catch (GeneralSecurityException e) {
+			throw new RuntimeException("calendar api authentication error", e);
+		}
+	}
+
+	public void findColors() throws IOException, GeneralSecurityException {
 		// Build a new authorized API client service.
 		// Note: Do not confuse this class with the
 		// com.google.api.services.calendar.model.Calendar class.
 		com.google.api.services.calendar.Calendar service = getCalendarService();
 
-		// List the next 10 events from the primary calendar.
-		DateTime timeMin = null;
-		if (spec != null && spec.getTimeMin() != null) {
-			timeMin = new DateTime(spec.getTimeMin());
+		com.google.api.services.calendar.model.Colors colors = service.colors()
+				.get().execute();
+
+		// Print available calendar list entry colors
+		for (Map.Entry<String, ColorDefinition> color : colors.getCalendar()
+				.entrySet()) {
+			System.out.println("ColorId : " + color.getKey());
+			System.out.println("  Background: "
+					+ color.getValue().getBackground());
+			System.out.println("  Foreground: "
+					+ color.getValue().getForeground());
 		}
 
-		DateTime timeMax = null;
-		if (spec != null && spec.getTimeMax() != null) {
-			timeMax = new DateTime(spec.getTimeMax());
+		// Print available event colors
+		for (Map.Entry<String, ColorDefinition> color : colors.getEvent()
+				.entrySet()) {
+			System.out.println("ColorId : " + color.getKey());
+			System.out.println("  Background: "
+					+ color.getValue().getBackground());
+			System.out.println("  Foreground: "
+					+ color.getValue().getForeground());
 		}
-
-		String orderBy = "startTime";
-		if (pageable != null && pageable.getSort() != null) {
-			java.util.Iterator<Order> iterator = pageable.getSort().iterator();
-			if (iterator != null && iterator.hasNext()) {
-				orderBy = iterator.next().getProperty();
-			}
-		}
-		logger.debug("timeMin:{}, timeMax:{}",
-				new Object[] { timeMin, timeMax });
-
-		String pageToken = null;
-		List<Event> eventList = new ArrayList<Event>();
-		do {
-			com.google.api.services.calendar.Calendar.Events.List list = service
-					.events().list(calendarId).setPageToken(pageToken)
-					.setOrderBy(orderBy).setSingleEvents(true);
-			if (timeMin != null) {
-				list.setTimeMin(timeMin);
-			}
-			if (timeMax != null) {
-				list.setTimeMax(timeMax);
-			}
-			Events events = list.execute();
-			eventList.addAll(events.getItems());
-			pageToken = events.getNextPageToken();
-		} while (pageToken != null);
-
-		return eventList;
 	}
 
-	public Event save(Event event) throws IOException, GeneralSecurityException {
+	public void findCalendars() throws IOException, GeneralSecurityException {
+		// Build a new authorized API client service.
+		// Note: Do not confuse this class with the
+		// com.google.api.services.calendar.model.Calendar class.
 		com.google.api.services.calendar.Calendar service = getCalendarService();
-		event = service.events().insert(calendarId, event).execute();
-		logger.debug("Event created: {}", event.getHtmlLink());
-		return event;
+
+		CalendarList cs = service.calendarList().list().execute();
+
+		// Print available calendar list entry colors
+		for (CalendarListEntry c : cs.getItems()) {
+			System.err.println(c.toPrettyString());
+		}
+	}
+
+	public Event save(Event event) {
+		try {
+			com.google.api.services.calendar.Calendar service = getCalendarService();
+			event = service.events().insert(calendarId, event).execute();
+			logger.debug("Event created: {}", event.getHtmlLink());
+			return event;
+		} catch (IOException e) {
+			throw new RuntimeException("calendar api error", e);
+		} catch (GeneralSecurityException e) {
+			throw new RuntimeException("calendar api authentication error", e);
+		}
 	}
 }
