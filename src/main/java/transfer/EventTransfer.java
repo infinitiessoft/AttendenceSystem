@@ -17,6 +17,10 @@ public class EventTransfer implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	public static enum Action {
+		permit, reject;
+	}
+
 	public static class Employee implements Serializable {
 		/**
 		 * 
