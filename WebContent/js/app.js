@@ -3,18 +3,19 @@ angular
 				'attendance',
 				[ 'ngRoute', 'ngCookies',
 						'formly', 'formlyBootstrap', 'ui.bootstrap',
-						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ])
+						'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave'])
 		.config(
 				[
 						'$routeProvider',
 						'$locationProvider',
 						'$httpProvider',
+						'formlyConfigProvider',
 						function($routeProvider, $locationProvider,
-								$httpProvider) {
+								$httpProvider,formlyConfigProvider) {
 
 							$routeProvider.when('/', {
-								templateUrl : 'partials/list-employees.html',
-								controller : 'list-employees'
+								templateUrl : 'partials/calendar.html',
+								controller : 'navigation'
 							});
 
 							$routeProvider
@@ -135,8 +136,67 @@ angular
 											}
 										}
 									});
+							
+							$routeProvider.when('/list-leavesettings', {
+								templateUrl : 'partials/list-leavesettings.html',
+								controller : 'list-leavesettings'
+							});
+							
+							$routeProvider
+							.when(
+									'/edit-leavesetting/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-leavesetting',
+										resolve : {
+											leavesetting : function(
+													leavesettingService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return leavesettingService.get(id);
+											}
+										}
+									});
+							
+							$routeProvider.when('/list-employeeleaves', {
+								templateUrl : 'partials/list-employeeleaves.html',
+								controller : 'list-employeeleaves'
+							});
+							
+							$routeProvider
+							.when(
+									'/edit-employeeleave/:id',
+									{
+										templateUrl : 'partials/edit.html',
+										controller : 'edit-employeeleave',
+										resolve : {
+											employeeleave : function(
+													employeeleaveService,
+													$route) {
+												var id = $route.current.params.id;
+												if(id == 0){
+													return {data:{}};
+												}
+												return employeeleaveService.get(id);
+											}
+										}
+									});
+							$routeProvider.when('/list-records', {
+								templateUrl : 'partials/list-records.html',
+								controller : 'list-records'
+							});
 
 							$routeProvider.otherwise('/');
+							
+							formlyConfigProvider.setWrapper({
+								name : 'validation',
+								types : [ 'input', 'datepicker', 'select','timepicker' ],
+								templateUrl : 'error-messages.html'
+							});
+
 
 							$httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 							$locationProvider.hashPrefix('!');
@@ -338,11 +398,88 @@ angular
 															};
 
 															return obj;
-														} ])
+														} ]).factory(
+																'leavesettingService',
+																[
+																		'$http',
+																		function($http) {
+																			var serviceBase = 'rest/leavesetting/';
+																			var obj = {};
+																			obj.list = function(queries) {
+																				return $http.get(serviceBase, {params:queries});
+																			};
+
+																			obj.get = function(id) {
+																				return $http.get(serviceBase  + id);
+																			};
+																			
+																			obj.insert = function(leavesetting) {
+																				return $http.post(serviceBase, leavesetting).then(
+																						function(results) {
+																							return results;
+																						});
+																			};
+
+																			obj.update = function(id, leavesetting) {
+																				return $http.put(serviceBase  + id,
+																						leavesetting).then(function(results) {
+																					return results;
+																				});
+																			};
+																			
+																			obj.remove = function(id) {
+																				return $http.delete(serviceBase + id).then(function(status) {
+																					return status;
+																				});
+																			};
+
+																			return obj;
+																		} ]).factory(
+																				'employeeleaveService',
+																				[
+																						'$http',
+																						function($http) {
+																							var serviceBase = 'rest/employeeleave/';
+																							var obj = {};
+																							obj.list = function(queries) {
+																								return $http.get(serviceBase, {params:queries});
+																							};
+
+																							obj.get = function(id) {
+																								return $http.get(serviceBase  + id);
+																							};
+																							
+																							obj.insert = function(employeeleave) {
+																								return $http.post(serviceBase, employeeleave).then(
+																										function(results) {
+																											return results;
+																										});
+																							};
+
+																							obj.update = function(id, employeeleave) {
+																								return $http.put(serviceBase  + id,
+																										employeeleave).then(function(results) {
+																									return results;
+																								});
+																							};
+																							
+																							obj.remove = function(id) {
+																								return $http.delete(serviceBase + id).then(function(status) {
+																									return status;
+																								});
+																							};
+
+																							return obj;
+																						} ])
 		.run(
 				function($rootScope, $location, $cookieStore, $http,
-						formlyConfig, auth) {
+						formlyConfig, auth, formlyConfig, formlyValidationMessages) {
 
+					formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'fc.$touched || form.$submitted';
+
+					formlyValidationMessages.addStringMessage('required',
+							'This field is required');
+					
 					auth.init('/', '/login', 'logout');
 					
 					/* Reset error when a new view is loaded */
@@ -378,9 +515,13 @@ angular
 							'datepicker-popup', 'show-button-bar',
 							'current-text', 'clear-text', 'close-text',
 							'close-on-date-selection',
-							'datepicker-append-to-body' ];
+							'datepicker-append-to-body' ,'meridians',
+						    'readonly-input',
+						    'mousewheel',
+						    'arrowkeys'];
 
-					var bindings = [ 'datepicker-mode', 'min-date', 'max-date' ];
+					var bindings = [ 'datepicker-mode', 'min-date', 'max-date', 'hour-step',
+									    'minute-step','show-meridian' ];
 
 					var ngModelAttrs = {};
 
@@ -409,16 +550,57 @@ angular
 								}
 							}
 						},
-						controller : [ '$scope', function($scope) {
-							$scope.datepicker = {};
+						  controller: [
+						               '$scope', function ($scope) {
+						                 $scope.datepicker = {};
 
-							$scope.datepicker.opened = false;
+						                 // make sure the initial value is of
+											// type DATE!
+						                 var currentModelVal = $scope.model[$scope.options.key];
+						                 if (typeof (currentModelVal) == 'string'){
+						                   $scope.model[$scope.options.key] = new Date(currentModelVal);
+						                 }
 
-							$scope.datepicker.open = function($event) {
-								$scope.datepicker.opened = true;
-							};
-						} ]
+
+						                 $scope.datepicker.opened = false;
+
+						                 $scope.datepicker.open = function ($event) {
+						                   $scope.datepicker.opened = true;
+						                 };
+						               }
+						             ]
 					});
+					
+					  formlyConfig.setType({
+					    name: 'timepicker',
+					    template: '<timepicker ng-model="model[options.key]"></timepicker>',
+					    wrapper: ['bootstrapLabel', 'bootstrapHasError'],
+					    defaultOptions: {
+					      ngModelAttrs: ngModelAttrs,
+					      templateOptions: {
+					        datepickerOptions: {}
+					      }
+					    },
+						  controller: [
+						               '$scope', function ($scope) {
+						                 $scope.datepicker = {};
+
+						                 // make sure the initial value is of
+											// type DATE!
+						                 var currentModelVal = $scope.model[$scope.options.key];
+						                 if (typeof (currentModelVal) == 'string'){
+						                   $scope.model[$scope.options.key] = new Date(currentModelVal);
+						                 }
+
+
+						                 $scope.datepicker.opened = false;
+
+						                 $scope.datepicker.open = function ($event) {
+						                   $scope.datepicker.opened = true;
+						                 };
+						               }
+						             ]
+					  });
 
 					function camelize(string) {
 						string = string.replace(/[\-_\s]+(.)?/g, function(

@@ -1,15 +1,13 @@
 package service;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
+import resources.specification.LeavesettingSpecification;
 import transfer.LeavesettingTransfer;
 import transfer.LeavesettingTransfer.Type;
 import dao.AttendRecordTypeDao;
@@ -18,14 +16,14 @@ import entity.AttendRecordType;
 import entity.Leavesetting;
 import exceptions.AttendRecordTypeNotFoundException;
 import exceptions.LeavesettingNotFoundException;
-import resources.specification.LeavesettingSpecification;
 
 public class LeavesettingServiceImpl implements LeavesettingService {
 
 	private LeavesettingDao leavesettingDao;
 	private AttendRecordTypeDao attendRecordTypeDao;
 
-	public LeavesettingServiceImpl(LeavesettingDao leavesettingDao, AttendRecordTypeDao attendRecordTypeDao) {
+	public LeavesettingServiceImpl(LeavesettingDao leavesettingDao,
+			AttendRecordTypeDao attendRecordTypeDao) {
 		this.leavesettingDao = leavesettingDao;
 		this.attendRecordTypeDao = attendRecordTypeDao;
 	}
@@ -67,46 +65,57 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 	}
 
 	@Override
-	public Page<LeavesettingTransfer> findAll(LeavesettingSpecification spec, Pageable pageable) {
+	public Page<LeavesettingTransfer> findAll(LeavesettingSpecification spec,
+			Pageable pageable) {
 		List<LeavesettingTransfer> transfers = new ArrayList<LeavesettingTransfer>();
-		Page<Leavesetting> leavesettings = leavesettingDao.findAll(spec, pageable);
-		for(Leavesetting leavesetting : leavesettings) {
+		Page<Leavesetting> leavesettings = leavesettingDao.findAll(spec,
+				pageable);
+		for (Leavesetting leavesetting : leavesettings) {
 			transfers.add(toLeavesettingTransfer(leavesetting));
 		}
-		Page<LeavesettingTransfer> rets = new PageImpl<LeavesettingTransfer>(transfers, pageable, leavesettings.getTotalElements());
+		Page<LeavesettingTransfer> rets = new PageImpl<LeavesettingTransfer>(
+				transfers, pageable, leavesettings.getTotalElements());
 		return rets;
 	}
-	
-	private void setUpLeavesetting(LeavesettingTransfer transfer, Leavesetting newEntry) {
+
+	private void setUpLeavesetting(LeavesettingTransfer transfer,
+			Leavesetting newEntry) {
 		if (transfer.isTypeSet()) {
 			if (transfer.getType().isIdSet()) {
-				entity.AttendRecordType type = attendRecordTypeDao.findOne(transfer.getType().getId());
+				entity.AttendRecordType type = attendRecordTypeDao
+						.findOne(transfer.getType().getId());
 				if (type == null) {
-					throw new AttendRecordTypeNotFoundException(transfer.getType().getId());
+					throw new AttendRecordTypeNotFoundException(transfer
+							.getType().getId());
 				}
 				newEntry.setType(type);
 			}
 		}
+		
 		if (transfer.isYearSet()) {
 			newEntry.setYear(transfer.getYear());
 		}
 		if (transfer.isDaysSet()) {
 			newEntry.setDays(transfer.getDays());
 		}
+		
+		newEntry.setName(transfer.getName());
 	}
 
-	private LeavesettingTransfer toLeavesettingTransfer(Leavesetting leavesetting) {
+	private LeavesettingTransfer toLeavesettingTransfer(
+			Leavesetting leavesetting) {
 		LeavesettingTransfer ret = new LeavesettingTransfer();
 		ret.setId(leavesetting.getId());
 		ret.setYear(leavesetting.getYear());
 		ret.setDays(leavesetting.getDays());
-		
+		ret.setName(leavesetting.getName());
+
 		AttendRecordType attendRecordType = leavesetting.getType();
 		Type type = new LeavesettingTransfer.Type();
 		type.setId(attendRecordType.getId());
 		type.setName(attendRecordType.getName());
 		ret.setType(type);
-		
+
 		return ret;
 	}
 }

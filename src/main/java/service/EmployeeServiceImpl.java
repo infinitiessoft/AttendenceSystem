@@ -27,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeDao employeeDao;
 	private DepartmentDao departmentDao;
 	private PasswordEncoder passwordEncoder;
-
+	
 	public EmployeeServiceImpl(EmployeeDao employeeDao,
 			DepartmentDao departmentDao, PasswordEncoder passwordEncoder) {
 		this.employeeDao = employeeDao;

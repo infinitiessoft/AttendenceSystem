@@ -231,18 +231,20 @@ angular
 						} ]
 					} ];
 					function onSubmit() {
-						if (id > 0) {
-							employeeService.update(id, vm.model);
-						} else {
-							employeeService.insert(vm.model).success(
-									function(status) {
-										var employeeid = status.id;
-										var roleid = vm.roles.role.id;
-										employeeRoleService.insert(employeeid,
-												roleid);
-									});
+						if (vm.form.$valid) {
+							if (id > 0) {
+								employeeService.update(id, vm.model);
+							} else {
+								employeeService.insert(vm.model).success(
+										function(status) {
+											var employeeid = status.id;
+											var roleid = vm.roles.role.id;
+											employeeRoleService.insert(
+													employeeid, roleid);
+										});
+							}
+							$location.path('/list-employees');
 						}
-						$location.path('/list-employees');
 					}
 
 				});

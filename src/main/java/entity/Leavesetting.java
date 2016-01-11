@@ -16,27 +16,30 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "leave_setting")
 public class Leavesetting extends AbstractEntity {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
+	
 	@Column(name = "year", nullable = false)
 	private Long year;
 
 	@Column(name = "days", nullable = false)
 	private Long days;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "type_id")
 	private AttendRecordType type;
 
 	@OneToOne(cascade = CascadeType.REMOVE, mappedBy = "leavesetting")
 	private EmployeeLeave employeeLeave;
-	
+
+	@Column(name = "name")
+	private String name ;
+
 	public Long getId() {
 		return id;
 	}
@@ -78,4 +81,12 @@ public class Leavesetting extends AbstractEntity {
 		this.employeeLeave = employeeLeave;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = type.getName() + "_" + year + "_" + days;
+	}
+	
 }

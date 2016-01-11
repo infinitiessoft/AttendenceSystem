@@ -37,6 +37,7 @@ public class Department extends AbstractEntity {
 	private Long manager_id;
 	@Column(name = "responseto", nullable = true)
 	private Long responseto;
+	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.REMOVE)
 	private Set<Employee> employees = new HashSet<Employee>(0);
 

@@ -83,8 +83,4 @@ public class EmployeesResource {
 		return EmployeeRolesResource.class;
 	}
 
-	@Path("{id}/records")
-	public Class<EmployeeRecordsResource> getEmployeeRecordsResource() {
-		return EmployeeRecordsResource.class;
-	}
 }

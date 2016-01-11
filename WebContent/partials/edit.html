@@ -4,11 +4,18 @@
 
 <form ng-submit="vm.onSubmit()" name="vm.form" novalidate>
 	<formly-form model="vm.model" fields="vm.fields" options="vm.options"
-		form="vm.form">
-	<a ng-click="back()" class="btn btn-danger">Cancel</a>
+		form="vm.form"> <a ng-click="back()"
+		class="btn btn-danger">Cancel</a>
 	<button type="submit" class="btn btn-primary submit-button"
-		ng-disabled="vm.form.$invalid">{{buttonText}}</button>
+		>{{buttonText}}</button>
 	<button type="button" class="btn btn-warning"
 		ng-click="vm.options.resetModel()">Reset</button>
 	</formly-form>
 </form>
+
+<script type="text/ng-template" id="error-messages.html">
+      <formly-transclude></formly-transclude>
+      <div ng-messages="fc.$error" ng-if="form.$submitted || options.formControl.$touched" class="error-messages">
+        <div ng-message="{{ ::name }}" ng-repeat="(name, message) in ::options.validation.messages" class="message">{{ message(fc.$viewValue, fc.$modelValue, this)}}</div>
+      </div>
+</script>

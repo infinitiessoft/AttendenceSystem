@@ -12,6 +12,7 @@
 		<class>entity.AttendRecord</class>
 		<class>entity.Leavesetting</class>
 		<class>entity.EmployeeLeave</class>
+		<class>entity.Event</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 	</persistence-unit>
 </persistence>

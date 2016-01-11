@@ -47,6 +47,9 @@
 
 	<jpa:repositories base-package="dao" />
 
+	<bean id="calendarDao" class="calendar.CalendarEventDao">
+	</bean>
+
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="departmentDao" />
@@ -61,9 +64,6 @@
 		<constructor-arg ref="roleDao" />
 	</bean>
 
-	<bean id="userDetailDao" class="dao.jpa.JpaUserDetailDao">
-		<constructor-arg ref="employeeDao" />
-	</bean>
 
 	<bean id="attendRecordTypeService" class="service.AttendRecordTypeServiceImpl">
 		<constructor-arg ref="attendRecordTypeDao" />
@@ -74,15 +74,28 @@
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="employeeRoleDao" />
 	</bean>
-	
-	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
-		<constructor-arg ref="leavesettingDao" />
-	</bean>
 
 	<bean id="attendRecordService" class="service.AttendRecordServiceImpl">
 		<constructor-arg ref="employeeDao" />
-		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="attendRecordDao" />
+		<constructor-arg ref="attendRecordTypeDao" />
+		<constructor-arg ref="eventDao" />
+		<constructor-arg ref="calendarDao" />
+	</bean>
+
+	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
+		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="attendRecordTypeDao" />
+	</bean>
+	
+	<bean id="employeeLeaveService" class="service.EmployeeLeaveServiceImpl">
+		<constructor-arg ref="employeeLeaveDao" />
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="leavesettingDao" />
+	</bean>
+
+	<bean id="userDetailService" class="service.UserDetailServiceImpl">
+		<constructor-arg ref="employeeDao" />
 	</bean>
 
 	<tx:annotation-driven transaction-manager="transactionManager" />
@@ -90,8 +103,6 @@
 	<!-- INIT REST COMPONENTS -->
 
 	<context:component-scan base-package="resources" />
-
-	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
 
 	<!-- SPRING SECURITY SETUP -->
 
@@ -112,14 +123,15 @@
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="departmentDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
+		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="employeeRoleDao" />
-		<constructor-arg ref="passwordEncoder" />
 		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">
 		<security:authentication-provider
-			user-service-ref="userDetailDao">
+			user-service-ref="userDetailService">
 			<security:password-encoder ref="passwordEncoder"></security:password-encoder>
 		</security:authentication-provider>
 	</security:authentication-manager>

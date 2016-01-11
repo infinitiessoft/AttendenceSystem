@@ -1,7 +1,5 @@
 package entity;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,16 +17,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "employee")
-public class Employee extends AbstractEntity implements UserDetails {
+public class Employee extends AbstractEntity {
 
 	/**
 	 * 
@@ -115,59 +108,15 @@ public class Employee extends AbstractEntity implements UserDetails {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
 	private Set<AttendRecord> attendRecords = new HashSet<AttendRecord>(0);
 
-	@Override
-	@Transient
-	@XmlTransient
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Set<EmployeeRole> roles = this.getEmployeeRoles();
-		if (roles == null) {
-			return Collections.emptyList();
-		}
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "employee", cascade = CascadeType.REMOVE)
+	private Set<Event> events = new HashSet<Event>(0);
 
-		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
-		for (EmployeeRole role : roles) {
-			authorities.add(new SimpleGrantedAuthority(role.getRole().getName()));
-		}
-
-		return authorities;
-	}
-
-	@Override
 	public String getPassword() {
 		return password;
 	}
 
-	@Override
 	public String getUsername() {
 		return username;
-	}
-
-	@Override
-	@Transient
-	@XmlTransient
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	@Transient
-	@XmlTransient
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	@Transient
-	@XmlTransient
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	@Transient
-	@XmlTransient
-	public boolean isEnabled() {
-		return true;
 	}
 
 	@XmlTransient

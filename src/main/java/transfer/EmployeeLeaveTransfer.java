@@ -1,20 +1,19 @@
 package transfer;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.xml.bind.annotation.XmlTransient;
 
 public class EmployeeLeaveTransfer implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	public static class Employee implements Serializable {
-		
+
 		private static final long serialVersionUID = 1L;
 		private Long id;
 		private String name;
-		
+
 		private boolean isIdSet;
 
 		public Long getId() {
@@ -44,13 +43,14 @@ public class EmployeeLeaveTransfer implements Serializable {
 			this.isIdSet = isIdSet;
 		}
 	}
-	
+
 	public static class Leavesetting implements Serializable {
-		
+
 		private static final long serialVersionUID = 1L;
 		private Long id;
+		private String name;
 		private Long days;
-		
+
 		private boolean isIdSet;
 
 		public Long getId() {
@@ -60,6 +60,14 @@ public class EmployeeLeaveTransfer implements Serializable {
 		public void setId(Long id) {
 			isIdSet = true;
 			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 
 		public Long getDays() {
@@ -80,7 +88,7 @@ public class EmployeeLeaveTransfer implements Serializable {
 			this.isIdSet = isIdSet;
 		}
 	}
-	
+
 	private Long id;
 	private Employee employee;
 	private Leavesetting leavesetting;
@@ -89,7 +97,7 @@ public class EmployeeLeaveTransfer implements Serializable {
 	private boolean isEmployeeSet;
 	private boolean isLeavesettingSet;
 	private boolean isUsedDaysSet;
-	
+
 	public EmployeeLeaveTransfer() {
 		super();
 	}

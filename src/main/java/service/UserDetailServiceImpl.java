@@ -1,17 +1,18 @@
-package dao.jpa;
+package service;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import security.EmployeeUserDetail;
 import dao.EmployeeDao;
-import dao.UserDetailDao;
 import entity.Employee;
 
-public class JpaUserDetailDao implements UserDetailDao {
+public class UserDetailServiceImpl implements UserDetailsService {
 
 	private EmployeeDao employeeDao;
 
-	public JpaUserDetailDao(EmployeeDao employeeDao) {
+	public UserDetailServiceImpl(EmployeeDao employeeDao) {
 		this.employeeDao = employeeDao;
 	}
 
@@ -23,7 +24,7 @@ public class JpaUserDetailDao implements UserDetailDao {
 			throw new UsernameNotFoundException("The employee with username "
 					+ username + " was not found");
 		}
-		return user;
+		return new EmployeeUserDetail(user);
 	}
 
 }

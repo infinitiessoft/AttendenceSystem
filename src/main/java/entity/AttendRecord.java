@@ -1,6 +1,8 @@
 package entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +12,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "attend_record")
@@ -22,15 +27,18 @@ public class AttendRecord extends AbstractEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "end_date", nullable = false)
 	private Date endDate;
 
 	@Column(name = "reason", nullable = false)
 	private String reason;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "book_date", nullable = false)
 	private Date bookDate;
 
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "start_date", nullable = false)
 	private Date startDate;
 
@@ -44,6 +52,9 @@ public class AttendRecord extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id", nullable = false)
 	private AttendRecordType type;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attendRecord")
+	private Set<Event> events = new HashSet<Event>(0);
 
 	public Long getId() {
 		return id;
@@ -107,6 +118,14 @@ public class AttendRecord extends AbstractEntity {
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	public Set<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(Set<Event> events) {
+		this.events = events;
 	}
 
 }
