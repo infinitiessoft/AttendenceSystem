@@ -73,8 +73,8 @@ angular
 														var pagination = lastState.pagination;
 														var start = pagination.start || 0;
 														var pageSize = pagination.number || 10;
-														var sort = tableState.sort.predicate;
-														var dir = tableState.sort.reverse ? 'DESC'
+														var sort = lastState.sort.predicate;
+														var dir = lastState.sort.reverse ? 'DESC'
 																: 'ASC';
 														var page = (start / pageSize);
 														if (page < 0) {

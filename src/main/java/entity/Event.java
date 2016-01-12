@@ -27,7 +27,7 @@ public class Event extends AbstractEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "book_date", nullable = false)
+	@Column(name = "book_date", nullable = true)
 	private Date bookDate;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "employee_id", nullable = false)
@@ -35,7 +35,7 @@ public class Event extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "record_id", nullable = false)
 	private AttendRecord attendRecord;
-	@Column(name = "action", nullable = false, length = 20)
+	@Column(name = "action", nullable = true, length = 20)
 	private String action;
 
 	public Long getId() {

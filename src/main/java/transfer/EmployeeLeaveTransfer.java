@@ -49,7 +49,7 @@ public class EmployeeLeaveTransfer implements Serializable {
 		private static final long serialVersionUID = 1L;
 		private Long id;
 		private String name;
-		private Long days;
+		private Double days;
 
 		private boolean isIdSet;
 
@@ -70,11 +70,11 @@ public class EmployeeLeaveTransfer implements Serializable {
 			this.name = name;
 		}
 
-		public Long getDays() {
+		public Double getDays() {
 			return days;
 		}
 
-		public void setDays(Long days) {
+		public void setDays(Double days) {
 			this.days = days;
 		}
 
@@ -92,7 +92,7 @@ public class EmployeeLeaveTransfer implements Serializable {
 	private Long id;
 	private Employee employee;
 	private Leavesetting leavesetting;
-	private Long usedDays;
+	private Double usedDays;
 
 	private boolean isEmployeeSet;
 	private boolean isLeavesettingSet;
@@ -128,11 +128,11 @@ public class EmployeeLeaveTransfer implements Serializable {
 		this.leavesetting = leavesetting;
 	}
 
-	public Long getUsedDays() {
+	public Double getUsedDays() {
 		return usedDays;
 	}
 
-	public void setUsedDays(Long usedDays) {
+	public void setUsedDays(Double usedDays) {
 		this.isUsedDaysSet = true;
 		this.usedDays = usedDays;
 	}

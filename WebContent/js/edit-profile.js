@@ -178,8 +178,10 @@ angular
 					} ];
 					function onSubmit() {
 						if (vm.form.$valid) {
-							employeeService.update(id, vm.model);
-							$location.path('/list-employees');
+							employeeService.update(id, vm.model).then(
+									function(status) {
+										$location.path('/home');
+									});
 						}
 					}
 

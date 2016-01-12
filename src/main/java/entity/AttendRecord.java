@@ -34,6 +34,9 @@ public class AttendRecord extends AbstractEntity {
 	@Column(name = "reason", nullable = false)
 	private String reason;
 
+	@Column(name = "status", nullable = false)
+	private String status;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "book_date", nullable = false)
 	private Date bookDate;
@@ -126,6 +129,14 @@ public class AttendRecord extends AbstractEntity {
 
 	public void setEvents(Set<Event> events) {
 		this.events = events;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

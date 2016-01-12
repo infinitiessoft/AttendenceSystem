@@ -33,7 +33,7 @@ public class Employee extends AbstractEntity {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "responseto")
+	@JoinColumn(name = "responseto", nullable = true)
 	private Employee employee;
 
 	@ManyToOne(fetch = FetchType.EAGER)

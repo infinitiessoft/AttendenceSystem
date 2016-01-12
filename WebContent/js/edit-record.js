@@ -90,8 +90,6 @@ angular
 					};
 
 					vm.model = record.data;
-					vm.confirmationModel = {};
-					vm.timestamp = {};
 
 					recordtypeService.list().then(function(status) {
 						var deps = status.data.content;
@@ -114,7 +112,9 @@ angular
 								type : 'text',
 								datepickerPopup : 'dd-MMMM-yyyy',
 								required : true
-							}
+							},
+							parsers : [ toStartTime ],
+							formatters : [ toStartTime ]
 						}, {
 							className : 'col-xs-3',
 							key : 'startDate',
@@ -137,7 +137,9 @@ angular
 							data : {
 								fieldToMatch : 'startDate',
 								modelToMatch : vm.model
-							}
+							},
+							parsers : [ toEndTime ],
+							formatters : [ toEndTime ]
 						}, {
 							className : 'col-xs-3',
 							key : 'endDate',
@@ -170,17 +172,39 @@ angular
 							label : 'Reason',
 							placeholder : 'Formly is terrific!',
 							type : 'text',
-							required : true
 						}
 					} ];
+
+					function toStartTime(value) {
+						if (value) {
+							value.setHours(10);
+							value.setMinutes(0);
+						}
+						return value;
+					}
+
+					function toEndTime(value) {
+						if (value) {
+							value.setHours(18);
+							value.setMinutes(0);
+						}
+						return value;
+					}
+
 					function onSubmit() {
 						if (vm.form.$valid) {
 							if (id > 0) {
-								recordService.update(id, vm.model);
+								recordService.update(id, vm.model).then(
+										function(status) {
+											$location.path('/list-records');
+										});
 							} else {
-								recordService.insert(vm.model);
+								recordService.insert(vm.model).then(
+										function(status) {
+											$location.path('/list-records');
+										});
 							}
-							$location.path('/list-records');
+
 						}
 					}
 

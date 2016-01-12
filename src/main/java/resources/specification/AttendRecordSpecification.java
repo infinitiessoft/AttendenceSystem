@@ -20,10 +20,10 @@ import entity.Employee;
 
 public class AttendRecordSpecification implements Specification<AttendRecord> {
 
-	@QueryParam("employeeName")
-	private Long employeeName;
-	@QueryParam("employeeId")
-	private Long employeeId;
+	@QueryParam("applicantName")
+	private String applicantName;
+	@QueryParam("applicantId")
+	private Long applicantId;
 	@QueryParam("endDate")
 	private Date endDate;
 	@QueryParam("bookDate")
@@ -32,6 +32,8 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 	private Date startDate;
 	@QueryParam("typeName")
 	private String typeName;
+	@QueryParam("status")
+	private String status;
 
 	@Override
 	public Predicate toPredicate(Root<AttendRecord> root,
@@ -40,6 +42,10 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 		if (!Strings.isNullOrEmpty(typeName)) {
 			predicates.add(cb.like(root.<AttendRecordType> get("type")
 					.<String> get("name"), "%" + typeName + "%"));
+		}
+		if (!Strings.isNullOrEmpty(status)) {
+			predicates.add(cb.like(root.<String> get("status"), "%" + status
+					+ "%"));
 		}
 		if (startDate != null) {
 			predicates.add(cb.greaterThanOrEqualTo(
@@ -54,15 +60,15 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 					bookDate));
 		}
 
-		if (employeeId != null) {
+		if (applicantId != null) {
 			predicates.add(cb.equal(
 					root.<Employee> get("employee").<Long> get("id"),
-					employeeId));
+					applicantId));
 		}
-		if (employeeName != null) {
+		if (applicantName != null) {
 			predicates.add(cb.equal(
 					root.<Employee> get("employee").<Long> get("name"),
-					employeeName));
+					applicantName));
 		}
 
 		if (predicates.isEmpty()) {
@@ -72,12 +78,12 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 		return cb.and(predicates.toArray(new Predicate[0]));
 	}
 
-	public Long getEmployeeId() {
-		return employeeId;
+	public Long getApplicantId() {
+		return applicantId;
 	}
 
-	public void setEmployeeId(Long employeeId) {
-		this.employeeId = employeeId;
+	public void setApplicantId(Long applicantId) {
+		this.applicantId = applicantId;
 	}
 
 	public Date getEndDate() {
@@ -110,6 +116,22 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getApplicantName() {
+		return applicantName;
+	}
+
+	public void setApplicantName(String applicantName) {
+		this.applicantName = applicantName;
 	}
 
 }

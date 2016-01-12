@@ -29,7 +29,7 @@ public class AttendRecordType extends AbstractEntity {
 	@Column(name = "name", unique = true, nullable = false, length = 20)
 	private String name;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "type")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "type")
 	private Set<AttendRecord> attendRecords = new HashSet<AttendRecord>(0);
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "type")

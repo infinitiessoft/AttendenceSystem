@@ -9,9 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "employee_leave")
@@ -26,11 +24,11 @@ public class EmployeeLeave extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
-	@OneToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "leavesetting_id", nullable = false)
 	private Leavesetting leavesetting;
 	@Column(name = "used_days", nullable = false)
-	private Long usedDays;
+	private Double usedDays;
 
 	public Long getId() {
 		return id;
@@ -40,7 +38,6 @@ public class EmployeeLeave extends AbstractEntity {
 		this.id = id;
 	}
 
-	@XmlTransient
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -49,7 +46,6 @@ public class EmployeeLeave extends AbstractEntity {
 		this.employee = employee;
 	}
 
-	@XmlTransient
 	public Leavesetting getLeavesetting() {
 		return leavesetting;
 	}
@@ -58,11 +54,11 @@ public class EmployeeLeave extends AbstractEntity {
 		this.leavesetting = leavesetting;
 	}
 
-	public Long getUsedDays() {
+	public Double getUsedDays() {
 		return usedDays;
 	}
 
-	public void setUsedDays(Long usedDays) {
+	public void setUsedDays(Double usedDays) {
 		this.usedDays = usedDays;
 	}
 

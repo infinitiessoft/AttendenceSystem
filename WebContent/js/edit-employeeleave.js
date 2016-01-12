@@ -1,5 +1,5 @@
 angular
-		.module('edit-employeeleave', ['formly', 'formlyBootstrap'])
+		.module('edit-employeeleave', [ 'formly', 'formlyBootstrap' ])
 		.constant('formlyExampleApiCheck', apiCheck())
 		.config(
 				function config(formlyConfigProvider, formlyExampleApiCheck) {
@@ -76,8 +76,9 @@ angular
 							});
 				}).controller(
 				'edit-employeeleave',
-				function($rootScope, $scope, $routeParams, $location, formlyVersion,
-						employeeleave, employeeleaveService, employeeService, leavesettingService) {
+				function($rootScope, $scope, $routeParams, $location,
+						formlyVersion, employeeleave, employeeleaveService,
+						employeeService, leavesettingService) {
 					var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit Employeeleave'
 							: 'Add Employeeleave';
@@ -108,7 +109,7 @@ angular
 							});
 						});
 					});
-					
+
 					leavesettingService.list().then(function(status) {
 						var deps = status.data.content;
 						angular.forEach(deps, function(dep) {
@@ -129,7 +130,7 @@ angular
 								label : 'Employee',
 								options : $scope.employees
 							}
-						}]
+						} ]
 					}, {
 						key : 'leavesetting',
 						fieldGroup : [ {
@@ -140,7 +141,7 @@ angular
 								label : 'Leavesetting',
 								options : $scope.leavesettings
 							}
-						}]
+						} ]
 					}, {
 						key : 'usedDays',
 						type : 'input',
@@ -155,13 +156,18 @@ angular
 						console.log("Id : " + id);
 						if (id > 0) {
 							console.log("Update");
-							employeeleaveService.update(id, vm.model);
+							employeeleaveService.update(id, vm.model).then(
+									function(status) {
+										$location.path('/list-employeeleaves');
+									});
 						} else {
 							console.log("Insert");
 							console.log(vm.leavesetting);
-							employeeleaveService.insert(vm.model);
+							employeeleaveService.insert(vm.model).then(
+									function(status) {
+										$location.path('/list-employeeleaves');
+									});
 						}
-						$location.path('/list-employeeleaves');
 					}
 
 				});

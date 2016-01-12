@@ -39,11 +39,16 @@ angular.module('edit-department', []).controller(
 			function onSubmit() {
 				if (vm.form.$valid) {
 					if (id > 0) {
-						departmentService.update(id, vm.model);
+						departmentService.update(id, vm.model).then(
+								function(status) {
+									$location.path('/list-departments');
+								});
 					} else {
-						departmentService.insert(vm.model);
+						departmentService.insert(vm.model).then(
+								function(status) {
+									$location.path('/list-departments');
+								});
 					}
-					$location.path('/list-departments');
 				}
 			}
 		});
