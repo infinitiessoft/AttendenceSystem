@@ -6,7 +6,7 @@ A sample project to demonstrate how a web app can be built using a Spring / Angu
 
 ##Table of Contents
    * *[OVERVIEW](#overview)*
-   * *[TECHNOLOGIES USED](#technologies used)*
+   * *[TECHNOLOGIES](#technologies used)*
    * *[FRONTEND](#frontend)*
    * *[BACKEND](#backend)*
    * *[SECURITY](#security)*
@@ -45,4 +45,27 @@ The Spring Security module was used to secure the REST backend (these guidelines
 The Spring Security Form Login mode was used, with fallback to HTTP-Basic Authentication for non-browser based HTTP clients. Protection is in-place against CSRF (cross-site request forgery).
 
 The passwords are not stored in the database in plain text but in a digested form, using the Spring Security SHA1 password encoder 
+
+####USAGE
+
+######Admin:
+
+When you login as admin you can find list of Records, Events, Employees, Roles, Department, RecordTypes, Leave-setting and EmployeeLeave where he can edit, delete or create new Entries. And he is the one who approves for the Events and Leave that the employee applies
+
+`Events:` when an employee is willing to attend some events that are available he can book the date and wait for the reply from the admin. Once admin is ready with his answer he provides the action based on his decision.
+
+`Leave-setting:` Mainly there are two types **official and unofficial leaves**
+ 
+ ***Official***- where the employee can apply in the Annual leave provided by the company, so he can keep the record of used and used days of leave from Annual Leave.
+
+***UnOfficial***- are the Employees Personal or Sick Leave 
+
+                   *By this the Employee can notify his activities to the Admin.*
+
+
+######Employee:
+
+When you login in as employee you can give all your personal details and apply for Leaves  or events 
+
+
 
