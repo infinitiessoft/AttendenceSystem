@@ -7,4 +7,5 @@ import entity.EmployeeLeave;
 
 public interface EmployeeLeaveDao extends PagingAndSortingRepository<EmployeeLeave, Long>, JpaSpecificationExecutor<EmployeeLeave> {
 
+	EmployeeLeave findByEmployeeIdAndLeavesettingId(Long employeeId, Long leavesettingId);
 }

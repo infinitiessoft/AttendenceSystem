@@ -81,6 +81,8 @@
 		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="eventDao" />
 		<constructor-arg ref="calendarDao" />
+		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="employeeLeaveDao" />
 	</bean>
 
 	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
@@ -130,9 +132,9 @@
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="departmentDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
-		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="employeeRoleDao" />
 		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="employeeLeaveDao" />
 		<constructor-arg ref="passwordEncoder" />
 	</bean>

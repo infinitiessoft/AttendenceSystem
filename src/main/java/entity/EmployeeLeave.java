@@ -10,9 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "employee_leave")
+@Table(name = "employee_leave", uniqueConstraints = @UniqueConstraint(columnNames = {
+		"employee_id", "leavesetting_id" }))
 public class EmployeeLeave extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
@@ -24,7 +26,7 @@ public class EmployeeLeave extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "employee_id", nullable = false)
 	private Employee employee;
-	@ManyToOne(cascade = CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "leavesetting_id", nullable = false)
 	private Leavesetting leavesetting;
 	@Column(name = "used_days", nullable = false)

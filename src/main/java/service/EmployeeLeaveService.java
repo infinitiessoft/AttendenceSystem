@@ -17,4 +17,6 @@ public interface EmployeeLeaveService {
 	public Page<EmployeeLeaveTransfer> findAll(EmployeeLeaveSpecification spec, Pageable pageable);
 
 	public EmployeeLeaveTransfer update(long id, EmployeeLeaveTransfer employeeLeave);
+	
+	public EmployeeLeaveTransfer findByEmployeeIdAndLeavesettingId(long employeeId, long leavesettingId);
 }

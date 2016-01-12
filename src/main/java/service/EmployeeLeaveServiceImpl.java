@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 
 import dao.EmployeeDao;
 import dao.EmployeeLeaveDao;
 import dao.LeavesettingDao;
 import entity.EmployeeLeave;
+import entity.EmployeeRole;
 import exceptions.EmployeeLeaveNotFoundException;
 import exceptions.EmployeeNotFoundException;
 import exceptions.LeavesettingNotFoundException;
@@ -66,6 +69,12 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService{
 		}
 		Page<EmployeeLeaveTransfer> rets = new PageImpl<EmployeeLeaveTransfer>(transfers, pageable, employeeLeaves.getTotalElements());
 		return rets;
+	}
+	
+	@Override
+	public EmployeeLeaveTransfer findByEmployeeIdAndLeavesettingId(long employeeId, long leavesettingId) {
+		EmployeeLeave leave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employeeId, leavesettingId);
+		return toEmployeeLeaveTransfer(leave);
 	}
 
 	@Override

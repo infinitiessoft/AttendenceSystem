@@ -77,6 +77,12 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 				transfers, pageable, leavesettings.getTotalElements());
 		return rets;
 	}
+	
+	@Override
+	public LeavesettingTransfer findByTypeIdAndYear(long typeId, long year) {
+		Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(typeId, year);
+		return toLeavesettingTransfer(leavesetting);
+	}
 
 	private void setUpLeavesetting(LeavesettingTransfer transfer,
 			Leavesetting newEntry) {
