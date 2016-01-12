@@ -133,6 +133,7 @@
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="employeeRoleDao" />
 		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="employeeLeaveDao" />
 		<constructor-arg ref="passwordEncoder" />
 	</bean>
 

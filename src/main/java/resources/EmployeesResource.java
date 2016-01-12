@@ -83,4 +83,14 @@ public class EmployeesResource {
 		return EmployeeRolesResource.class;
 	}
 
+	@Path("{id}/records")
+	public Class<EmployeeAttendRecordsResource> getEmployeeAttendRecordsResource() {
+		return EmployeeAttendRecordsResource.class;
+	}
+
+	@Path("{id}/events")
+	public Class<EmployeeEventsResource> getEmployeeEventsResource() {
+		return EmployeeEventsResource.class;
+	}
+
 }

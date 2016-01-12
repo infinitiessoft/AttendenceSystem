@@ -1,12 +1,12 @@
 angular
-		.module('list-events', [ 'ngResource' ])
+		.module('list-memberevents', [ 'ngResource', 'auth' ])
 		.controller(
-				'list-events',
+				'list-memberevents',
 				[
 						'$scope',
 						'$http',
-						'eventService',
-						function($scope, $http, eventService) {
+						'memberEventService',
+						function($scope, $http, memberEventService) {
 							var lastState = {
 								pagination : {
 									start : 0,
@@ -52,7 +52,7 @@ angular
 								$scope.isLoading = true;
 
 								var filters = queryParams(tableState);
-								eventService
+								memberEventService
 										.list(filters)
 										.then(
 												function(status) {
@@ -64,7 +64,7 @@ angular
 
 							var update = function(id, entry) {
 								$scope.isLoading = true;
-								eventService
+								memberEventService
 										.update(id, entry)
 										.then(
 												function(status) {
@@ -81,7 +81,7 @@ angular
 
 													var filters = queryParams(lastState);
 
-													eventService
+													memberEventService
 															.list(filters)
 															.then(
 																	function(
@@ -94,11 +94,7 @@ angular
 
 							$scope.permit = function(newsEntry) {
 								var entry = {
-<<<<<<< HEAD
-										"action" : "permit"
-=======
 									"action" : "permit"
->>>>>>> 818fc3ceef492518356f21171e8bd7810c2ce964
 								};
 								update(newsEntry.id, entry);
 
@@ -111,23 +107,28 @@ angular
 								update(newsEntry.id, entry);
 
 							};
-						} ]).factory('eventService',
-				[ '$http', function($http) {
-					var serviceBase = 'rest/event/';
-					var obj = {};
-					obj.list = function(queries) {
-						return $http.get(serviceBase, {
-							params : queries
-						});
-					};
+						} ]).factory(
+				'memberEventService',
+				[
+						'auth',
+						'$http',
+						function(auth, $http) {
+							var serviceBase = 'rest/employee/'
+									+ auth.user.principal.id + '/events/';
+							var obj = {};
+							obj.list = function(queries) {
+								return $http.get(serviceBase, {
+									params : queries
+								});
+							};
 
-					obj.get = function(id) {
-						return $http.get(serviceBase + id);
-					};
+							obj.get = function(id) {
+								return $http.get(serviceBase + id);
+							};
 
-					obj.update = function(id, record) {
-						return $http.put(serviceBase + id, record);
-					};
+							obj.update = function(id, record) {
+								return $http.put(serviceBase + id, record);
+							};
 
-					return obj;
-				} ]);
+							return obj;
+						} ]);

@@ -35,40 +35,37 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 	@QueryParam("status")
 	private String status;
 
+	private Long id;
+
 	@Override
-	public Predicate toPredicate(Root<AttendRecord> root,
-			CriteriaQuery<?> query, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<AttendRecord> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		if (!Strings.isNullOrEmpty(typeName)) {
-			predicates.add(cb.like(root.<AttendRecordType> get("type")
-					.<String> get("name"), "%" + typeName + "%"));
+			predicates.add(cb.like(root.<AttendRecordType> get("type").<String> get("name"), "%" + typeName + "%"));
 		}
 		if (!Strings.isNullOrEmpty(status)) {
-			predicates.add(cb.like(root.<String> get("status"), "%" + status
-					+ "%"));
+			predicates.add(cb.like(root.<String> get("status"), "%" + status + "%"));
 		}
 		if (startDate != null) {
-			predicates.add(cb.greaterThanOrEqualTo(
-					root.<Date> get("startDate"), startDate));
+			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("startDate"), startDate));
 		}
 		if (endDate != null) {
-			predicates.add(cb.lessThanOrEqualTo(root.<Date> get("endDate"),
-					endDate));
+			predicates.add(cb.lessThanOrEqualTo(root.<Date> get("endDate"), endDate));
 		}
 		if (bookDate != null) {
-			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("bookDate"),
-					bookDate));
+			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("bookDate"), bookDate));
 		}
 
 		if (applicantId != null) {
-			predicates.add(cb.equal(
-					root.<Employee> get("employee").<Long> get("id"),
-					applicantId));
+			predicates.add(cb.equal(root.<Employee> get("employee").<Long> get("id"), applicantId));
 		}
+
+		if (id != null) {
+			predicates.add(cb.equal(root.<Long> get("id"), id));
+		}
+
 		if (applicantName != null) {
-			predicates.add(cb.equal(
-					root.<Employee> get("employee").<Long> get("name"),
-					applicantName));
+			predicates.add(cb.equal(root.<Employee> get("employee").<Long> get("name"), applicantName));
 		}
 
 		if (predicates.isEmpty()) {
