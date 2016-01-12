@@ -56,9 +56,9 @@ When you login as admin you can find list of Records, Events, Employees, Roles, 
 
 `Leave-setting:` Mainly there are two types **official and unofficial leaves**
  
- ***Official***- where the employee can apply in the Annual leave provided by the company, so he can keep the record of used and used days of leave from Annual Leave.
+ ***Official***- where the employee can apply in the Annual leave provided by the company, so he can keep the record of used and unused days of leave from Annual Leave.
 
-***UnOfficial***- are the Employees Personal or Sick Leave 
+***UnOfficial***- are the Employees Personal or Sick Leave. 
 
                    *By this the Employee can notify his activities to the Admin.*
 
