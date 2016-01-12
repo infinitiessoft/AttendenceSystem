@@ -8,7 +8,7 @@ A sample project to demonstrate how a web app can be built using a Spring / Angu
    * *[OVERVIEW](#overview)*
    * *[TECHNOLOGIES USED](#technologies used)*
    * *[FRONTEND](#frontend)*
-   * *[BACKEND](#Backend)*
+   * *[BACKEND](#backend)*
    * *[SECURITY](#security)*
    * *[USAGE](#usage)*
    
