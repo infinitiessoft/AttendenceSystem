@@ -94,11 +94,7 @@ angular
 
 							$scope.permit = function(newsEntry) {
 								var entry = {
-<<<<<<< HEAD
-										"action" : "permit"
-=======
 									"action" : "permit"
->>>>>>> 818fc3ceef492518356f21171e8bd7810c2ce964
 								};
 								update(newsEntry.id, entry);
 

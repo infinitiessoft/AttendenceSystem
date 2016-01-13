@@ -36,23 +36,30 @@ public class EventSpecification implements Specification<Event> {
 	@QueryParam("action")
 	private String action;
 
+	private Long id;
+
 	@Override
-	public Predicate toPredicate(Root<Event> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+	public Predicate toPredicate(Root<Event> root, CriteriaQuery<?> query,
+			CriteriaBuilder cb) {
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		if (!Strings.isNullOrEmpty(recordTypeName)) {
-			predicates.add(
-					cb.like(root.<AttendRecord> get("attendRecord").<AttendRecordType> get("type").<String> get("name"),
-							"%" + recordTypeName + "%"));
+			predicates.add(cb.like(root.<AttendRecord> get("attendRecord")
+					.<AttendRecordType> get("type").<String> get("name"), "%"
+					+ recordTypeName + "%"));
 		}
 		if (!Strings.isNullOrEmpty(action)) {
-			predicates.add(cb.like(root.<String> get("action"), "%" + action + "%"));
+			predicates.add(cb.like(root.<String> get("action"), "%" + action
+					+ "%"));
 		}
 		if (bookDate != null) {
-			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("bookDate"), bookDate));
+			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("bookDate"),
+					bookDate));
 		}
 
 		if (approverId != null) {
-			predicates.add(cb.equal(root.<Employee> get("employee").<Long> get("id"), approverId));
+			predicates.add(cb.equal(
+					root.<Employee> get("employee").<Long> get("id"),
+					approverId));
 		}
 
 		if (id != null) {
@@ -60,17 +67,19 @@ public class EventSpecification implements Specification<Event> {
 		}
 
 		if (approverName != null) {
-			predicates.add(cb.equal(root.<Employee> get("employee").<Long> get("name"), approverName));
+			predicates.add(cb.equal(
+					root.<Employee> get("employee").<Long> get("name"),
+					approverName));
 		}
 
 		if (applicantId != null) {
-			predicates.add(cb.equal(root.<AttendRecord> get("attendRecord").<Employee> get("employee").<Long> get("id"),
-					applicantId));
+			predicates.add(cb.equal(root.<AttendRecord> get("attendRecord")
+					.<Employee> get("employee").<Long> get("id"), applicantId));
 		}
 		if (applicantName != null) {
-			predicates
-					.add(cb.equal(root.<AttendRecord> get("attendRecord").<Employee> get("employee").<Long> get("name"),
-							applicantName));
+			predicates.add(cb.equal(root.<AttendRecord> get("attendRecord")
+					.<Employee> get("employee").<Long> get("name"),
+					applicantName));
 		}
 
 		if (predicates.isEmpty()) {
@@ -136,12 +145,12 @@ public class EventSpecification implements Specification<Event> {
 		this.recordTypeName = recordTypeName;
 	}
 
-	// public Long getId() {
-	// return id;
-	// }
+	public Long getId() {
+		return id;
+	}
 
-	// public void setId(Long id) {
-	// this.id = id;
-	// }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 }
