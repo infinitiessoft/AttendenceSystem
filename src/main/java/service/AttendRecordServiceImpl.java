@@ -43,8 +43,7 @@ import exceptions.InvalidStartAndEndDateException;
 
 public class AttendRecordServiceImpl implements AttendRecordService {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(AttendRecordServiceImpl.class);
+	private final static Logger logger = LoggerFactory.getLogger(AttendRecordServiceImpl.class);
 	private final static String OFFICIAL_LEAVE_NAME = "official";
 	private AttendRecordDao attendRecordDao;
 	private AttendRecordTypeDao attendRecordTypeDao;
@@ -54,9 +53,8 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 	private LeavesettingDao leavesettingDao;
 	private EmployeeLeaveDao employeeLeaveDao;
 
-	public AttendRecordServiceImpl(AttendRecordDao attendRecordDao,
-			AttendRecordTypeDao attendRecordTypeDao, EmployeeDao employeeDao,
-			EventDao eventDao, CalendarEventDao calendarEventDao,
+	public AttendRecordServiceImpl(AttendRecordDao attendRecordDao, AttendRecordTypeDao attendRecordTypeDao,
+			EmployeeDao employeeDao, EventDao eventDao, CalendarEventDao calendarEventDao,
 			LeavesettingDao leavesettingDao, EmployeeLeaveDao employeeLeaveDao) {
 		this.attendRecordDao = attendRecordDao;
 		this.attendRecordTypeDao = attendRecordTypeDao;
@@ -94,15 +92,11 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		setUpAttendRecord(attendRecord, newEntry);
 		newEntry.setBookDate(new Date());
 		newEntry.setStatus(Status.pending.name());
-		Employee applicant = employeeDao.findOne(attendRecord.getApplicant()
-				.getId());
-		assertStartDateAfterJoinDate(newEntry.getStartDate(),
-				applicant.getDateofjoined());
-		assetEndDateAfterStartDate(newEntry.getStartDate(),
-				newEntry.getEndDate());
+		Employee applicant = employeeDao.findOne(attendRecord.getApplicant().getId());
+		assertStartDateAfterJoinDate(newEntry.getStartDate(), applicant.getDateofjoined());
+		assetEndDateAfterStartDate(newEntry.getStartDate(), newEntry.getEndDate());
 		assertStartDateNotOver30DaysFromNow(newEntry.getStartDate());
-		assertIsBusinessDays(newEntry.getType(), newEntry.getStartDate(),
-				newEntry.getEndDate());
+		assertIsBusinessDays(newEntry.getType(), newEntry.getStartDate(), newEntry.getEndDate());
 		if (checkRemainingUsedDays(attendRecord)) {
 			newEntry = attendRecordDao.save(newEntry);
 
@@ -127,8 +121,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 	private void assertStartDateAfterJoinDate(Date startDate, Date dateofjoined) {
 		if (!startDate.after(dateofjoined)) {
-			throw new InvalidStartAndEndDateException(
-					"startDate should always over your joined date");
+			throw new InvalidStartAndEndDateException("startDate should always over your joined date");
 		}
 	}
 
@@ -138,8 +131,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.DAY_OF_YEAR, 30);
 		if (startC.after(now)) {
-			throw new InvalidStartAndEndDateException(
-					"startDate cannot over 30 days from now");
+			throw new InvalidStartAndEndDateException("startDate cannot over 30 days from now");
 		}
 	}
 
@@ -149,8 +141,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		}
 	}
 
-	private void assertIsBusinessDays(AttendRecordType type, Date startDate,
-			Date endDate) {
+	private void assertIsBusinessDays(AttendRecordType type, Date startDate, Date endDate) {
 		if (OFFICIAL_LEAVE_NAME.equals(type.getName())) {
 			return;
 		}
@@ -179,86 +170,74 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		setUpAttendRecord(updated, attendRecord);
 		attendRecord.setBookDate(new Date());
 		Employee applicant = attendRecord.getEmployee();
-		assertStartDateAfterJoinDate(attendRecord.getStartDate(),
-				applicant.getDateofjoined());
-		assetEndDateAfterStartDate(attendRecord.getStartDate(),
-				attendRecord.getEndDate());
+		assertStartDateAfterJoinDate(attendRecord.getStartDate(), applicant.getDateofjoined());
+		assetEndDateAfterStartDate(attendRecord.getStartDate(), attendRecord.getEndDate());
 		assertStartDateNotOver30DaysFromNow(attendRecord.getStartDate());
-		assertIsBusinessDays(attendRecord.getType(),
-				attendRecord.getStartDate(), attendRecord.getEndDate());
+		assertIsBusinessDays(attendRecord.getType(), attendRecord.getStartDate(), attendRecord.getEndDate());
 		return toAttendRecordTransfer(attendRecordDao.save(attendRecord));
 	}
 
 	private boolean checkRemainingUsedDays(AttendRecordTransfer attendRecord) {
-		Employee employee = employeeDao.findOne(attendRecord.getApplicant()
-				.getId());
+		Employee employee = employeeDao.findOne(attendRecord.getApplicant().getId());
 		Date startDate = attendRecord.getStartDate();
 		Date endDate = attendRecord.getEndDate();
+		Date joinDate = employee.getDateofjoined();
+
 		double duration = countDuration(startDate, endDate);
 		Calendar startC = Calendar.getInstance();
 		startC.setTime(startDate);
 		Calendar endC = Calendar.getInstance();
 		endC.setTime(endDate);
 		Calendar joinC = Calendar.getInstance();
-		joinC.setTime(employee.getDateofjoined());
-
-		if (!overDateOfJoined(startDate, endDate, employee.getDateofjoined())) {
+		joinC.setTime(joinDate);
+		Calendar joinY = Calendar.getInstance();
+		joinY.setTime(joinDate);
+		joinY.set(Calendar.YEAR, startC.get(Calendar.YEAR));
+		Date joinDay = joinY.getTime();
+		
+		if (!CalendarUtil.overDateOfJoined(startDate, endDate, joinDate)) {
 			logger.debug("Time Range is not over dateOfJoined");
-			long years = getYearOfJoined(employee.getDateofjoined(), startDate);
+			long years = getYearOfJoined(joinDate, startDate);
 			logger.debug("Employee joined years : {}", years);
-			Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(
-					attendRecord.getType().getId(), years);
-			EmployeeLeave employeeLeave = findEmployeeLeave(employee,
-					leavesetting);
+			Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(attendRecord.getType().getId(), years);
+			EmployeeLeave employeeLeave = findEmployeeLeave(employee, leavesetting);
 			if ((leavesetting.getDays() - employeeLeave.getUsedDays()) >= duration) {
-				employeeLeave
-						.setUsedDays((employeeLeave.getUsedDays() + duration));
+				employeeLeave.setUsedDays((employeeLeave.getUsedDays() + duration));
 				employeeLeaveDao.save(employeeLeave);
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-
-			if (startDate.getDate() == employee.getDateofjoined().getDate()) {
+			if (startC.get(Calendar.DAY_OF_MONTH) == joinC.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("Start date is joined date");
-				long years = getYearOfJoined(employee.getDateofjoined(),
-						startDate);
+				long years = getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
-				Leavesetting leavesetting = leavesettingDao
-						.findByTypeIdAndYear(attendRecord.getType().getId(),
-								years);
-				EmployeeLeave employeeLeave = findEmployeeLeave(employee,
-						leavesetting);
+				Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(attendRecord.getType().getId(), years);
+				EmployeeLeave employeeLeave = findEmployeeLeave(employee, leavesetting);
 				if ((leavesetting.getDays() - employeeLeave.getUsedDays()) >= duration) {
-					employeeLeave
-							.setUsedDays((employeeLeave.getUsedDays() + duration));
+					employeeLeave.setUsedDays((employeeLeave.getUsedDays() + duration));
 					employeeLeaveDao.save(employeeLeave);
 					return true;
 				} else {
 					return false;
 				}
-			} else if (endDate.getDate() == employee.getDateofjoined()
-					.getDate()) {
+			} else if (endC.get(Calendar.DAY_OF_MONTH) == joinC.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("End date is joined date");
-				long years = getYearOfJoined(employee.getDateofjoined(),
-						startDate);
+				long years = getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
-				Leavesetting past = leavesettingDao.findByTypeIdAndYear(
-						attendRecord.getType().getId(), years);
+				Leavesetting past = leavesettingDao.findByTypeIdAndYear(attendRecord.getType().getId(), years);
 				EmployeeLeave employeeLeave = findEmployeeLeave(employee, past);
-				if ((past.getDays() - employeeLeave.getUsedDays()) >= (duration - 1)) {
-					employeeLeave
-							.setUsedDays((employeeLeave.getUsedDays() + (duration - 1)));
+				double newDuartion = countDuration(joinDay, endDate);
+				logger.debug("Next Year Duration : {}", newDuartion);
+				if ((past.getDays() - employeeLeave.getUsedDays()) >= (duration - newDuartion)) {
+					employeeLeave.setUsedDays((employeeLeave.getUsedDays() + (duration - newDuartion)));
 					employeeLeaveDao.save(employeeLeave);
-					Leavesetting newLeavesetting = leavesettingDao
-							.findByTypeIdAndYear(
-									attendRecord.getType().getId(), (years + 1));
+					Leavesetting newLeavesetting = leavesettingDao.findByTypeIdAndYear(attendRecord.getType().getId(),
+							(years + 1));
 					employeeLeave = findEmployeeLeave(employee, newLeavesetting);
-					if ((newLeavesetting.getDays() - employeeLeave
-							.getUsedDays()) >= 1) {
-						employeeLeave
-								.setUsedDays((employeeLeave.getUsedDays() + 1));
+					if ((newLeavesetting.getDays() - employeeLeave.getUsedDays()) >= newDuartion) {
+						employeeLeave.setUsedDays((employeeLeave.getUsedDays() + newDuartion));
 						employeeLeaveDao.save(employeeLeave);
 						return true;
 					}
@@ -266,32 +245,25 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 					return false;
 				}
 			} else {
-				Date joined = employee.getDateofjoined();
-				joined.setYear(startDate.getYear());
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(joined);
-				cal.add(Calendar.HOUR_OF_DAY, -8);
-
-				double pastDuration = countDuration(startDate, cal.getTime());
-				long years = getYearOfJoined(employee.getDateofjoined(),
-						startDate);
-				Leavesetting past = leavesettingDao.findByTypeIdAndYear(
-						attendRecord.getType().getId(), years);
+				Calendar calE = Calendar.getInstance();
+				calE.setTime(joinDay);
+				calE.add(Calendar.DATE, -1); 
+				calE.set(Calendar.AM_PM, 1);
+				calE.set(Calendar.HOUR, 6);
+				double pastDuration = countDuration(startDate, calE.getTime());
+				
+				long years = getYearOfJoined(joinDate, startDate);
+				Leavesetting past = leavesettingDao.findByTypeIdAndYear(attendRecord.getType().getId(), years);
 				EmployeeLeave employeeLeave = findEmployeeLeave(employee, past);
 				if ((past.getDays() - employeeLeave.getUsedDays()) >= pastDuration) {
-					employeeLeave
-							.setUsedDays((employeeLeave.getUsedDays() + pastDuration));
+					employeeLeave.setUsedDays((employeeLeave.getUsedDays() + pastDuration));
 					employeeLeaveDao.save(employeeLeave);
-					double newDuration = countDuration(
-							employee.getDateofjoined(), endDate);
-					Leavesetting newLeavesetting = leavesettingDao
-							.findByTypeIdAndYear(
-									attendRecord.getType().getId(), (years + 1));
+					double newDuration = countDuration(joinDay, endDate);
+					Leavesetting newLeavesetting = leavesettingDao.findByTypeIdAndYear(attendRecord.getType().getId(),
+							(years + 1));
 					employeeLeave = findEmployeeLeave(employee, newLeavesetting);
-					if ((newLeavesetting.getDays() - employeeLeave
-							.getUsedDays()) >= newDuration) {
-						employeeLeave
-								.setUsedDays((employeeLeave.getUsedDays() + newDuration));
+					if ((newLeavesetting.getDays() - employeeLeave.getUsedDays()) >= newDuration) {
+						employeeLeave.setUsedDays((employeeLeave.getUsedDays() + newDuration));
 						employeeLeaveDao.save(employeeLeave);
 						return true;
 					}
@@ -303,11 +275,9 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		return false;
 	}
 
-	private EmployeeLeave findEmployeeLeave(Employee employee,
-			Leavesetting leavesetting) {
-		EmployeeLeave employeeLeave = employeeLeaveDao
-				.findByEmployeeIdAndLeavesettingId(employee.getId(),
-						leavesetting.getId());
+	private EmployeeLeave findEmployeeLeave(Employee employee, Leavesetting leavesetting) {
+		EmployeeLeave employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employee.getId(),
+				leavesetting.getId());
 		if (employeeLeave == null) {
 			employeeLeave = new EmployeeLeave();
 			employeeLeave.setEmployee(employee);
@@ -325,38 +295,20 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		return period.getYears() + 1;
 	}
 
-	private boolean overDateOfJoined(Date start, Date end, Date join) {
-		Calendar startC = Calendar.getInstance();
-		startC.setTime(start);
-		Calendar endC = Calendar.getInstance();
-		endC.setTime(end);
-		Calendar joinC = Calendar.getInstance();
-		joinC.setTime(join);
-		if (joinC.get(Calendar.DAY_OF_YEAR) >= startC.get(Calendar.DAY_OF_YEAR)
-				&& joinC.get(Calendar.DAY_OF_YEAR) <= endC
-						.get(Calendar.DAY_OF_YEAR)) {
-			return true;
-		}
-		return false;
-	}
-
 	@Transactional
 	@Override
-	public Page<AttendRecordTransfer> findAll(AttendRecordSpecification spec,
-			Pageable pageable) {
+	public Page<AttendRecordTransfer> findAll(AttendRecordSpecification spec, Pageable pageable) {
 		List<AttendRecordTransfer> transfers = new ArrayList<AttendRecordTransfer>();
-		Page<AttendRecord> attendRecords = attendRecordDao.findAll(spec,
-				pageable);
+		Page<AttendRecord> attendRecords = attendRecordDao.findAll(spec, pageable);
 		for (AttendRecord attendRecord : attendRecords) {
 			transfers.add(toAttendRecordTransfer(attendRecord));
 		}
-		Page<AttendRecordTransfer> rets = new PageImpl<AttendRecordTransfer>(
-				transfers, pageable, attendRecords.getTotalElements());
+		Page<AttendRecordTransfer> rets = new PageImpl<AttendRecordTransfer>(transfers, pageable,
+				attendRecords.getTotalElements());
 		return rets;
 	}
 
-	private void setUpAttendRecord(AttendRecordTransfer transfer,
-			AttendRecord newEntry) {
+	private void setUpAttendRecord(AttendRecordTransfer transfer, AttendRecord newEntry) {
 		if (transfer.isStartDateSet()) {
 			newEntry.setStartDate(transfer.getStartDate());
 		}
@@ -373,26 +325,21 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		if (newEntry.getStartDate() == null || newEntry.getEndDate() == null) {
 			throw new InvalidStartAndEndDateException();
 		}
-		newEntry.setDuration(countDuration(newEntry.getStartDate(),
-				newEntry.getEndDate()));
+		newEntry.setDuration(countDuration(newEntry.getStartDate(), newEntry.getEndDate()));
 		if (transfer.isTypeSet()) {
 			if (transfer.getType().isIdSet()) {
-				entity.AttendRecordType type = attendRecordTypeDao
-						.findOne(transfer.getType().getId());
+				entity.AttendRecordType type = attendRecordTypeDao.findOne(transfer.getType().getId());
 				if (type == null) {
-					throw new AttendRecordTypeNotFoundException(transfer
-							.getType().getId());
+					throw new AttendRecordTypeNotFoundException(transfer.getType().getId());
 				}
 				newEntry.setType(type);
 			}
 		}
 		if (transfer.isEmployeeSet()) {
 			if (transfer.getApplicant().isIdSet()) {
-				entity.Employee employee = employeeDao.findOne(transfer
-						.getApplicant().getId());
+				entity.Employee employee = employeeDao.findOne(transfer.getApplicant().getId());
 				if (employee == null) {
-					throw new EmployeeNotFoundException(transfer.getApplicant()
-							.getId());
+					throw new EmployeeNotFoundException(transfer.getApplicant().getId());
 				}
 				newEntry.setEmployee(employee);
 			}
@@ -403,8 +350,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		return CalendarUtil.countDuration(startDate, endDate);
 	}
 
-	private AttendRecordTransfer toAttendRecordTransfer(
-			AttendRecord attendRecord) {
+	private AttendRecordTransfer toAttendRecordTransfer(AttendRecord attendRecord) {
 		AttendRecordTransfer ret = new AttendRecordTransfer();
 		ret.setId(attendRecord.getId());
 		AttendRecordTransfer.Employee employee = new AttendRecordTransfer.Employee();

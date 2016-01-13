@@ -100,6 +100,8 @@
 		<constructor-arg ref="eventDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="calendarDao" />
+		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="employeeLeaveDao" />
 	</bean>
 
 
