@@ -76,10 +76,10 @@ angular
 							});
 				}).controller(
 				'edit-leavesetting',
-				function($rootScope, $scope, $routeParams, $location,
+				function($rootScope, $scope, $stateParams, $state,
 						formlyVersion, leavesetting, leavesettingService,
 						recordtypeService) {
-					var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
+					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit Leavesetting'
 							: 'Add Leavesetting';
 					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
@@ -145,13 +145,13 @@ angular
 							console.log("Update");
 							leavesettingService.update(id, vm.model).then(
 									function(status) {
-										$location.path('/list-leavesettings');
+										$state.go('dashboard.list-leavesettings');
 									});
 						} else {
 							console.log("Insert");
 							leavesettingService.insert(vm.model).then(
 									function(status) {
-										$location.path('/list-leavesettings');
+										$state.go('dashboard.list-leavesettings');
 									});
 						}
 					}

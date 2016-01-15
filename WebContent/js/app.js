@@ -7,10 +7,10 @@ angular
 		.config(
 				[
 						'$routeProvider',
-						'$locationProvider',
+						'$state',
 						'$httpProvider',
 						'formlyConfigProvider',
-						function($routeProvider, $locationProvider,
+						function($routeProvider, $state,
 								$httpProvider,formlyConfigProvider) {
 
 							$routeProvider.when('/', {
@@ -207,8 +207,6 @@ angular
 											}
 										}
 									});
-<<<<<<< HEAD
-=======
 							$routeProvider.when('/list-memberrecords', {
 								templateUrl : 'partials/list-memberrecords.html',
 								controller : 'list-memberrecords'
@@ -256,7 +254,7 @@ angular
 							 * unauthenticated requests
 							 */
 							$httpProvider.interceptors.push(function($q,
-									$rootScope, $location) {
+									$rootScope, $state) {
 								return {
 									'responseError' : function(rejection) {
 										var data = rejection.data;
@@ -264,9 +262,10 @@ angular
 										var config = rejection.config;
 										var method = config.method;
 										var url = config.url;
+										console.log('intercept status:'+status);
 
 										if (status == 401) {
-											$location.path("/login");
+											$state.go('login');
 										} else {
 											$rootScope.error = method + " on "
 													+ url
@@ -282,245 +281,6 @@ angular
 						} ]
 
 		)
-		.factory(
-				'employeeService',
-				[
-						'$http',
-						function($http) {
-							var serviceBase = 'rest/employee/';
-							var obj = {};
-							obj.list = function(queries) {
-								return $http.get(serviceBase, {params:queries});
-							};
-
-							obj.get = function(id) {
-								return $http.get(serviceBase  + id);
-							};
-
-							obj.insert = function(employee) {
-								return $http.post(serviceBase, employee);
-							};
-
-							obj.update = function(id, employee) {
-								return $http.put(serviceBase  + id,
-										employee).then(function(results) {
-									return results;
-								});
-							};
-							
-							obj.remove = function(id) {
-								return $http.delete(serviceBase + id).then(function(status) {
-									return status;
-								});
-							};
-
-							return obj;
-						} ]).factory(
-								'departmentService',
-								[
-										'$http',
-										function($http) {
-											var serviceBase = 'rest/department/';
-											var obj = {};
-											obj.list = function(queries) {
-												return $http.get(serviceBase, {params:queries});
-											};
-
-											obj.get = function(id) {
-												return $http.get(serviceBase  + id);
-											};
-
-											obj.insert = function(department) {
-												return $http.post(serviceBase, department).then(
-														function(results) {
-															return results;
-														});
-											};
-
-											obj.update = function(id, department) {
-												return $http.put(serviceBase  + id,
-														department).then(function(results) {
-													return results;
-												});
-											};
-											
-											obj.remove = function(id) {
-												return $http.delete(serviceBase + id).then(function(status) {
-													return status;
-												});
-											};
-
-											return obj;
-										} ])
-										.factory(
-								'employeeRoleService',
-								[
-										'$http',
-										function($http) {
-											var serviceBase = 'rest/employee/';
-											var obj = {};
-											obj.list = function(employeeid) {
-												return $http.get(serviceBase+employeeid+"/roles");
-											};
-
-											obj.get = function(employeeid,roleid) {
-												return $http.get(serviceBase+employeeid+"/roles/"+roleid);
-											};
-
-											obj.insert = function(employeeid,roleid) {
-												return $http.put(serviceBase+employeeid+"/roles/"+roleid);
-											};
-											
-											obj.remove = function(id) {
-												return $http.delete(serviceBase+employeeid+"/roles/"+roleid);
-											};
-
-											return obj;
-										} ]).factory(
-												'roleService',
-												[
-														'$http',
-														function($http) {
-															var serviceBase = 'rest/role/';
-															var obj = {};
-															obj.list = function(queries) {
-																return $http.get(serviceBase, {params:queries});
-															};
-
-															obj.get = function(id) {
-																return $http.get(serviceBase  + id);
-															};
-
-															obj.insert = function(role) {
-																return $http.post(serviceBase, role).then(
-																		function(results) {
-																			return results;
-																		});
-															};
-
-															obj.update = function(id, role) {
-																return $http.put(serviceBase  + id,
-																		role).then(function(results) {
-																	return results;
-																});
-															};
-															
-															obj.remove = function(id) {
-																return $http.delete(serviceBase + id).then(function(status) {
-																	return status;
-																});
-															};
-
-															return obj;
-														} ]).factory(
-												'recordtypeService',
-												[
-														'$http',
-														function($http) {
-															var serviceBase = 'rest/recordtype/';
-															var obj = {};
-															obj.list = function(queries) {
-																return $http.get(serviceBase, {params:queries});
-															};
-
-															obj.get = function(id) {
-																return $http.get(serviceBase  + id);
-															};
-
-															obj.insert = function(recordtype) {
-																return $http.post(serviceBase, recordtype).then(
-																		function(results) {
-																			return results;
-																		});
-															};
-
-															obj.update = function(id, recordtype) {
-																return $http.put(serviceBase  + id,
-																		recordtype).then(function(results) {
-																	return results;
-																});
-															};
-															
-															obj.remove = function(id) {
-																return $http.delete(serviceBase + id).then(function(status) {
-																	return status;
-																});
-															};
-
-															return obj;
-														} ]).factory(
-																'leavesettingService',
-																[
-																		'$http',
-																		function($http) {
-																			var serviceBase = 'rest/leavesetting/';
-																			var obj = {};
-																			obj.list = function(queries) {
-																				return $http.get(serviceBase, {params:queries});
-																			};
-
-																			obj.get = function(id) {
-																				return $http.get(serviceBase  + id);
-																			};
-																			
-																			obj.insert = function(leavesetting) {
-																				return $http.post(serviceBase, leavesetting).then(
-																						function(results) {
-																							return results;
-																						});
-																			};
-
-																			obj.update = function(id, leavesetting) {
-																				return $http.put(serviceBase  + id,
-																						leavesetting).then(function(results) {
-																					return results;
-																				});
-																			};
-																			
-																			obj.remove = function(id) {
-																				return $http.delete(serviceBase + id).then(function(status) {
-																					return status;
-																				});
-																			};
-
-																			return obj;
-																		} ]).factory(
-																				'employeeleaveService',
-																				[
-																						'$http',
-																						function($http) {
-																							var serviceBase = 'rest/employeeleave/';
-																							var obj = {};
-																							obj.list = function(queries) {
-																								return $http.get(serviceBase, {params:queries});
-																							};
-
-																							obj.get = function(id) {
-																								return $http.get(serviceBase  + id);
-																							};
-																							
-																							obj.insert = function(employeeleave) {
-																								return $http.post(serviceBase, employeeleave).then(
-																										function(results) {
-																											return results;
-																										});
-																							};
-
-																							obj.update = function(id, employeeleave) {
-																								return $http.put(serviceBase  + id,
-																										employeeleave).then(function(results) {
-																									return results;
-																								});
-																							};
-																							
-																							obj.remove = function(id) {
-																								return $http.delete(serviceBase + id).then(function(status) {
-																									return status;
-																								});
-																							};
-
-																							return obj;
-																						} ])
 		.run(
 				function($rootScope, $location, $cookieStore, $http,
 						formlyConfig, auth, formlyConfig, formlyValidationMessages) {

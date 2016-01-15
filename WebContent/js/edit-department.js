@@ -1,8 +1,8 @@
 angular.module('edit-department', []).controller(
 		'edit-department',
-		function($rootScope, $scope, $routeParams, $location, formlyVersion,
+		function($rootScope, $scope, $stateParams, $state, formlyVersion,
 				department, departmentService) {
-			var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
+			var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 			$rootScope.listPage = '#!/list-departments'
 			$rootScope.title = (id > 0) ? 'Edit Department' : 'Add Department';
 			$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
@@ -41,12 +41,12 @@ angular.module('edit-department', []).controller(
 					if (id > 0) {
 						departmentService.update(id, vm.model).then(
 								function(status) {
-									$location.path('/list-departments');
+									$state.go('dashboard.list-departments');
 								});
 					} else {
 						departmentService.insert(vm.model).then(
 								function(status) {
-									$location.path('/list-departments');
+									$state.go('dashboard.list-departments');
 								});
 					}
 				}

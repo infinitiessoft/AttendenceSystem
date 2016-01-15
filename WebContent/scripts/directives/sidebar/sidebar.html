@@ -1,0 +1,42 @@
+<div class="navbar-default sidebar" role="navigation">
+	<div class="sidebar-nav navbar-collapse">
+		<ul class="nav in" id="side-menu">
+			<li ui-sref-active="active"><a ui-sref="dashboard.home"><i
+					class="fa fa-calendar fa-fw"></i> Calendar</a></li>
+			<li ng-show="authenticated()" ui-sref-active="active"><a
+				ui-sref="dashboard.list-memberrecords"><i class="fa fa-edit fa-fw"></i>
+					Attend Records</a></li>
+			<li ng-show="authenticated()" ui-sref-active="active"><a
+				ui-sref="dashboard.list-memberevents"><i class="fa fa-envelope fa-fw"></i>
+					Events</a></li>
+			<li ng-show="hasRole('admin')" ng-class="{active: collapseVar==1}">{{dropDown}}
+				<a href="" ng-click="check(1)"><i class="fa fa-wrench fa-fw"></i>
+					Admin<span class="fa arrow"></span></a>
+				<ul class="nav nav-second-level" collapse="collapseVar!=1">
+					<li ui-sref-active="active"><a
+						ui-sref="dashboard.list-records"> All Records</a></li>
+					<li ui-sref-active="active"><a
+						ui-sref="dashboard.list-events"> All Events</a></li>
+					<li ui-sref-active="active"><a
+						ui-sref="dashboard.list-employees"> Employees</a></li>
+					<li ui-sref-active="active"><a
+						ui-sref="dashboard.list-departments"> Departments</a></li>
+					<li ui-sref-active="active"><a ui-sref="dashboard.list-roles">
+							Roles</a></li>
+					<li ui-sref-active="active"><a
+						ui-sref="dashboard.list-recordtypes"> Record Types</a></li>
+					<li ui-sref-active="active"><a
+						ui-sref="dashboard.list-leavesettings"> Leave Rules</a></li>
+					<li ui-sref-active="active"><a
+						ui-sref="dashboard.list-employeeleaves"> Employee Leaves</a></li>
+				</ul> <!-- /.nav-second-level -->
+			</li>
+			<li><a href="https://github.com/pohsun-huang/AttendenceSystem"><i
+					class="fa fa-github fa-fw"></i>Github</a></li>
+		</ul>
+	</div>
+	<!-- /.sidebar-collapse -->
+</div>
+
+
+

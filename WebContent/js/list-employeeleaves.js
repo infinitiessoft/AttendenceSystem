@@ -95,4 +95,40 @@ angular
 
 								}
 							};
-						} ]);
+						} ]).factory(
+								'employeeleaveService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/employeeleave/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											};
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											};
+											
+											obj.insert = function(employeeleave) {
+												return $http.post(serviceBase, employeeleave).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, employeeleave) {
+												return $http.put(serviceBase  + id,
+														employeeleave).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ]);

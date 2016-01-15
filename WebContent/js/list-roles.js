@@ -95,4 +95,40 @@ angular
 
 								}
 							};
-						} ]);
+						} ]).factory(
+								'roleService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/role/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											};
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											};
+
+											obj.insert = function(role) {
+												return $http.post(serviceBase, role).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, role) {
+												return $http.put(serviceBase  + id,
+														role).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ]);

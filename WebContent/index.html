@@ -1,128 +1,124 @@
 <!doctype html>
-<html lang="en" ng-app="RDash">
+<html class="no-js">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>Attendance System2.0</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<!-- build:css(.) styles/vendor.css -->
+<!-- bower:css -->
+<link rel="stylesheet"
+	href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+<!-- endbower -->
+<!-- endbuild -->
 
-	<title>RDash AngularJS</title>
-  <!-- STYLES -->
-  <link rel="stylesheet" href="lib/css/main.min.css"/>
-  <!-- SCRIPTS -->
-  <script src="lib/js/main.min.js"></script>
-  <!-- Custom Scripts -->
-  <script type="text/javascript" src="js/dashboard.min.js"></script>
+<!-- build:css(.tmp) styles/main.css -->
+<link rel="stylesheet" href="styles/main.css">
+<link rel="stylesheet" href="styles/sb-admin-2.css">
+<link rel="stylesheet" href="styles/timeline.css">
+<link rel="stylesheet"
+	href="bower_components/metisMenu/dist/metisMenu.min.css">
+<link rel="stylesheet"
+	href="bower_components/angular-loading-bar/build/loading-bar.min.css">
+<link rel="stylesheet"
+	href="bower_components/font-awesome/css/font-awesome.min.css"
+	type="text/css">
+<link rel="stylesheet" href="css/custom.css">
+<!-- endbuild -->
+
+<script type="text/javascript" src="lib/api-check.min.js"></script>
+<script type="text/javascript" src="lib/jquery-2.2.0.min.js"></script>
+<script type="text/javascript" src="lib/angular-1.4.7.min.js"></script>
+<script type="text/javascript" src="lib/angular-resource.min.js"></script>
+<script type="text/javascript" src="lib/angular-route.min.js"></script>
+<script type="text/javascript" src="lib/angular-cookies.min.js"></script>
+<script type="text/javascript" src="lib/angular-messages-1.4.4.min.js"></script>
+<script type="text/javascript" src="lib/angular-animate-1.4.4.min.js"></script>
+<script type="text/javascript"
+	src="lib/ui-bootstrap-tpls-0.14.3.min.js"></script>
+<script type="text/javascript" src="lib/formly.min.js"></script>
+<script type="text/javascript"
+	src="lib/angular-formly-templates-bootstrap.min.js"></script>
+<script type="text/javascript" src="js/smart-table.min.js"></script>
+<script type="text/javascript" src="js/auth.js"></script>
+<script type="text/javascript" src="js/edit-profile.js"></script>
+<script type="text/javascript" src="js/edit-employee.js"></script>
+<script type="text/javascript" src="js/list-employees.js"></script>
+<script type="text/javascript" src="js/list-departments.js"></script>
+<script type="text/javascript" src="js/edit-department.js"></script>
+<script type="text/javascript" src="js/list-roles.js"></script>
+<script type="text/javascript" src="js/edit-role.js"></script>
+<script type="text/javascript" src="js/list-recordtypes.js"></script>
+<script type="text/javascript" src="js/edit-recordtype.js"></script>
+<script type="text/javascript" src="js/list-leavesettings.js"></script>
+<script type="text/javascript" src="js/edit-leavesetting.js"></script>
+<script type="text/javascript" src="js/list-employeeleaves.js"></script>
+<script type="text/javascript" src="js/edit-employeeleave.js"></script>
+<script type="text/javascript" src="js/list-records.js"></script>
+<script type="text/javascript" src="js/list-events.js"></script>
+<script type="text/javascript" src="js/edit-record.js"></script>
+<script type="text/javascript" src="js/list-memberrecords.js"></script>
+<script type="text/javascript" src="js/edit-memberrecord.js"></script>
+<script type="text/javascript" src="js/list-memberevents.js"></script>
+<script type="text/javascript" src="js/navigation.js"></script>
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<!-- <script src="bower_components/jquery/dist/jquery.min.js"></script> -->
+<!-- <script src="bower_components/angular/angular.min.js"></script> -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script
+	src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/json3/lib/json3.min.js"></script>
+<script src="bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
+<script
+	src="bower_components/angular-loading-bar/build/loading-bar.min.js"></script>
+<!-- <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script> -->
+<script src="bower_components/metisMenu/dist/metisMenu.min.js"></script>
+<script src="bower_components/Chart.js/Chart.min.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
+<script src="js/sb-admin-2.js"></script>
+<!-- endbuild -->
+
+
+
+<script>
+	(function(i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r;
+		i[r] = i[r] || function() {
+			(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date();
+		a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m)
+	})(window, document, 'script', '//www.google-analytics.com/analytics.js',
+			'ga');
+	ga('create', 'UA-XXXXX-X');
+	ga('send', 'pageview');
+</script>
+<!-- Custom CSS -->
+
+<!-- Custom Fonts -->
+
+<!-- Morris Charts CSS -->
+<!-- <link href="styles/morrisjs/morris.css" rel="stylesheet"> -->
+
+
 </head>
-<body ng-controller="MasterCtrl">
-  <div id="page-wrapper" ng-class="{'open': toggle}" ng-cloak>
 
-    <!-- Sidebar -->
-    <div id="sidebar-wrapper">
-      <ul class="sidebar">
-        <li class="sidebar-main">
-          <a ng-click="toggleSidebar()">
-            Dashboard
-            <span class="menu-icon glyphicon glyphicon-transfer"></span>
-          </a>
-        </li>
-        <li class="sidebar-title"><span>NAVIGATION</span></li>
-        <li class="sidebar-list">
-          <a href="#">Dashboard <span class="menu-icon fa fa-tachometer"></span></a>
-        </li>
-        <li class="sidebar-list">
-          <a href="#/tables">Tables <span class="menu-icon fa fa-table"></span></a>
-        </li>
-      </ul>
-      <div class="sidebar-footer">
-        <div class="col-xs-4">
-          <a href="https://github.com/pohsun-huang/AttendenceSystem" target="_blank">
-            Github
-          </a>
-        </div>
-        <div class="col-xs-4">
-          <a href="https://github.com/pohsun-huang/AttendenceSystem/README.md" target="_blank">
-            About
-          </a>
-        </div>
-        <div class="col-xs-4">
-          <a href="#">
-            Support
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- End Sidebar -->
+<body>
 
-    <div id="content-wrapper">
-      <div class="page-content">
+	<div ng-app="sbAdminApp">
+		<div ui-view></div>
 
-        <!-- Header Bar -->
-        <div class="row header">
-          <div class="col-xs-12">
-            <div class="user pull-right">
-              <div class="item dropdown">
-                <a href="#" class="dropdown-toggle">
-                  <img src="img/avatar.jpg">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                  <li class="dropdown-header">
-                    Joe Bloggs
-                  </li>
-                  <li class="divider"></li>
-                  <li class="link">
-                    <a href="#">
-                      Profile
-                    </a>
-                  </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
-                    </a>
-                  </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
-                    </a>
-                  </li>
-                  <li class="divider"></li>
-                  <li class="link">
-                    <a href="#">
-                      Logout
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div class="item dropdown">
-               <a href="#" class="dropdown-toggle">
-                  <i class="fa fa-bell-o"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                  <li class="dropdown-header">
-                    Notifications
-                  </li>
-                  <li class="divider"></li>
-                  <li>
-                    <a href="#">Server Down!</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="meta">
-              <div class="page">
-                Dashboard
-              </div>
-              <div class="breadcrumb-links">
-                Home / Dashboard
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Header Bar -->
+	</div>
 
-        <!-- Main Content -->
-        <div ui-view></div>
-
-      </div><!-- End Page Content -->
-    </div><!-- End Content Wrapper -->
-  </div><!-- End Page Wrapper -->
 </body>
+
 </html>

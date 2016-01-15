@@ -92,4 +92,61 @@ angular.module('list-employees', [ 'ngResource' ]).controller(
 
 						}
 					};
-				} ]);
+				} ]).factory(
+						'employeeService',
+						[
+								'$http',
+								function($http) {
+									var serviceBase = 'rest/employee/';
+									var obj = {};
+									obj.list = function(queries) {
+										return $http.get(serviceBase, {params:queries});
+									};
+
+									obj.get = function(id) {
+										return $http.get(serviceBase  + id);
+									};
+
+									obj.insert = function(employee) {
+										return $http.post(serviceBase, employee);
+									};
+
+									obj.update = function(id, employee) {
+										return $http.put(serviceBase  + id,
+												employee).then(function(results) {
+											return results;
+										});
+									};
+									
+									obj.remove = function(id) {
+										return $http.delete(serviceBase + id).then(function(status) {
+											return status;
+										});
+									};
+
+									return obj;
+								} ]).factory(
+										'employeeRoleService',
+										[
+												'$http',
+												function($http) {
+													var serviceBase = 'rest/employee/';
+													var obj = {};
+													obj.list = function(employeeid) {
+														return $http.get(serviceBase+employeeid+"/roles");
+													};
+
+													obj.get = function(employeeid,roleid) {
+														return $http.get(serviceBase+employeeid+"/roles/"+roleid);
+													};
+
+													obj.insert = function(employeeid,roleid) {
+														return $http.put(serviceBase+employeeid+"/roles/"+roleid);
+													};
+													
+													obj.remove = function(id) {
+														return $http.delete(serviceBase+employeeid+"/roles/"+roleid);
+													};
+
+													return obj;
+												} ]);

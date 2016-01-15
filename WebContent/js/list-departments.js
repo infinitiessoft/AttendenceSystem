@@ -95,4 +95,40 @@ angular
 
 								}
 							};
-						} ]);
+						} ]).factory(
+								'departmentService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/department/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											};
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											};
+
+											obj.insert = function(department) {
+												return $http.post(serviceBase, department).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, department) {
+												return $http.put(serviceBase  + id,
+														department).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ]);

@@ -1,8 +1,8 @@
 angular.module('edit-role', []).controller(
 		'edit-role',
-		function($rootScope, $scope, $routeParams, $location, formlyVersion,
+		function($rootScope, $scope, $stateParams, $state, formlyVersion,
 				role, roleService) {
-			var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
+			var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 			$rootScope.listPage = '#!/list-roles'
 			$rootScope.title = (id > 0) ? 'Edit Role' : 'Add Role';
 			$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
@@ -40,11 +40,11 @@ angular.module('edit-role', []).controller(
 				if (vm.form.$valid) {
 					if (id > 0) {
 						roleService.update(id, vm.model).then(function(status) {
-							$location.path('/list-roles');
+							$state.go('dashboard.list-roles');
 						});
 					} else {
 						roleService.insert(vm.model).then(function(status) {
-							$location.path('/list-roles');
+							$state.go('dashboard.list-roles');
 						});
 					}
 				}

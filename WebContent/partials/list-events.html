@@ -1,62 +1,68 @@
-<div class="page-header">
-	<h3>Event</h3>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Event</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<table st-pipe="callServer" st-table="displayed"
+				class="table table-striped">
+				<thead>
+					<tr>
+						<th st-sort="id">id</th>
+						<th st-sort="applicantName">applicant</th>
+						<th st-sort="approverName">approver</th>
+						<th st-sort="action">action</th>
+						<th st-sort="recordTypeName">type</th>
+						<th st-sort="startDate">start date</th>
+						<th st-sort="endDate">end date</th>
+						<th st-sort="duration">duration</th>
+					</tr>
+					<tr>
+						<th></th>
+						<th><input st-search="applicantName" /></th>
+						<th><input st-search="approverName" /></th>
+						<th><input st-search="action" /></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody ng-show="!isLoading">
+					<tr ng-repeat="row in displayed">
+						<td>{{row.id}}</td>
+						<td>{{row.record.employee.name}}</td>
+						<td>{{row.approver.name}}</td>
+						<td>{{row.action}}</td>
+						<td>{{row.record.type.name}}</td>
+						<td>{{row.record.startDate| date:'yyyy-MM-dd HH:mm' }}</td>
+						<td>{{row.record.endDate| date:'yyyy-MM-dd HH:mm' }}</td>
+						<td>{{row.record.duration}}</td>
+						<td><button type="button" ng-click="permit(row)"
+								class="btn btn-sm btn-success" ng-show="!row.action">
+								<i class="glyphicon glyphicon-ok"> </i>
+							</button>
+							<button type="button" ng-click="reject(row)"
+								class="btn btn-sm btn-warning" ng-show="!row.action">
+								<i class="glyphicon glyphicon-remove"> </i>
+							</button></td>
+					</tr>
+				</tbody>
+				<tbody ng-show="isLoading">
+					<tr>
+						<td colspan="3" class="text-center">Loading ...</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td class="text-center" st-pagination="" st-items-by-page="10"
+							colspan="3"></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
 </div>
-<div>
-	<table st-pipe="callServer" st-table="displayed"
-		class="table table-striped">
-		<thead>
-			<tr>
-				<th st-sort="id">id</th>
-				<th st-sort="applicantName">applicant</th>
-				<th st-sort="approverName">approver</th>
-				<th st-sort="action">action</th>
-				<th st-sort="recordTypeName">type</th>
-				<th st-sort="startDate">start date</th>
-				<th st-sort="endDate">end date</th>
-				<th st-sort="duration">duration</th>
-			</tr>
-			<tr>
-				<th></th>
-				<th><input st-search="applicantName" /></th>
-				<th><input st-search="approverName" /></th>
-				<th><input st-search="action" /></th>
-				<th></th>
-				<th></th>
-				<th></th>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody ng-show="!isLoading">
-			<tr ng-repeat="row in displayed">
-				<td>{{row.id}}</td>
-				<td>{{row.record.employee.name}}</td>
-				<td>{{row.approver.name}}</td>
-				<td>{{row.action}}</td>
-				<td>{{row.record.type.name}}</td>
-				<td>{{row.record.startDate| date:'yyyy-MM-dd HH:mm' }}</td>
-				<td>{{row.record.endDate| date:'yyyy-MM-dd HH:mm' }}</td>
-				<td>{{row.record.duration}}</td>
-				<td><button type="button" ng-click="permit(row)"
-						class="btn btn-sm btn-success" ng-show="!row.action">
-						<i class="glyphicon glyphicon-ok"> </i>
-					</button>
-					<button type="button" ng-click="reject(row)"
-						class="btn btn-sm btn-danger" ng-show="!row.action">
-						<i class="glyphicon glyphicon-remove"> </i>
-					</button></td>
-			</tr>
-		</tbody>
-		<tbody ng-show="isLoading">
-			<tr>
-				<td colspan="3" class="text-center">Loading ...</td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<tr>
-				<td class="text-center" st-pagination="" st-items-by-page="10"
-					colspan="3"></td>
-			</tr>
-		</tfoot>
-	</table>
-</div>
-<hr />

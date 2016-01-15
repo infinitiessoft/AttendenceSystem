@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.joda.time.Duration;
 import org.joda.time.Interval;
-import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -219,7 +218,7 @@ public class CalendarUtil {
 		event.setAttendees(Arrays.asList(attendees));
 		return event;
 	}
-	
+
 	public static boolean overDateOfJoined(Date start, Date end, Date join) {
 		Calendar startC = Calendar.getInstance();
 		startC.setTime(start);
@@ -228,10 +227,11 @@ public class CalendarUtil {
 		Calendar joinC = Calendar.getInstance();
 		joinC.setTime(join);
 		if (joinC.get(Calendar.DAY_OF_YEAR) >= startC.get(Calendar.DAY_OF_YEAR)
-				&& joinC.get(Calendar.DAY_OF_YEAR) <= endC.get(Calendar.DAY_OF_YEAR)) {
+				&& joinC.get(Calendar.DAY_OF_YEAR) <= endC
+						.get(Calendar.DAY_OF_YEAR)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 }

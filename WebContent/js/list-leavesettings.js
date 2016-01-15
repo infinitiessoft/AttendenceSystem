@@ -95,4 +95,40 @@ angular
 
 								}
 							};
-						} ]);
+						} ]).factory(
+								'leavesettingService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/leavesetting/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											};
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											};
+											
+											obj.insert = function(leavesetting) {
+												return $http.post(serviceBase, leavesetting).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, leavesetting) {
+												return $http.put(serviceBase  + id,
+														leavesetting).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ]);

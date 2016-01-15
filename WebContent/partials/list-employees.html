@@ -1,63 +1,70 @@
-<div class="pull-right">
-	<a href="#!/edit-employee/0" class="btn btn-sm btn-success"
-		title="Create"><i class="glyphicon glyphicon-plus"> </i></a>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">Employee</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="pull-right">
+				<a ui-sref="dashboard.edit-employee({id:0})" class="btn btn-sm btn-success"
+					title="Create"><i class="glyphicon glyphicon-plus"> </i></a>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<table st-pipe="callServer" st-table="displayed"
+				class="table table-striped">
+				<thead>
+					<tr>
+						<th st-sort="id">id</th>
+						<th st-sort="name">name</th>
+						<th st-sort="username">username</th>
+						<th st-sort="dateOfJoined">dateOfJoined</th>
+						<th st-sort="gender">gender</th>
+						<th st-sort="department">department</th>
+					</tr>
+					<tr>
+						<th></th>
+						<th><input st-search="name" /></th>
+						<th><input st-search="username" /></th>
+						<th></th>
+						<th><input st-search="gender" /></th>
+						<th><input st-search="department" /></th>
+					</tr>
+				</thead>
+				<tbody ng-show="!isLoading">
+					<tr ng-repeat="row in displayed">
+						<td>{{row.id}}</td>
+						<td>{{row.name}}</td>
+						<td>{{row.username}}</td>
+						<td>{{row.dateOfJoined}}</td>
+						<td>{{row.gender}}</td>
+						<td>{{row.department.name}}</td>
+						<td><a ui-sref="dashboard.edit-employee({id:row.id})"
+							class="btn btn-sm btn-primary"> <i
+								class="glyphicon glyphicon-pencil"> </i>
+						</a>
+							<button type="button" ng-click="removeEntry(row)"
+								class="btn btn-sm btn-danger">
+								<i class="glyphicon glyphicon-remove"> </i>
+							</button></td>
+					</tr>
+				</tbody>
+				<tbody ng-show="isLoading">
+					<tr>
+						<td colspan="3" class="text-center">Loading ...</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td class="text-center" st-pagination="" st-items-by-page="10"
+							colspan="3"></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
 </div>
-<div class="page-header">
-	<h3>Employee</h3>
-</div>
-<div>
-	<table st-pipe="callServer" st-table="displayed"
-		class="table table-striped">
-		<thead>
-			<tr>
-				<th st-sort="id">id</th>
-				<th st-sort="name">name</th>
-				<th st-sort="username">username</th>
-				<th st-sort="dateOfJoined">dateOfJoined</th>
-				<th st-sort="email">email</th>
-				<th st-sort="gender">gender</th>
-				<th st-sort="department">department</th>
-			</tr>
-			<tr>
-				<th></th>
-				<th><input st-search="name" /></th>
-				<th><input st-search="username" /></th>
-				<th></th>
-				<th></th>
-				<th><input st-search="gender" /></th>
-				<th><input st-search="department" /></th>
-			</tr>
-		</thead>
-		<tbody ng-show="!isLoading">
-			<tr ng-repeat="row in displayed">
-				<td>{{row.id}}</td>
-				<td>{{row.name}}</td>
-				<td>{{row.username}}</td>
-				<td>{{row.dateOfJoined}}</td>
-				<td>{{row.email}}</td>
-				<td>{{row.gender}}</td>
-				<td>{{row.department.name}}</td>
-				<td><a href="#!/edit-employee/{{row.id}}"
-					class="btn btn-sm btn-primary"> <i
-						class="glyphicon glyphicon-pencil"> </i>
-				</a>
-					<button type="button" ng-click="removeEntry(row)"
-						class="btn btn-sm btn-danger">
-						<i class="glyphicon glyphicon-remove"> </i>
-					</button></td>
-			</tr>
-		</tbody>
-		<tbody ng-show="isLoading">
-			<tr>
-				<td colspan="3" class="text-center">Loading ...</td>
-			</tr>
-		</tbody>
-		<tfoot>
-			<tr>
-				<td class="text-center" st-pagination="" st-items-by-page="10"
-					colspan="3"></td>
-			</tr>
-		</tfoot>
-	</table>
-</div>
-<hr />

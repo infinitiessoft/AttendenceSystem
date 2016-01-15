@@ -35,10 +35,10 @@ function($scope, $route, auth) {
 		auth.authenticate($scope.credentials, function(authenticated) {
 			if (authenticated) {
 				console.log("Login succeeded")
-				$scope.error = false;
+				 $scope.error = false;
 			} else {
 				console.log("Login failed")
-				$scope.error = true;
+				 $scope.error = true;
 			}
 		})
 	};

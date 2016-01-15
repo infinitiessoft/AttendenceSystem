@@ -1,0 +1,20 @@
+<div id="wrapper">
+
+	<!-- Navigation -->
+
+	<header></header>
+	<!-- /.navbar-top-links -->
+
+	<!-- /.navbar-static-side -->
+
+	<div id="page-wrapper" style="min-height: 561px;">
+		<div class="alert alert-danger alert-dismissable" ng-show="error">
+			<button type="button" class="close" data-dismiss="alert"
+				aria-hidden="true">&times;</button>
+			<i class="fa fa-times-circle"></i>{{error}}
+		</div>
+		<div ui-view></div>
+
+	</div>
+	<!-- /#page-wrapper -->
+</div>

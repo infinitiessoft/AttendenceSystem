@@ -94,9 +94,7 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 					};
 				} ]).factory(
 						'recordService',
-						[
-								'$http',
-								function($http) {
+						['$http', function($http) {
 									var serviceBase = 'rest/record/';
 									var obj = {};
 									obj.list = function(queries) {

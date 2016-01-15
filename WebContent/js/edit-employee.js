@@ -77,10 +77,10 @@ angular
 				})
 		.controller(
 				'edit-employee',
-				function($rootScope, $scope, $routeParams, $location,
+				function($rootScope, $scope, $stateParams, $state,
 						formlyVersion, employee, employeeService,
 						departmentService, roleService, employeeRoleService) {
-					var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
+					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit Employee'
 							: 'Add Employee';
 					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
@@ -136,7 +136,7 @@ angular
 						type : 'input',
 						templateOptions : {
 							label : 'Name',
-							placeholder : 'name',
+							placeholder : 'Name',
 							type : 'text',
 							required : true
 						}
@@ -145,7 +145,7 @@ angular
 						type : 'input',
 						templateOptions : {
 							label : 'Username',
-							placeholder : 'Formly is terrific!',
+							placeholder : 'Username',
 							type : 'text',
 							required : true
 						}
@@ -188,7 +188,7 @@ angular
 						type : 'input',
 						templateOptions : {
 							label : 'Email',
-							placeholder : 'Formly is terrific!',
+							placeholder : 'E-mail',
 							type : 'email',
 							required : true
 						}
@@ -236,7 +236,7 @@ angular
 							if (id > 0) {
 								employeeService.update(id, vm.model).then(
 										function(status) {
-											$location.path('/list-employees');
+											$state.go('dashboard.list-employees');
 										});
 							} else {
 								employeeService
@@ -251,8 +251,7 @@ angular
 															.then(
 																	function(
 																			status) {
-																		$location
-																				.path('/list-employees');
+																		$state.go('dashboard.list-employees');
 																	});
 												});
 							}

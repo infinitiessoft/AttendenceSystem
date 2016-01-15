@@ -1,8 +1,8 @@
 angular.module('edit-recordtype', []).controller(
 		'edit-recordtype',
-		function($rootScope, $scope, $routeParams, $location, formlyVersion,
+		function($rootScope, $scope, $stateParams, $state, formlyVersion,
 				recordtype, recordtypeService) {
-			var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
+			var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 			$rootScope.listPage = '#!/list-recordtypes'
 			$rootScope.title = (id > 0) ? 'Edit AttendRecordType'
 					: 'Add AttendRecordType';
@@ -32,7 +32,7 @@ angular.module('edit-recordtype', []).controller(
 				type : 'input',
 				templateOptions : {
 					label : 'Name',
-					placeholder : 'name',
+					placeholder : 'Name',
 					type : 'text',
 					required : true
 				}
@@ -42,12 +42,12 @@ angular.module('edit-recordtype', []).controller(
 					if (id > 0) {
 						recordtypeService.update(id, vm.model).then(
 								function(status) {
-									$location.path('/list-recordtypes');
+									$state.go('dashboard.list-recordtypes');
 								});
 					} else {
 						recordtypeService.insert(vm.model).then(
 								function(status) {
-									$location.path('/list-recordtypes');
+									$state.go('dashboard.list-recordtypes');
 								});
 					}
 				}

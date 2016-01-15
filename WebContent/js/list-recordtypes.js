@@ -96,4 +96,40 @@ angular
 
 								}
 							};
-						} ]);
+						} ]).factory(
+								'recordtypeService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/recordtype/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											};
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											};
+
+											obj.insert = function(recordtype) {
+												return $http.post(serviceBase, recordtype).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, recordtype) {
+												return $http.put(serviceBase  + id,
+														recordtype).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ]);

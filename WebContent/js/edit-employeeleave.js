@@ -76,10 +76,10 @@ angular
 							});
 				}).controller(
 				'edit-employeeleave',
-				function($rootScope, $scope, $routeParams, $location,
+				function($rootScope, $scope, $stateParams, $state,
 						formlyVersion, employeeleave, employeeleaveService,
 						employeeService, leavesettingService) {
-					var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
+					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit Employeeleave'
 							: 'Add Employeeleave';
 					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
@@ -158,14 +158,14 @@ angular
 							console.log("Update");
 							employeeleaveService.update(id, vm.model).then(
 									function(status) {
-										$location.path('/list-employeeleaves');
+										$state.go('dashboard.list-employeeleaves');
 									});
 						} else {
 							console.log("Insert");
 							console.log(vm.leavesetting);
 							employeeleaveService.insert(vm.model).then(
 									function(status) {
-										$location.path('/list-employeeleaves');
+										$state.go('dashboard.list-employeeleaves');
 									});
 						}
 					}

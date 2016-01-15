@@ -18,8 +18,8 @@ angular
 						authenticated : false,
 						user : {},
 						loginPath : '/login',
-						logoutPath : '/logout',
-						homePath : '/',
+						logoutPath : 'logout',
+						homePath : '/home',
 						path : $location.path(),
 
 						authenticate : function(credentials, callback) {
@@ -28,7 +28,8 @@ angular
 								authorization : "Basic "
 										+ btoa(credentials.username + ":"
 												+ credentials.password)
-							} : {};
+							}
+									: {};
 
 							$http
 									.get('rest/auth', {
@@ -39,14 +40,19 @@ angular
 												if (data.name) {
 													auth.user = data;
 													auth.authenticated = true;
+													callback
+															&& callback(auth.authenticated);
+													$location
+															.path(auth.path == auth.loginPath ? auth.homePath
+																	: auth.path);
 												} else {
 													auth.authenticated = false;
+													callback
+															&& callback(auth.authenticated);
+													$location
+															.path(auth.loginPath);
 												}
-												callback
-														&& callback(auth.authenticated);
-												$location
-														.path(auth.path == auth.loginPath ? auth.homePath
-																: auth.path);
+
 											}).error(function() {
 										auth.authenticated = false;
 										auth.user = {};
@@ -59,13 +65,28 @@ angular
 							$location.path(auth.loginPath);
 							auth.authenticated = false;
 							auth.user = {};
-							$http.post(auth.logoutPath, {}).success(function() {
-								console.log("Logout succeeded");
-								$location.path(auth.loginPath);
-							}).error(function(data) {
-								console.log("Logout failed");
-								$location.path(auth.loginPath);
-							});
+							$http
+									.get('rest/auth')
+									.then(
+											function(data) {
+												$http
+														.post(auth.logoutPath,
+																{})
+														.success(
+																function() {
+																	console
+																			.log("Logout succeeded");
+																	$location
+																			.path(auth.loginPath);
+																})
+														.error(
+																function(data) {
+																	console
+																			.log("Logout failed");
+																	$location
+																			.path(auth.loginPath);
+																});
+											});
 						},
 
 						init : function(homePath, loginPath, logoutPath) {

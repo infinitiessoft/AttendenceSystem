@@ -70,9 +70,9 @@ angular
 				})
 		.controller(
 				'edit-record',
-				function($rootScope, $scope, $routeParams, $location,
+				function($rootScope, $scope, $stateParams, $state,
 						formlyVersion, record, recordtypeService, recordService) {
-					var id = ($routeParams.id) ? parseInt($routeParams.id) : 0;
+					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit AttendRecord'
 							: 'Add AttendRecord';
 					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
@@ -113,12 +113,12 @@ angular
 								datepickerPopup : 'dd-MMMM-yyyy',
 								required : true
 							},
-							parsers : [ toStartTime ],
-							formatters : [ toStartTime ]
+							parsers : [ toStartTime ]
 						}, {
 							className : 'col-xs-3',
 							key : 'startDate',
 							type : 'timepicker',
+							defaultValue: new Date(),
 							templateOptions : {
 								label : 'Start time',
 								required : true
@@ -138,13 +138,13 @@ angular
 								fieldToMatch : 'startDate',
 								modelToMatch : vm.model
 							},
-							parsers : [ toEndTime ],
-							formatters : [ toEndTime ]
+							parsers : [ toEndTime ]
 						}, {
 							className : 'col-xs-3',
 							key : 'endDate',
 							optionsTypes : [ 'afterField' ],
 							type : 'timepicker',
+							defaultValue: new Date(),
 							templateOptions : {
 								label : 'End time',
 								required : true
@@ -167,11 +167,10 @@ angular
 						} ],
 					}, {
 						key : 'reason',
-						type : 'input',
+						type : 'textarea',
 						templateOptions : {
 							label : 'Reason',
-							placeholder : 'Formly is terrific!',
-							type : 'text',
+							placeholder : 'Reason'
 						}
 					} ];
 
@@ -196,12 +195,12 @@ angular
 							if (id > 0) {
 								recordService.update(id, vm.model).then(
 										function(status) {
-											$location.path('/list-records');
+											$state.go('dashboard.list-records');
 										});
 							} else {
 								recordService.insert(vm.model).then(
 										function(status) {
-											$location.path('/list-records');
+											$state.go('dashboard.list-records');
 										});
 							}
 
