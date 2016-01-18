@@ -25,7 +25,7 @@ import transfer.DepartmentTransfer;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/department")
+@Path("/departments")
 public class DepartmentsResource {
 
 	@Autowired

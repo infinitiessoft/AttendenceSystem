@@ -34,7 +34,7 @@ public class EmployeeEventsResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public Page<EventTransfer> findAll(@PathParam("id") long id,
 			@BeanParam EventSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
@@ -45,7 +45,7 @@ public class EmployeeEventsResource {
 	@GET
 	@Path(value = "{eventid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public EventTransfer getEvent(@PathParam("id") long id,
 			@PathParam("eventid") long eventId) {
 		EventSpecification spec = new EventSpecification();
@@ -63,7 +63,7 @@ public class EmployeeEventsResource {
 
 	@PUT
 	@Path(value = "{eventid}")
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public EventTransfer updateEvent(@PathParam("id") long id,
 			@PathParam("eventid") long eventId, EventTransfer department) {
 		getEvent(id, eventId);

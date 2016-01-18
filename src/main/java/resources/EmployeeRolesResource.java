@@ -32,7 +32,7 @@ public class EmployeeRolesResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public Page<RoleTransfer> findAllRole(@PathParam("id") long id,
 			@BeanParam EmployeeRoleSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
@@ -43,7 +43,7 @@ public class EmployeeRolesResource {
 	@GET
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public RoleTransfer findRole(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
 		return employeeRoleService.findByEmployeeIdAndRoleId(id, roleId);
@@ -52,7 +52,7 @@ public class EmployeeRolesResource {
 	@PUT
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin')")
+	@PreAuthorize("hasAuthority('admin')")
 	public Response assignRoleToEmployee(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
 		employeeRoleService.assignRoleToEmployee(id, roleId);
@@ -63,7 +63,7 @@ public class EmployeeRolesResource {
 	@DELETE
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin')")
+	@PreAuthorize("hasAuthority('admin')")
 	public Response revokeRoleToEmployee(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
 		employeeRoleService.delete(id, roleId);

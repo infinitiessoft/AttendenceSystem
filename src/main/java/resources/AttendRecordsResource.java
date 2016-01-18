@@ -17,6 +17,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import resources.specification.AttendRecordSpecification;
@@ -30,7 +31,8 @@ import transfer.EmployeeTransfer;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/record")
+@PreAuthorize("hasAuthority('admin')")
+@Path("/records")
 public class AttendRecordsResource {
 
 	@Autowired

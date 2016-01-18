@@ -38,7 +38,10 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 		} else if (ex instanceof javax.persistence.PersistenceException) {
 			errorMessage.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 			errorMessage.setMessage("invalid argument");
-		} else {
+		}else if(ex instanceof org.springframework.security.access.AccessDeniedException){
+			errorMessage.setCode(Response.Status.UNAUTHORIZED.getStatusCode());
+			errorMessage.setMessage(ex.getMessage());
+		}else {
 			errorMessage.setCode(Response.Status.INTERNAL_SERVER_ERROR
 					.getStatusCode()); // defaults to internal server error 500
 		}

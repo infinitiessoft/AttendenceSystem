@@ -30,7 +30,7 @@ import transfer.EmployeeTransfer;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/employee")
+@Path("/employees")
 public class EmployeesResource {
 
 	@Autowired
@@ -43,7 +43,7 @@ public class EmployeesResource {
 	@GET
 	@Path(value = "{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public EmployeeTransfer getEmployee(@PathParam("id") long id,
 			@Context SecurityContext sc) {
 		return employeeService.retrieve(id);
@@ -53,7 +53,7 @@ public class EmployeesResource {
 	@DELETE
 	@Path(value = "{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public Response deleteEmployee(@PathParam("id") long id) {
 		employeeService.delete(id);
 		return Response.status(Status.OK)
@@ -64,7 +64,7 @@ public class EmployeesResource {
 	// **Method to update
 	@PUT
 	@Path(value = "{id}")
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public EmployeeTransfer updateEmployee(@PathParam("id") long id,
 			EmployeeTransfer employee) {
 		return employeeService.update(id, employee);
@@ -72,7 +72,7 @@ public class EmployeesResource {
 
 	// **Method to save or create
 	@POST
-	@PreAuthorize("hasRole('admin')")
+	@PreAuthorize("hasAuthority('admin')")
 	public EmployeeTransfer saveEmployee(EmployeeTransfer employee) {
 		return employeeService.save(employee);
 	}
@@ -80,7 +80,7 @@ public class EmployeesResource {
 	// ** Method to find All the employees in the list
 
 	@GET
-	@PreAuthorize("hasRole('admin')")
+	@PreAuthorize("hasAuthority('admin')")
 	public Page<EmployeeTransfer> findAllEmployee(
 			@BeanParam SimplePageRequest pageRequest,
 			@BeanParam EmployeeSpecification spec) {

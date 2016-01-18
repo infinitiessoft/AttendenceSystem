@@ -101,7 +101,7 @@ angular
 								[
 										'$http',
 										function($http) {
-											var serviceBase = 'rest/recordtype/';
+											var serviceBase = 'rest/recordtypes/';
 											var obj = {};
 											obj.list = function(queries) {
 												return $http.get(serviceBase, {params:queries});

@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import resources.specification.AttendRecordSpecification;
@@ -19,7 +20,8 @@ import transfer.AttendRecordReport;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/report")
+@PreAuthorize("hasAuthority('admin')")
+@Path("/reports")
 public class ReportsResource {
 
 	@Autowired

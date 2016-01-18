@@ -100,7 +100,7 @@ angular
 								[
 										'$http',
 										function($http) {
-											var serviceBase = 'rest/department/';
+											var serviceBase = 'rest/departments/';
 											var obj = {};
 											obj.list = function(queries) {
 												return $http.get(serviceBase, {params:queries});

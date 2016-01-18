@@ -113,7 +113,7 @@ angular
 						'auth',
 						'$http',
 						function(auth, $http) {
-							var serviceBase = 'rest/employee/'
+							var serviceBase = 'rest/employees/'
 									+ auth.user.principal.id + '/events/';
 							var obj = {};
 							obj.list = function(queries) {

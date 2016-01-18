@@ -36,7 +36,7 @@ public class EmployeeAttendRecordsResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public Page<AttendRecordTransfer> findAll(@PathParam("id") long id,
 			@BeanParam AttendRecordSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
@@ -47,7 +47,7 @@ public class EmployeeAttendRecordsResource {
 	@GET
 	@Path(value = "{recordid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public AttendRecordTransfer getAttendRecord(@PathParam("id") long id,
 			@PathParam("recordid") long recordId) {
 		AttendRecordSpecification spec = new AttendRecordSpecification();
@@ -65,7 +65,7 @@ public class EmployeeAttendRecordsResource {
 
 	// **Method to save or create
 	@POST
-	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public AttendRecordTransfer saveAttendRecord(@PathParam("id") long id,
 			@Context SecurityContext sc, AttendRecordTransfer attendRecord) {
 		// EmployeeTransfer employee = employeeService.findByUsername(sc

@@ -52,7 +52,7 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 					};
 					
 					
-					var serviceBase = 'rest/report/records';
+					var serviceBase = 'rest/reports/records';
 					$scope.exportHref = buildUrl(serviceBase,lastState.search.predicateObject);
 					
 					var queryParams = function(tableState){
@@ -155,7 +155,7 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 				.factory(
 						'recordService',
 						['$http', function($http) {
-									var serviceBase = 'rest/record/';
+									var serviceBase = 'rest/records/';
 									var obj = {};
 									obj.list = function(queries) {
 										return $http.get(serviceBase, {params:queries});
@@ -188,7 +188,7 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 								.factory(
 						'reportService',
 						['$http', function($http) {
-									var serviceBase = 'rest/report/';
+									var serviceBase = 'rest/reports/';
 									var obj = {};
 									obj.downloadRecords = function(queries) {
 										return $http.get(serviceBase+'records', {params:queries});

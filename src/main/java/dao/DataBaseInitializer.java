@@ -100,10 +100,10 @@ public class DataBaseInitializer {
 
 		Employee admin = new Employee();
 		admin.setDateofjoined(new Date());
-		admin.setEmail("pohsun@infinitiessoft.com");
-		admin.setName("pohsun, Huang");
-		admin.setPassword(this.passwordEncoder.encode("2ggudoou"));
-		admin.setUsername("pohsun");
+		admin.setEmail("user@gmail.com");
+		admin.setName("User");
+		admin.setPassword(this.passwordEncoder.encode("user"));
+		admin.setUsername("user");
 		admin.setGender(Gender.male.name());
 		admin.setDepartment(dep);
 		admin.setEmployee(demo);
