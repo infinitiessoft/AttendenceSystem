@@ -148,28 +148,35 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
+
+	<security:global-method-security
+		secured-annotations="enabled" pre-post-annotations="enabled" />
+
 	<security:http realm="Protected API" use-expressions="true"
 		auto-config="true" authentication-manager-ref="authenticationManager">
-		<security:intercept-url pattern="/" access="permitAll" />
 		<security:intercept-url pattern="/index.html"
 			access="permitAll" />
 		<security:intercept-url pattern="/login"
 			access="permitAll" />
-		<security:intercept-url pattern="/list-employees"
-			access="permitAll" />
-		<security:intercept-url pattern="/edit-employee"
-			access="permitAll" />
-		<security:intercept-url pattern="/edit-profile"
-			access="permitAll" />
-		<security:intercept-url pattern="/list-departments"
-			access="permitAll" />
-		<security:intercept-url pattern="/edit-department"
-			access="permitAll" />
 		<security:intercept-url pattern="/rest/auth"
 			access="permitAll" />
+		<security:intercept-url pattern="/rest/report"
+			access="hasRole('admin')" />
+		<security:intercept-url pattern="/rest/employeeleave"
+			access="hasRole('admin')" />
+		<security:intercept-url pattern="/rest/event"
+			access="hasRole('admin')" />
+		<security:intercept-url pattern="/rest/leavesetting"
+			access="hasRole('admin')" />
+		<security:intercept-url pattern="/rest/role"
+			access="hasRole('admin')" />
+		<security:intercept-url pattern="/rest/record"
+			access="hasRole('admin')" />
+		<security:intercept-url pattern="/rest/recordtype"
+			access="hasRole('admin')" />
 		<security:intercept-url pattern="/rest/**"
 			access="isAuthenticated()" />
-
+		<security:intercept-url pattern="/" access="permitAll" />
 		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
 			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 

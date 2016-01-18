@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import resources.specification.EmployeeRoleSpecification;
@@ -31,6 +32,7 @@ public class EmployeeRolesResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("hasRole('admin') or #id == principal.id")
 	public Page<RoleTransfer> findAllRole(@PathParam("id") long id,
 			@BeanParam EmployeeRoleSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
@@ -41,18 +43,19 @@ public class EmployeeRolesResource {
 	@GET
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RoleTransfer findRole(@PathParam("id") long employeeId,
+	@PreAuthorize("hasRole('admin') or #id == principal.id")
+	public RoleTransfer findRole(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
-		return employeeRoleService
-				.findByEmployeeIdAndRoleId(employeeId, roleId);
+		return employeeRoleService.findByEmployeeIdAndRoleId(id, roleId);
 	}
 
 	@PUT
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response assignRoleToEmployee(@PathParam("id") long employeeId,
+	@PreAuthorize("hasRole('admin')")
+	public Response assignRoleToEmployee(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
-		employeeRoleService.assignRoleToEmployee(employeeId, roleId);
+		employeeRoleService.assignRoleToEmployee(id, roleId);
 		return Response.status(Status.NO_CONTENT)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
@@ -60,9 +63,10 @@ public class EmployeeRolesResource {
 	@DELETE
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response revokeRoleToEmployee(@PathParam("id") long employeeId,
+	@PreAuthorize("hasRole('admin')")
+	public Response revokeRoleToEmployee(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
-		employeeRoleService.delete(employeeId, roleId);
+		employeeRoleService.delete(id, roleId);
 		return Response.status(Status.NO_CONTENT)
 				.type(MediaType.APPLICATION_JSON).build();
 	}

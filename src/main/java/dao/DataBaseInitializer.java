@@ -116,12 +116,12 @@ public class DataBaseInitializer {
 
 		EmployeeRole demoEmployee = new EmployeeRole();
 		demoEmployee.setEmployee(demo);
-		demoEmployee.setRole(role);
+		demoEmployee.setRole(user);
 		employeeRoleDao.save(demoEmployee);
 
 		EmployeeRole demo2Employee = new EmployeeRole();
 		demo2Employee.setEmployee(demo2);
-		demo2Employee.setRole(role);
+		demo2Employee.setRole(user);
 		employeeRoleDao.save(demo2Employee);
 
 		for (int i = 0; i < 200; i++) {
