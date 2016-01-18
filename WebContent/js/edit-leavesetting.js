@@ -110,6 +110,16 @@ angular
 					});
 
 					vm.fields = [ {
+						key : 'name',
+						type : 'input',
+						templateOptions : {
+							label : 'Name',
+							placeholder : 'name',
+							type : 'text',
+							required : true
+						}
+					},
+					{
 						key : 'type',
 						fieldGroup : [ {
 							key : 'id',
@@ -125,8 +135,8 @@ angular
 						type : 'input',
 						templateOptions : {
 							label : 'year',
-							placeholder : 'Formly is terrific!',
-							type : 'text',
+							placeholder : 'year',
+							type : 'number',
 							required : true
 						}
 					}, {
@@ -134,8 +144,8 @@ angular
 						type : 'input',
 						templateOptions : {
 							label : 'days',
-							placeholder : 'Formly is terrific!',
-							type : 'text',
+							placeholder : 'days',
+							type : 'number',
 							required : true
 						}
 					} ];

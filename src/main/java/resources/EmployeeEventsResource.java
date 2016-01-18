@@ -33,9 +33,8 @@ public class EmployeeEventsResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Page<EventTransfer> findAll(@PathParam("id") long id,
+	public Page<EventTransfer> findAll(@PathParam("id") long id,@BeanParam EventSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
-		EventSpecification spec = new EventSpecification();
 		spec.setApproverId(id);
 		return eventService.findAll(spec, pageRequest);
 	}

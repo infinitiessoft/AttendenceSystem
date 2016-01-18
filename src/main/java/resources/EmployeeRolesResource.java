@@ -32,8 +32,8 @@ public class EmployeeRolesResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Page<RoleTransfer> findAllRole(@PathParam("id") long id,
+			@BeanParam EmployeeRoleSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
-		EmployeeRoleSpecification spec = new EmployeeRoleSpecification();
 		spec.setEmployeeId(id);
 		return employeeRoleService.findAll(spec, pageRequest);
 	}
@@ -50,8 +50,7 @@ public class EmployeeRolesResource {
 	@PUT
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response assignRoleToEmployee(
-			@PathParam("id") long employeeId,
+	public Response assignRoleToEmployee(@PathParam("id") long employeeId,
 			@PathParam("roleid") long roleId) {
 		employeeRoleService.assignRoleToEmployee(employeeId, roleId);
 		return Response.status(Status.NO_CONTENT)
@@ -61,8 +60,7 @@ public class EmployeeRolesResource {
 	@DELETE
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response revokeRoleToEmployee(
-			@PathParam("id") long employeeId,
+	public Response revokeRoleToEmployee(@PathParam("id") long employeeId,
 			@PathParam("roleid") long roleId) {
 		employeeRoleService.delete(employeeId, roleId);
 		return Response.status(Status.NO_CONTENT)

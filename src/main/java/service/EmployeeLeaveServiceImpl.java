@@ -139,6 +139,11 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		leavesetting.setId(leave.getId());
 		leavesetting.setName(leave.getName());
 		leavesetting.setDays(leave.getDays());
+		leavesetting.setYear(leave.getYear());
+		EmployeeLeaveTransfer.Leavesetting.Type type = new EmployeeLeaveTransfer.Leavesetting.Type();
+		type.setId(leave.getType().getId());
+		type.setName(leave.getType().getName());
+		leavesetting.setType(type);
 		ret.setLeavesetting(leavesetting);
 		return ret;
 	}

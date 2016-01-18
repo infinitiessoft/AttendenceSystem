@@ -147,8 +147,8 @@ angular
 						type : 'input',
 						templateOptions : {
 							label : 'usedDays',
-							placeholder : 'Formly is terrific!',
-							type : 'text',
+							placeholder : 'used days',
+							type : 'number',
 							required : true
 						}
 					} ];

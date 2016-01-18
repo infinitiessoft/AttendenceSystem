@@ -22,17 +22,17 @@
 						<th st-sort="id">id</th>
 						<th st-sort="name">name</th>
 						<th st-sort="username">username</th>
-						<th st-sort="dateOfJoined">dateOfJoined</th>
 						<th st-sort="gender">gender</th>
-						<th st-sort="department">department</th>
+						<th st-sort="departmentName">department</th>
+						<th st-sort="dateOfJoined">dateOfJoined</th>
 					</tr>
 					<tr>
 						<th></th>
 						<th><input st-search="name" /></th>
 						<th><input st-search="username" /></th>
-						<th></th>
 						<th><input st-search="gender" /></th>
-						<th><input st-search="department" /></th>
+						<th><input st-search="departmentName" /></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody ng-show="!isLoading">
@@ -40,9 +40,9 @@
 						<td>{{row.id}}</td>
 						<td>{{row.name}}</td>
 						<td>{{row.username}}</td>
-						<td>{{row.dateOfJoined}}</td>
 						<td>{{row.gender}}</td>
 						<td>{{row.department.name}}</td>
+						<td>{{row.dateOfJoined}}</td>
 						<td><a ui-sref="dashboard.edit-employee({id:row.id})"
 							class="btn btn-sm btn-primary"> <i
 								class="glyphicon glyphicon-pencil"> </i>

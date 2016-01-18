@@ -46,10 +46,38 @@ public class EmployeeLeaveTransfer implements Serializable {
 
 	public static class Leavesetting implements Serializable {
 
+		public static class Type implements Serializable {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			private Long id;
+			private String name;
+
+			public Long getId() {
+				return id;
+			}
+
+			public void setId(Long id) {
+				this.id = id;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public void setName(String name) {
+				this.name = name;
+			}
+
+		}
+
 		private static final long serialVersionUID = 1L;
 		private Long id;
 		private String name;
 		private Double days;
+		private Long year;
+		private Type type;
 
 		private boolean isIdSet;
 
@@ -86,6 +114,22 @@ public class EmployeeLeaveTransfer implements Serializable {
 		@XmlTransient
 		public void setIdSet(boolean isIdSet) {
 			this.isIdSet = isIdSet;
+		}
+
+		public Long getYear() {
+			return year;
+		}
+
+		public void setYear(Long year) {
+			this.year = year;
+		}
+
+		public Type getType() {
+			return type;
+		}
+
+		public void setType(Type type) {
+			this.type = type;
 		}
 	}
 

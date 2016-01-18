@@ -27,9 +27,11 @@ public class DataBaseInitializer {
 	private EmployeeLeaveDao employeeLeaveDao;
 	private PasswordEncoder passwordEncoder;
 
-	public DataBaseInitializer(EmployeeDao employeeDao, RoleDao roleDao, DepartmentDao depDao,
-			AttendRecordTypeDao recordTypeDao, EmployeeRoleDao employeeRoleDao, LeavesettingDao leavesettingDao,
-			AttendRecordDao recordDao, EmployeeLeaveDao employeeLeaveDao, PasswordEncoder passwordEncoder) {
+	public DataBaseInitializer(EmployeeDao employeeDao, RoleDao roleDao,
+			DepartmentDao depDao, AttendRecordTypeDao recordTypeDao,
+			EmployeeRoleDao employeeRoleDao, LeavesettingDao leavesettingDao,
+			AttendRecordDao recordDao, EmployeeLeaveDao employeeLeaveDao,
+			PasswordEncoder passwordEncoder) {
 		super();
 		this.employeeDao = employeeDao;
 		this.roleDao = roleDao;
@@ -122,38 +124,18 @@ public class DataBaseInitializer {
 		demo2Employee.setRole(role);
 		employeeRoleDao.save(demo2Employee);
 
-		AttendRecord record = new AttendRecord();
-		record.setBookDate(new Date());
-		record.setDuration(1D);
-		record.setEmployee(admin);
-		record.setEndDate(new Date());
-		record.setReason("reason");
-		record.setStartDate(new Date());
-		record.setType(annual);
-		record.setStatus(AttendRecordTransfer.Status.permit.name());
-		recordDao.save(record);
-
-		AttendRecord record2 = new AttendRecord();
-		record2.setBookDate(new Date());
-		record2.setDuration(1D);
-		record2.setEmployee(admin);
-		record2.setEndDate(new Date());
-		record2.setReason("reason");
-		record2.setStartDate(new Date());
-		record2.setType(sick);
-		record2.setStatus(AttendRecordTransfer.Status.permit.name());
-		recordDao.save(record2);
-
-		AttendRecord record3 = new AttendRecord();
-		record3.setBookDate(new Date());
-		record3.setDuration(1D);
-		record3.setEmployee(admin);
-		record3.setEndDate(new Date());
-		record3.setReason("reason");
-		record3.setStartDate(new Date());
-		record3.setType(personal);
-		record3.setStatus(AttendRecordTransfer.Status.permit.name());
-		recordDao.save(record3);
+		for (int i = 0; i < 200; i++) {
+			AttendRecord record = new AttendRecord();
+			record.setBookDate(new Date());
+			record.setDuration(1D);
+			record.setEmployee(admin);
+			record.setEndDate(new Date());
+			record.setReason("fake demo:" + i);
+			record.setStartDate(new Date());
+			record.setType(annual);
+			record.setStatus(AttendRecordTransfer.Status.permit.name());
+			recordDao.save(record);
+		}
 
 		Leavesetting annual1 = new Leavesetting();
 		annual1.setDays(3d);
@@ -194,5 +176,4 @@ public class DataBaseInitializer {
 		adminPersonal.setUsedDays(0d);
 		adminPersonal = employeeLeaveDao.save(adminPersonal);
 	}
-
 }

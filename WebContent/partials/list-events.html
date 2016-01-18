@@ -12,19 +12,19 @@
 				<thead>
 					<tr>
 						<th st-sort="id">id</th>
-						<th st-sort="applicantName">applicant</th>
-						<th st-sort="approverName">approver</th>
-						<th st-sort="action">action</th>
+						<th st-sort="recordEmployeeName">applicant</th>
+						<th st-sort="employeeName">approver</th>
 						<th st-sort="recordTypeName">type</th>
-						<th st-sort="startDate">start date</th>
-						<th st-sort="endDate">end date</th>
-						<th st-sort="duration">duration</th>
+						<th st-sort="recordStartDate">start date</th>
+						<th st-sort="recordEndDate">end date</th>
+						<th>duration</th>
+						<th st-sort="action">action</th>
 					</tr>
 					<tr>
 						<th></th>
 						<th><input st-search="applicantName" /></th>
 						<th><input st-search="approverName" /></th>
-						<th><input st-search="action" /></th>
+						<th></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -32,15 +32,15 @@
 					</tr>
 				</thead>
 				<tbody ng-show="!isLoading">
-					<tr ng-repeat="row in displayed">
+					<tr ng-repeat="row in displayed"  popover="reason: {{row.record.reason}}" popover-placement="top" popover-trigger="click">
 						<td>{{row.id}}</td>
 						<td>{{row.record.employee.name}}</td>
-						<td>{{row.approver.name}}</td>
-						<td>{{row.action}}</td>
+						<td>{{row.employee.name}}</td>
 						<td>{{row.record.type.name}}</td>
 						<td>{{row.record.startDate| date:'yyyy-MM-dd HH:mm' }}</td>
 						<td>{{row.record.endDate| date:'yyyy-MM-dd HH:mm' }}</td>
 						<td>{{row.record.duration}}</td>
+						<td>{{row.action}}</td>
 						<td><button type="button" ng-click="permit(row)"
 								class="btn btn-sm btn-success" ng-show="!row.action">
 								<i class="glyphicon glyphicon-ok"> </i>

@@ -8,8 +8,9 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="pull-right">
-				<a ui-sref="dashboard.edit-employeeleave({id:0})" class="btn btn-sm btn-success"
-					title="Create"><i class="glyphicon glyphicon-plus"> </i></a>
+				<a ui-sref="dashboard.edit-employeeleave({id:0})"
+					class="btn btn-sm btn-success" title="Create"><i
+					class="glyphicon glyphicon-plus"> </i></a>
 			</div>
 		</div>
 	</div>
@@ -20,13 +21,17 @@
 				<thead>
 					<tr>
 						<th st-sort="id">id</th>
-						<th st-sort="employee">employee</th>
-						<th st-sort="leavesetting">leavesetting</th>
-						<th st-sort="usedDays">usedDays</th>
+						<th st-sort="employeeName">employee</th>
+						<th st-sort="leavesettingTypeName">type</th>
+						<th st-sort="leavesettingYear">year</th>
+						<th>availableDays</th>
+						<th>usedDays</th>
 					</tr>
 					<tr>
 						<th></th>
-						<th><input st-search="employee" /></th>
+						<th><input st-search="employeeName" /></th>
+						<th><input st-search="typeName" /></th>
+						<th><input st-search="year" /></th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -35,9 +40,12 @@
 					<tr ng-repeat="row in displayed">
 						<td>{{row.id}}</td>
 						<td>{{row.employee.name}}</td>
-						<td>{{row.leavesetting.name}}</td>
+						<td>{{row.leavesetting.type.name}}</td>
+						<td>{{row.leavesetting.year}}</td>
+						<td>{{row.leavesetting.days}}</td>
 						<td>{{row.usedDays}}</td>
-						<td><a ui-sref="dashboard.edit-employeeleave({id:row.id})""
+						<td><a ui-sref="dashboard.edit-employeeleave({id:row.id})"
+							"
 							class="btn btn-sm btn-primary"> <i
 								class="glyphicon glyphicon-pencil"> </i>
 						</a>

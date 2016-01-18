@@ -30,20 +30,20 @@ public class EventsResource {
 	@GET
 	@Path(value = "{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public EventTransfer getEventt(@PathParam("id") long id) {
+	public EventTransfer getEvent(@PathParam("id") long id) {
 		return eventService.retrieve(id);
 	}
 
 	// **Method to update
 	@PUT
 	@Path(value = "{id}")
-	public EventTransfer updateEventt(@PathParam("id") long id,
+	public EventTransfer updateEvent(@PathParam("id") long id,
 			EventTransfer department) {
 		return eventService.update(id, department);
 	}
 
 	@GET
-	public Page<EventTransfer> findallEventt(
+	public Page<EventTransfer> findallEvent(
 			@BeanParam SimplePageRequest pageRequest,
 			@BeanParam EventSpecification spec) {
 		return eventService.findAll(spec, pageRequest);

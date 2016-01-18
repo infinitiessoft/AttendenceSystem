@@ -38,8 +38,8 @@ public class EmployeeAttendRecordsResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Page<AttendRecordTransfer> findAll(@PathParam("id") long id,
+			@BeanParam AttendRecordSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
-		AttendRecordSpecification spec = new AttendRecordSpecification();
 		spec.setApplicantId(id);
 		return attendRecordService.findAll(spec, pageRequest);
 	}
