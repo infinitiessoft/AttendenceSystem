@@ -20,6 +20,7 @@ import resources.specification.CalendarEventSpecification;
 import transfer.AttendRecordReport;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
+import transfer.EventTransfer;
 import calendar.CalendarEventDao;
 import calendar.CalendarUtil;
 
@@ -29,7 +30,6 @@ import dao.AttendRecordDao;
 import dao.AttendRecordTypeDao;
 import dao.EmployeeDao;
 import dao.EmployeeLeaveDao;
-import dao.EventDao;
 import dao.LeavesettingDao;
 import entity.AttendRecord;
 import entity.AttendRecordType;
@@ -52,19 +52,19 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 	private AttendRecordDao attendRecordDao;
 	private AttendRecordTypeDao attendRecordTypeDao;
 	private EmployeeDao employeeDao;
-	private EventDao eventDao;
+	private EventService eventService;
 	private CalendarEventDao calendarEventDao;
 	private LeavesettingDao leavesettingDao;
 	private EmployeeLeaveDao employeeLeaveDao;
 
 	public AttendRecordServiceImpl(AttendRecordDao attendRecordDao,
 			AttendRecordTypeDao attendRecordTypeDao, EmployeeDao employeeDao,
-			EventDao eventDao, CalendarEventDao calendarEventDao,
+			EventService eventService, CalendarEventDao calendarEventDao,
 			LeavesettingDao leavesettingDao, EmployeeLeaveDao employeeLeaveDao) {
 		this.attendRecordDao = attendRecordDao;
 		this.attendRecordTypeDao = attendRecordTypeDao;
 		this.employeeDao = employeeDao;
-		this.eventDao = eventDao;
+		this.eventService = eventService;
 		this.calendarEventDao = calendarEventDao;
 		this.leavesettingDao = leavesettingDao;
 		this.employeeLeaveDao = employeeLeaveDao;
@@ -114,10 +114,14 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		// event else it being permit automatically
 		Employee approver = newEntry.getEmployee().getEmployee();
 		if (approver != null) {
-			entity.Event event = new entity.Event();
-			event.setAttendRecord(newEntry);
-			event.setEmployee(approver);
-			eventDao.save(event);
+			EventTransfer event = new EventTransfer();
+			EventTransfer.AttendRecord record = new EventTransfer.AttendRecord();
+			record.setId(newEntry.getId());
+			EventTransfer.Employee employee = new EventTransfer.Employee();
+			employee.setId(approver.getId());
+			event.setApprover(employee);
+			event.setRecord(record);
+			eventService.save(event);
 		} else {
 			newEntry.setStatus(Status.permit.name());
 			newEntry = attendRecordDao.save(newEntry);

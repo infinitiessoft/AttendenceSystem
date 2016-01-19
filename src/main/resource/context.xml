@@ -4,16 +4,83 @@
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
 			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
 			http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
 			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
 			http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
 	<context:annotation-config />
+
+	<task:annotation-driven executor="executor" />
+	<task:executor id="executor" pool-size="1" />
+
+	<!-- retry advice for external service call -->
+	<bean id="externalCallRetryAdvice"
+		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
+		<description>
+			Advice for external service call, any exceptions listed
+			in map and specify
+			value to 'true'
+			will result in a complete retry.
+		</description>
+		<property name="retryOperations">
+			<bean class="org.springframework.retry.support.RetryTemplate">
+				<property name="backOffPolicy">
+					<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+						<property name="initialInterval" value="1000" />
+						<property name="multiplier" value="30" />
+						<property name="maxInterval" value="600000" />
+					</bean>
+				</property>
+				<property name="retryPolicy">
+					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+						<!-- maxAttempts -->
+						<constructor-arg index="0" value="5" />
+						<constructor-arg index="1">
+							<util:map>
+								<!-- true means will retry, false means won't -->
+								<entry key="org.springframework.mail.MailException" value="true" />
+							</util:map>
+						</constructor-arg>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+
+	<!-- SET default mail properties -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="25" />
+		<property name="username" value="attendance@infinitiessoft.com" />
+		<property name="password" value="attendance0123" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="mailService" class="service.MailServiceImpl">
+		<constructor-arg ref="mailSender" />
+	</bean>
+
+	<aop:config>
+		<aop:advisor
+			pointcut="execution(public * org.springframework.mail.javamail.JavaMailSenderImpl.send(..))"
+			advice-ref="externalCallRetryAdvice" />
+	</aop:config>
 
 	<!-- DATABASE SETUP -->
 
@@ -79,7 +146,7 @@
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
-		<constructor-arg ref="eventDao" />
+		<constructor-arg ref="eventService" />
 		<constructor-arg ref="calendarDao" />
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="employeeLeaveDao" />
@@ -102,6 +169,8 @@
 		<constructor-arg ref="calendarDao" />
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="employeeLeaveDao" />
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="mailService" />
 	</bean>
 
 

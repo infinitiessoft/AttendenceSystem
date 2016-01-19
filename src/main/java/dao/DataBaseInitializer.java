@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import transfer.AttendRecordTransfer;
 import entity.AttendRecord;
 import entity.AttendRecordType;
 import entity.Department;
@@ -13,7 +14,6 @@ import entity.EmployeeRole;
 import entity.Gender;
 import entity.Leavesetting;
 import entity.Role;
-import transfer.AttendRecordTransfer;
 
 public class DataBaseInitializer {
 
@@ -73,7 +73,7 @@ public class DataBaseInitializer {
 
 		Employee demo2 = new Employee();
 		demo2.setDateofjoined(new Date());
-		demo2.setEmail("demo2@gmail.com");
+		demo2.setEmail("attendancel@infinitiessoft.com");
 		demo2.setName("demo2");
 		demo2.setPassword(this.passwordEncoder.encode("demo2"));
 		demo2.setUsername("demo2");
@@ -83,7 +83,7 @@ public class DataBaseInitializer {
 
 		Employee demo = new Employee();
 		demo.setDateofjoined(new Date());
-		demo.setEmail("demo@gmail.com");
+		demo.setEmail("pohsun.mail@gmail.com");
 		demo.setName("demo");
 		demo.setPassword(this.passwordEncoder.encode("demo"));
 		demo.setUsername("demo");
@@ -100,7 +100,7 @@ public class DataBaseInitializer {
 
 		Employee admin = new Employee();
 		admin.setDateofjoined(new Date());
-		admin.setEmail("user@gmail.com");
+		admin.setEmail("pohsun@infinitiessoft.com");
 		admin.setName("User");
 		admin.setPassword(this.passwordEncoder.encode("user"));
 		admin.setUsername("user");

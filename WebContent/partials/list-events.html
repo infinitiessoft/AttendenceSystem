@@ -35,7 +35,7 @@
 					<tr ng-repeat="row in displayed"  popover="reason: {{row.record.reason}}" popover-placement="top" popover-trigger="click">
 						<td>{{row.id}}</td>
 						<td>{{row.record.employee.name}}</td>
-						<td>{{row.employee.name}}</td>
+						<td>{{row.approver.name}}</td>
 						<td>{{row.record.type.name}}</td>
 						<td>{{row.record.startDate| date:'yyyy-MM-dd HH:mm' }}</td>
 						<td>{{row.record.endDate| date:'yyyy-MM-dd HH:mm' }}</td>
