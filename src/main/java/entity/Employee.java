@@ -72,29 +72,6 @@ public class Employee extends AbstractEntity {
 	// private Set<AttendRecord> attendRecordsForEmployeeId = new
 	// HashSet<AttendRecord>(
 	// 0);
-	@Column(name = "color")
-	private String color;
-
-	@Column(name = "specialleave")
-	private float specialleave;
-
-	@Column(name = "specialleave_used")
-	private float specialleave_used;
-
-	@Column(name = "sick")
-	private float sick;
-
-	@Column(name = "sick_used")
-	private float sick_used;
-
-	@Column(name = "personal")
-	private float personal;
-
-	@Column(name = "personal_used")
-	private float personal_used;
-
-	@Column(name = "official_used")
-	private float official_used;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "employee", cascade = CascadeType.REMOVE)
 	private Set<EmployeeRole> employeeRoles = new HashSet<EmployeeRole>(0);
@@ -167,70 +144,6 @@ public class Employee extends AbstractEntity {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	public float getSpecialleave() {
-		return specialleave;
-	}
-
-	public void setSpecialleave(float specialleave) {
-		this.specialleave = specialleave;
-	}
-
-	public float getSpecialleave_used() {
-		return specialleave_used;
-	}
-
-	public void setSpecialleave_used(float specialleave_used) {
-		this.specialleave_used = specialleave_used;
-	}
-
-	public float getSick() {
-		return sick;
-	}
-
-	public void setSick(float sick) {
-		this.sick = sick;
-	}
-
-	public float getSick_used() {
-		return sick_used;
-	}
-
-	public void setSick_used(float sick_used) {
-		this.sick_used = sick_used;
-	}
-
-	public float getPersonal() {
-		return personal;
-	}
-
-	public void setPersonal(float personal) {
-		this.personal = personal;
-	}
-
-	public float getPersonal_used() {
-		return personal_used;
-	}
-
-	public void setPersonal_used(float personal_used) {
-		this.personal_used = personal_used;
-	}
-
-	public float getOfficial_used() {
-		return official_used;
-	}
-
-	public void setOfficial_used(float official_used) {
-		this.official_used = official_used;
 	}
 
 	public Date getLastLogin() {

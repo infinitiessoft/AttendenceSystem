@@ -6,8 +6,6 @@ public class DepartmentTransfer {
 
 	private Long id;
 	private String name;
-	private Long manager_id;
-	private Long responseto;
 
 	private boolean isNameSet;
 
@@ -16,13 +14,10 @@ public class DepartmentTransfer {
 
 	}
 
-	public DepartmentTransfer(Long id, String name, Long manager_id,
-			Long responseto) {
+	public DepartmentTransfer(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.manager_id = manager_id;
-		this.responseto = responseto;
 	}
 
 	public Long getId() {
@@ -40,22 +35,6 @@ public class DepartmentTransfer {
 	public void setName(String name) {
 		setNameSet(true);
 		this.name = name;
-	}
-
-	public Long getManager_id() {
-		return manager_id;
-	}
-
-	public void setManager_id(Long manager_id) {
-		this.manager_id = manager_id;
-	}
-
-	public Long getResponseto() {
-		return responseto;
-	}
-
-	public void setResponseto(Long responseto) {
-		this.responseto = responseto;
 	}
 
 	@XmlTransient

@@ -28,6 +28,15 @@ public class SimplePageRequest implements Pageable {
 
 	}
 
+	public SimplePageRequest(Integer page, Integer pageSize, String sortParam,
+			String dir) {
+		super();
+		this.page = page;
+		this.pageSize = pageSize;
+		this.sortParam = sortParam;
+		this.dir = dir;
+	}
+
 	@Override
 	public int getPageNumber() {
 		return getInner().getPageNumber();
@@ -74,6 +83,38 @@ public class SimplePageRequest implements Pageable {
 			inner = new PageRequest(page, pageSize, sort);
 		}
 		return inner;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public String getSortParam() {
+		return sortParam;
+	}
+
+	public void setSortParam(String sortParam) {
+		this.sortParam = sortParam;
+	}
+
+	public String getDir() {
+		return dir;
+	}
+
+	public void setDir(String dir) {
+		this.dir = dir;
+	}
+
+	public void setInner(Pageable inner) {
+		this.inner = inner;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 
 }

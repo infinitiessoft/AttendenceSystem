@@ -21,7 +21,7 @@ import transfer.AttendRecordTransfer.Type;
 import transfer.EventTransfer;
 import transfer.EventTransfer.Action;
 import util.MailUtils;
-import calendar.CalendarEventDao;
+import calendar.CalendarEventService;
 import calendar.CalendarUtil;
 
 import com.google.common.base.Strings;
@@ -48,14 +48,14 @@ public class EventServiceImpl implements EventService {
 			.getLogger(EventServiceImpl.class);
 	private EventDao eventDao;
 	private AttendRecordDao attendRecordDao;
-	private CalendarEventDao calendarEventDao;
+	private CalendarEventService calendarEventDao;
 	private LeavesettingDao leavesettingDao;
 	private EmployeeLeaveDao employeeLeaveDao;
 	private EmployeeDao employeeDao;
 	private MailService mailService;
 
 	public EventServiceImpl(EventDao eventDao, AttendRecordDao attendRecordDao,
-			CalendarEventDao calendarEventDao, LeavesettingDao leavesettingDao,
+			CalendarEventService calendarEventDao, LeavesettingDao leavesettingDao,
 			EmployeeLeaveDao employeeLeaveDao, EmployeeDao employeeDao,
 			MailService mailService) {
 		this.eventDao = eventDao;
@@ -86,6 +86,7 @@ public class EventServiceImpl implements EventService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public EventTransfer save(EventTransfer event) {
 		event.setId(null);
@@ -153,7 +154,11 @@ public class EventServiceImpl implements EventService {
 		} catch (IllegalArgumentException e) {
 			throw new InvalidActionException(updated.getAction());
 		}
-		setUpEvent(updated, event);
+		if (updated.isActionSet()) {
+			event.setAction(updated.getAction());
+			event.setBookDate(new Date());
+		}
+
 		event = update(event);
 
 		// if event is being permited and leave duration is more than 1 day and
@@ -324,7 +329,6 @@ public class EventServiceImpl implements EventService {
 		return rets;
 	}
 
-	@Transactional
 	private EventTransfer toEventTransfer(Event event) {
 		EventTransfer ret = new EventTransfer();
 		ret.setId(event.getId());

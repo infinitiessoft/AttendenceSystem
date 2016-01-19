@@ -1,18 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="
 			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
 			http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
 			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
 			http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
 	<context:annotation-config />
+
+	<task:annotation-driven executor="executor" />
+	<task:executor id="executor" pool-size="1" />
+
+	<!-- retry advice for external service call -->
+	<bean id="mailRetryAdvice"
+		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
+		<description>
+			Advice for mail service call, any exceptions listed
+			in map
+			and specify
+			value to 'true'
+			will result in a complete retry.
+		</description>
+		<property name="retryOperations">
+			<bean class="org.springframework.retry.support.RetryTemplate">
+				<property name="backOffPolicy">
+					<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+						<property name="initialInterval" value="1000" />
+						<property name="multiplier" value="30" />
+						<property name="maxInterval" value="600000" />
+					</bean>
+				</property>
+				<property name="retryPolicy">
+					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+						<!-- maxAttempts -->
+						<constructor-arg index="0" value="5" />
+						<constructor-arg index="1">
+							<util:map>
+								<!-- true means will retry, false means won't -->
+								<entry key="org.springframework.mail.MailException" value="true" />
+							</util:map>
+						</constructor-arg>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="calendarRetryAdvice"
+		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
+		<description>
+			Advice for google calendar service call, any exceptions
+			listed
+			in map and specify
+			value to 'true'
+			will result in a complete
+			retry.
+		</description>
+		<property name="retryOperations">
+			<bean class="org.springframework.retry.support.RetryTemplate">
+				<property name="backOffPolicy">
+					<bean class="org.springframework.retry.backoff.FixedBackOffPolicy">
+						<property name="backOffPeriod" value="1000" />
+					</bean>
+				</property>
+				<property name="retryPolicy">
+					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+						<!-- maxAttempts -->
+						<constructor-arg index="0" value="3" />
+						<constructor-arg index="1">
+							<util:map>
+								<!-- true means will retry, false means won't -->
+								<entry key="exceptions.CalendarInsertionException" value="true" />
+							</util:map>
+						</constructor-arg>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+
+	<!-- SET default mail properties -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="25" />
+		<property name="username" value="attendance@infinitiessoft.com" />
+		<property name="password" value="attendance0123" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="mailService" class="service.MailServiceImpl">
+		<constructor-arg ref="mailSender" />
+	</bean>
+
+	<aop:config>
+		<aop:advisor
+			pointcut="execution(public * org.springframework.mail.javamail.JavaMailSenderImpl.send(..))"
+			advice-ref="mailRetryAdvice" />
+	</aop:config>
+
 
 	<!-- DATABASE SETUP -->
 
@@ -48,6 +151,16 @@
 
 	<jpa:repositories base-package="dao" />
 
+
+	<bean id="calendarService" class="calendar.CalendarEventServiceImpl">
+	</bean>
+
+	<aop:config>
+		<aop:advisor
+			pointcut="execution(public * calendar.CalendarEventServiceImpl.save(..))"
+			advice-ref="calendarRetryAdvice" />
+	</aop:config>
+
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="departmentDao" />
@@ -62,9 +175,6 @@
 		<constructor-arg ref="roleDao" />
 	</bean>
 
-	<bean id="userDetailDao" class="dao.jpa.JpaUserDetailDao">
-		<constructor-arg ref="employeeDao" />
-	</bean>
 
 	<bean id="attendRecordTypeService" class="service.AttendRecordTypeServiceImpl">
 		<constructor-arg ref="attendRecordTypeDao" />
@@ -75,24 +185,39 @@
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="employeeRoleDao" />
 	</bean>
-	
+
 	<bean id="attendRecordService" class="service.AttendRecordServiceImpl">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
+		<constructor-arg ref="eventService" />
+		<constructor-arg ref="calendarService" />
+		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="employeeLeaveDao" />
 	</bean>
 
 	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
 	</bean>
-	
+
 	<bean id="employeeLeaveService" class="service.EmployeeLeaveServiceImpl">
 		<constructor-arg ref="employeeLeaveDao" />
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="leavesettingDao" />
 	</bean>
-	
+
+	<bean id="eventService" class="service.EventServiceImpl">
+		<constructor-arg ref="eventDao" />
+		<constructor-arg ref="attendRecordDao" />
+		<constructor-arg ref="calendarService" />
+		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="employeeLeaveDao" />
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="mailService" />
+	</bean>
+
+
 	<bean id="userDetailService" class="service.UserDetailServiceImpl">
 		<constructor-arg ref="employeeDao" />
 	</bean>
@@ -102,10 +227,7 @@
 	<!-- INIT REST COMPONENTS -->
 
 	<context:component-scan base-package="resources" />
-
-	<bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
-
-		<!-- SPRING SECURITY SETUP -->
+	<!-- SPRING SECURITY SETUP -->
 
 	<bean id="passwordEncoder" class="security.SHA1PasswordEncoder">
 	</bean>
@@ -118,12 +240,29 @@
 		<property name="headerName" value="X-XSRF-TOKEN" />
 	</bean>
 
+	<bean id="dataBaseInitializer" class="dao.DataBaseInitializer"
+		init-method="initDataBase">
+		<constructor-arg ref="employeeDao" />
+		<constructor-arg ref="roleDao" />
+		<constructor-arg ref="departmentDao" />
+		<constructor-arg ref="attendRecordTypeDao" />
+		<constructor-arg ref="employeeRoleDao" />
+		<constructor-arg ref="leavesettingDao" />
+		<constructor-arg ref="attendRecordDao" />
+		<constructor-arg ref="employeeLeaveDao" />
+		<constructor-arg ref="passwordEncoder" />
+	</bean>
+
 	<security:authentication-manager id="authenticationManager">
 		<security:authentication-provider
 			user-service-ref="userDetailService">
 			<security:password-encoder ref="passwordEncoder"></security:password-encoder>
 		</security:authentication-provider>
 	</security:authentication-manager>
+
+
+	<security:global-method-security
+		secured-annotations="enabled" pre-post-annotations="enabled" />
 
 	<security:http realm="Protected API" use-expressions="true"
 		auto-config="true" authentication-manager-ref="authenticationManager">
@@ -132,21 +271,8 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/login"
 			access="permitAll" />
-		<security:intercept-url pattern="/list-employees"
-			access="permitAll" />
-		<security:intercept-url pattern="/edit-employee"
-			access="permitAll" />
-		<security:intercept-url pattern="/edit-profile"
-			access="permitAll" />
-		<security:intercept-url pattern="/list-departments"
-			access="permitAll" />
-		<security:intercept-url pattern="/edit-department"
-			access="permitAll" />
 		<security:intercept-url pattern="/rest/auth"
 			access="permitAll" />
-		<security:intercept-url pattern="/rest/**"
-			access="isAuthenticated()" />
-
 		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
 			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 
@@ -158,6 +284,5 @@
 		<security:http-basic />
 		<security:logout />
 	</security:http>
-
 
 </beans>

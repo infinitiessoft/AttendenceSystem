@@ -22,10 +22,10 @@
 	<task:executor id="executor" pool-size="1" />
 
 	<!-- retry advice for external service call -->
-	<bean id="externalCallRetryAdvice"
+	<bean id="mailRetryAdvice"
 		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
 		<description>
-			Advice for external service call, any exceptions listed
+			Advice for mail service call, any exceptions listed
 			in map and specify
 			value to 'true'
 			will result in a complete retry.
@@ -55,11 +55,42 @@
 		</property>
 	</bean>
 
+	<bean id="calendarRetryAdvice"
+		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
+		<description>
+			Advice for google calendar service call, any exceptions listed
+			in map and specify
+			value to 'true'
+			will result in a complete retry.
+		</description>
+		<property name="retryOperations">
+			<bean class="org.springframework.retry.support.RetryTemplate">
+				<property name="backOffPolicy">
+					<bean class="org.springframework.retry.backoff.FixedBackOffPolicy">
+						<property name="backOffPeriod" value="1000" />
+					</bean>
+				</property>
+				<property name="retryPolicy">
+					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+						<!-- maxAttempts -->
+						<constructor-arg index="0" value="3" />
+						<constructor-arg index="1">
+							<util:map>
+								<!-- true means will retry, false means won't -->
+								<entry key="exceptions.CalendarInsertionException" value="true" />
+							</util:map>
+						</constructor-arg>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
 
 	<!-- SET default mail properties -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com" />
-		<property name="port" value="25" />
+		<property name="port" value="255" />
 		<property name="username" value="attendance@infinitiessoft.com" />
 		<property name="password" value="attendance0123" />
 		<property name="javaMailProperties">
@@ -79,7 +110,7 @@
 	<aop:config>
 		<aop:advisor
 			pointcut="execution(public * org.springframework.mail.javamail.JavaMailSenderImpl.send(..))"
-			advice-ref="externalCallRetryAdvice" />
+			advice-ref="mailRetryAdvice" />
 	</aop:config>
 
 	<!-- DATABASE SETUP -->
@@ -114,8 +145,14 @@
 
 	<jpa:repositories base-package="dao" />
 
-	<bean id="calendarDao" class="calendar.CalendarEventDao">
+	<bean id="calendarService" class="calendar.CalendarEventServiceImpl">
 	</bean>
+	
+	<aop:config>
+		<aop:advisor
+			pointcut="execution(public * calendar.CalendarEventServiceImpl.save(..))"
+			advice-ref="calendarRetryAdvice" />
+	</aop:config>
 
 	<bean id="employeeService" class="service.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
@@ -147,7 +184,7 @@
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="eventService" />
-		<constructor-arg ref="calendarDao" />
+		<constructor-arg ref="calendarService" />
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="employeeLeaveDao" />
 	</bean>
@@ -166,7 +203,7 @@
 	<bean id="eventService" class="service.EventServiceImpl">
 		<constructor-arg ref="eventDao" />
 		<constructor-arg ref="attendRecordDao" />
-		<constructor-arg ref="calendarDao" />
+		<constructor-arg ref="calendarService" />
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="employeeLeaveDao" />
 		<constructor-arg ref="employeeDao" />
@@ -181,7 +218,6 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 
 	<!-- INIT REST COMPONENTS -->
-
 	<context:component-scan base-package="resources" />
 
 	<!-- SPRING SECURITY SETUP -->
