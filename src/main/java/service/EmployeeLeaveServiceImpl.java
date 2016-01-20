@@ -100,7 +100,6 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 					throw new EmployeeNotFoundException(transfer.getEmployee()
 							.getId());
 				}
-				System.out.println("************ id : " + employee.getId());
 				newEntry.setEmployee(employee);
 			}
 		}
@@ -112,7 +111,6 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 					throw new LeavesettingNotFoundException(transfer
 							.getLeavesetting().getId());
 				}
-				System.out.println("************ id : " + leavesetting.getId());
 				newEntry.setLeavesetting(leavesetting);
 			}
 		}
@@ -139,6 +137,11 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		leavesetting.setId(leave.getId());
 		leavesetting.setName(leave.getName());
 		leavesetting.setDays(leave.getDays());
+		leavesetting.setYear(leave.getYear());
+		EmployeeLeaveTransfer.Leavesetting.Type type = new EmployeeLeaveTransfer.Leavesetting.Type();
+		type.setId(leave.getType().getId());
+		type.setName(leave.getType().getName());
+		leavesetting.setType(type);
 		ret.setLeavesetting(leavesetting);
 		return ret;
 	}

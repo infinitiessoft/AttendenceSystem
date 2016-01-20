@@ -263,6 +263,7 @@ public class EmployeeTransfer {
 		this.isPasswordSet = isPasswordSet;
 	}
 
+	@XmlTransient
 	public List<Role> getRoles() {
 		return roles;
 	}

@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import resources.specification.EmployeeLeaveSpecification;
@@ -25,7 +26,8 @@ import transfer.EmployeeLeaveTransfer;
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/employeeleave")
+@PreAuthorize("hasAuthority('admin')")
+@Path("/employeeleaves")
 public class EmployeeLeaveResource {
 
 	@Autowired

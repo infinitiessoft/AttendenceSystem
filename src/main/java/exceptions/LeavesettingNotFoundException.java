@@ -15,4 +15,8 @@ public class LeavesettingNotFoundException extends HTTPNotFoundException {
 		super(String.format("Leavesetting %s could not be found.", id));
 	}
 
+	public LeavesettingNotFoundException(String type, long year) {
+		super(String.format("Leavesetting %s for year %s could not be found.", type, year));
+	}
+
 }

@@ -11,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import resources.specification.EventSpecification;
@@ -33,9 +34,10 @@ public class EmployeeEventsResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public Page<EventTransfer> findAll(@PathParam("id") long id,
+			@BeanParam EventSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
-		EventSpecification spec = new EventSpecification();
 		spec.setApproverId(id);
 		return eventService.findAll(spec, pageRequest);
 	}
@@ -43,26 +45,28 @@ public class EmployeeEventsResource {
 	@GET
 	@Path(value = "{eventid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public EventTransfer getEvent(@PathParam("id") long employeeId,
-			@PathParam("eventid") long id) {
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
+	public EventTransfer getEvent(@PathParam("id") long id,
+			@PathParam("eventid") long eventId) {
 		EventSpecification spec = new EventSpecification();
-		spec.setApproverId(employeeId);
-		spec.setId(id);
+		spec.setApproverId(id);
+		spec.setId(eventId);
 
 		Page<EventTransfer> lists = eventService.findAll(spec, null);
 		EventTransfer ret = lists.getContent().size() > 0 ? lists.getContent()
 				.get(0) : null;
 		if (ret == null) {
-			throw new EventNotFoundException(id);
+			throw new EventNotFoundException(eventId);
 		}
 		return ret;
 	}
 
 	@PUT
 	@Path(value = "{eventid}")
-	public EventTransfer updateEvent(@PathParam("id") long employeeId,
-			@PathParam("eventid") long id, EventTransfer department) {
-		getEvent(employeeId, id);
-		return eventService.update(id, department);
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
+	public EventTransfer updateEvent(@PathParam("id") long id,
+			@PathParam("eventid") long eventId, EventTransfer department) {
+		getEvent(id, eventId);
+		return eventService.update(eventId, department);
 	}
 }

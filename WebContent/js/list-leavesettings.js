@@ -100,7 +100,7 @@ angular
 								[
 										'$http',
 										function($http) {
-											var serviceBase = 'rest/leavesetting/';
+											var serviceBase = 'rest/leavesettings/';
 											var obj = {};
 											obj.list = function(queries) {
 												return $http.get(serviceBase, {params:queries});

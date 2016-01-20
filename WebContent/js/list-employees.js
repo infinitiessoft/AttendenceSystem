@@ -97,7 +97,7 @@ angular.module('list-employees', [ 'ngResource' ]).controller(
 						[
 								'$http',
 								function($http) {
-									var serviceBase = 'rest/employee/';
+									var serviceBase = 'rest/employees/';
 									var obj = {};
 									obj.list = function(queries) {
 										return $http.get(serviceBase, {params:queries});
@@ -130,7 +130,7 @@ angular.module('list-employees', [ 'ngResource' ]).controller(
 										[
 												'$http',
 												function($http) {
-													var serviceBase = 'rest/employee/';
+													var serviceBase = 'rest/employees/';
 													var obj = {};
 													obj.list = function(employeeid) {
 														return $http.get(serviceBase+employeeid+"/roles");

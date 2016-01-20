@@ -6,7 +6,6 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,16 +22,15 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.CalendarScopes;
-import com.google.api.services.calendar.model.CalendarList;
-import com.google.api.services.calendar.model.CalendarListEntry;
-import com.google.api.services.calendar.model.ColorDefinition;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
-public class CalendarEventDao {
+import exceptions.CalendarInsertionException;
+
+public class CalendarEventServiceImpl implements CalendarEventService {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(CalendarEventDao.class);
+			.getLogger(CalendarEventServiceImpl.class);
 	/** Application name. */
 	private static final String APPLICATION_NAME = "Attendance System2.0 with Google Calendar API";
 
@@ -66,32 +64,12 @@ public class CalendarEventDao {
 	}
 	private final String calendarId;
 
-	public CalendarEventDao(String calendarId) {
+	public CalendarEventServiceImpl(String calendarId) {
 		this.calendarId = calendarId;
 	}
 
-	public CalendarEventDao() {
+	public CalendarEventServiceImpl() {
 		this("attendance@infinitiessoft.com");
-	}
-
-	public static void main(String args[]) throws IOException,
-			GeneralSecurityException {
-		CalendarEventDao dao = new CalendarEventDao();
-		dao.findCalendars();
-//		List<Event> events = dao.findAll(null, null);
-//		for (Event event : events) {
-//			System.err.println(event.getColorId() + "  " + event.getSummary()
-//					+ "  " + event.getStatus() + "  " + event.getOrganizer()
-//					+ "  " + event.getKind() + "  ");
-//		}
-		// System.err.println(es.size());
-		// Event event = new Event();
-		// EventDateTime start = new EventDateTime();
-		// start.setDateTime(new DateTime(new Date()));
-		// event.setStart(start);
-		// event.setEnd(start);
-		// event.setSummary("demo");
-		// dao.save(event);
 	}
 
 	/**
@@ -133,6 +111,13 @@ public class CalendarEventDao {
 				APPLICATION_NAME).build();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see calendar.CalendarEventDaoI#findAll(resources.specification.
+	 * CalendarEventSpecification, org.springframework.data.domain.Pageable)
+	 */
+	@Override
 	public List<Event> findAll(CalendarEventSpecification spec,
 			Pageable pageable) {
 		try {
@@ -188,50 +173,14 @@ public class CalendarEventDao {
 		}
 	}
 
-	public void findColors() throws IOException, GeneralSecurityException {
-		// Build a new authorized API client service.
-		// Note: Do not confuse this class with the
-		// com.google.api.services.calendar.model.Calendar class.
-		com.google.api.services.calendar.Calendar service = getCalendarService();
-
-		com.google.api.services.calendar.model.Colors colors = service.colors()
-				.get().execute();
-
-		// Print available calendar list entry colors
-		for (Map.Entry<String, ColorDefinition> color : colors.getCalendar()
-				.entrySet()) {
-			System.out.println("ColorId : " + color.getKey());
-			System.out.println("  Background: "
-					+ color.getValue().getBackground());
-			System.out.println("  Foreground: "
-					+ color.getValue().getForeground());
-		}
-
-		// Print available event colors
-		for (Map.Entry<String, ColorDefinition> color : colors.getEvent()
-				.entrySet()) {
-			System.out.println("ColorId : " + color.getKey());
-			System.out.println("  Background: "
-					+ color.getValue().getBackground());
-			System.out.println("  Foreground: "
-					+ color.getValue().getForeground());
-		}
-	}
-
-	public void findCalendars() throws IOException, GeneralSecurityException {
-		// Build a new authorized API client service.
-		// Note: Do not confuse this class with the
-		// com.google.api.services.calendar.model.Calendar class.
-		com.google.api.services.calendar.Calendar service = getCalendarService();
-
-		CalendarList cs = service.calendarList().list().execute();
-
-		// Print available calendar list entry colors
-		for (CalendarListEntry c : cs.getItems()) {
-			System.err.println(c.toPrettyString());
-		}
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * calendar.CalendarEventDaoI#save(com.google.api.services.calendar.model
+	 * .Event)
+	 */
+	@Override
 	public Event save(Event event) {
 		try {
 			com.google.api.services.calendar.Calendar service = getCalendarService();
@@ -239,9 +188,10 @@ public class CalendarEventDao {
 			logger.debug("Event created: {}", event.getHtmlLink());
 			return event;
 		} catch (IOException e) {
-			throw new RuntimeException("calendar api error", e);
+			throw new CalendarInsertionException("calendar api error", e);
 		} catch (GeneralSecurityException e) {
-			throw new RuntimeException("calendar api authentication error", e);
+			throw new CalendarInsertionException(
+					"calendar api authentication error", e);
 		}
 	}
 }

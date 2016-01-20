@@ -77,12 +77,14 @@ public class EventTransfer implements Serializable {
 		private Date startDate;
 		private Type type;
 		private Status status;
+		private boolean isIdSet;
 
 		public Long getId() {
 			return id;
 		}
 
 		public void setId(Long id) {
+			setIdSet(true);
 			this.id = id;
 		}
 
@@ -150,6 +152,16 @@ public class EventTransfer implements Serializable {
 			this.status = status;
 		}
 
+		@XmlTransient
+		public boolean isIdSet() {
+			return isIdSet;
+		}
+
+		@XmlTransient
+		public void setIdSet(boolean isIdSet) {
+			this.isIdSet = isIdSet;
+		}
+
 	}
 
 	private Long id;
@@ -158,6 +170,8 @@ public class EventTransfer implements Serializable {
 	private Employee approver;
 	private AttendRecord record;
 	private boolean isActionSet;
+	private boolean isApproverSet;
+	private boolean isRecordSet;
 
 	public Long getId() {
 		return id;
@@ -189,13 +203,16 @@ public class EventTransfer implements Serializable {
 	}
 
 	public void setRecord(AttendRecord record) {
+		isRecordSet = true;
 		this.record = record;
 	}
 
+	@XmlTransient
 	public boolean isActionSet() {
 		return isActionSet;
 	}
 
+	@XmlTransient
 	public void setActionSet(boolean isActionSet) {
 		this.isActionSet = isActionSet;
 	}
@@ -205,7 +222,28 @@ public class EventTransfer implements Serializable {
 	}
 
 	public void setApprover(Employee approver) {
+		isApproverSet = true;
 		this.approver = approver;
+	}
+
+	@XmlTransient
+	public boolean isApproverSet() {
+		return isApproverSet;
+	}
+
+	@XmlTransient
+	public void setApproverSet(boolean isApproverSet) {
+		this.isApproverSet = isApproverSet;
+	}
+
+	@XmlTransient
+	public boolean isRecordSet() {
+		return isRecordSet;
+	}
+
+	@XmlTransient
+	public void setRecordSet(boolean isRecordSet) {
+		this.isRecordSet = isRecordSet;
 	}
 
 }

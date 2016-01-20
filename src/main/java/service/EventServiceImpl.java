@@ -20,12 +20,14 @@ import transfer.AttendRecordTransfer.Status;
 import transfer.AttendRecordTransfer.Type;
 import transfer.EventTransfer;
 import transfer.EventTransfer.Action;
-import calendar.CalendarEventDao;
+import util.MailUtils;
+import calendar.CalendarEventService;
 import calendar.CalendarUtil;
 
 import com.google.common.base.Strings;
 
 import dao.AttendRecordDao;
+import dao.EmployeeDao;
 import dao.EmployeeLeaveDao;
 import dao.EventDao;
 import dao.LeavesettingDao;
@@ -34,26 +36,35 @@ import entity.Employee;
 import entity.EmployeeLeave;
 import entity.Event;
 import entity.Leavesetting;
+import exceptions.AttendRecordNotFoundException;
 import exceptions.DuplicateApproveException;
+import exceptions.EmployeeNotFoundException;
 import exceptions.EventNotFoundException;
 import exceptions.InvalidActionException;
 
 public class EventServiceImpl implements EventService {
 
-	private static final Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(EventServiceImpl.class);
 	private EventDao eventDao;
 	private AttendRecordDao attendRecordDao;
-	private CalendarEventDao calendarEventDao;
+	private CalendarEventService calendarEventDao;
 	private LeavesettingDao leavesettingDao;
 	private EmployeeLeaveDao employeeLeaveDao;
+	private EmployeeDao employeeDao;
+	private MailService mailService;
 
-	public EventServiceImpl(EventDao eventDao, AttendRecordDao attendRecordDao, CalendarEventDao calendarEventDao,
-			LeavesettingDao leavesettingDao, EmployeeLeaveDao employeeLeaveDao) {
+	public EventServiceImpl(EventDao eventDao, AttendRecordDao attendRecordDao,
+			CalendarEventService calendarEventDao, LeavesettingDao leavesettingDao,
+			EmployeeLeaveDao employeeLeaveDao, EmployeeDao employeeDao,
+			MailService mailService) {
 		this.eventDao = eventDao;
 		this.attendRecordDao = attendRecordDao;
 		this.calendarEventDao = calendarEventDao;
 		this.leavesettingDao = leavesettingDao;
 		this.employeeLeaveDao = employeeLeaveDao;
+		this.employeeDao = employeeDao;
+		this.mailService = mailService;
 	}
 
 	@Transactional
@@ -81,13 +92,49 @@ public class EventServiceImpl implements EventService {
 		event.setId(null);
 		Event dep = new Event();
 		setUpEvent(event, dep);
-		return toEventTransfer(eventDao.save(dep));
+
+		return toEventTransfer(save(dep));
+	}
+
+	private Event save(Event event) {
+		event = eventDao.save(event);
+		event = eventDao.findOne(event.getId());
+		try {
+			notifyApprover(event.getEmployee(), event.getAttendRecord());
+		} catch (Throwable t) {
+			logger.warn("send mail failed", t);
+		}
+		return event;
+	}
+
+	private Event update(Event event) {
+		return eventDao.save(event);
 	}
 
 	private void setUpEvent(EventTransfer transfer, Event dep) {
 		if (transfer.isActionSet()) {
 			dep.setAction(transfer.getAction());
 			dep.setBookDate(new Date());
+		}
+
+		if (transfer.isRecordSet() && transfer.getRecord().isIdSet()) {
+			AttendRecord record = attendRecordDao.findOne(transfer.getRecord()
+					.getId());
+			if (record == null) {
+				throw new AttendRecordNotFoundException(transfer.getRecord()
+						.getId());
+			}
+			dep.setAttendRecord(record);
+		}
+
+		if (transfer.isApproverSet() && transfer.getApprover().isIdSet()) {
+			Employee employee = employeeDao.findOne(transfer.getApprover()
+					.getId());
+			if (employee == null) {
+				throw new EmployeeNotFoundException(transfer.getApprover()
+						.getId());
+			}
+			dep.setEmployee(employee);
 		}
 	}
 
@@ -107,8 +154,12 @@ public class EventServiceImpl implements EventService {
 		} catch (IllegalArgumentException e) {
 			throw new InvalidActionException(updated.getAction());
 		}
-		setUpEvent(updated, event);
-		event = eventDao.save(event);
+		if (updated.isActionSet()) {
+			event.setAction(updated.getAction());
+			event.setBookDate(new Date());
+		}
+
+		event = update(event);
 
 		// if event is being permited and leave duration is more than 1 day and
 		// there is a manager the employee's manager response to then send it an
@@ -119,13 +170,14 @@ public class EventServiceImpl implements EventService {
 			Double duration = record.getDuration();
 			int size = record.getEvents().size();
 			Employee employee = event.getEmployee().getEmployee();
-			logger.debug("duration:{}, size:{}", new Object[] { duration, size });
+			logger.debug("duration:{}, size:{}",
+					new Object[] { duration, size });
 			if (duration > 1.0d && size <= 1 && employee != null) {
 				logger.debug("second event have not been sent, send it now");
 				entity.Event newEvent = new entity.Event();
 				newEvent.setAttendRecord(record);
 				newEvent.setEmployee(employee);
-				eventDao.save(newEvent);
+				save(newEvent);
 			} else { // duration less than or equal to 1 day
 				record = permit(record);
 			}
@@ -137,6 +189,12 @@ public class EventServiceImpl implements EventService {
 		}
 		event.setAttendRecord(record);
 		return toEventTransfer(event);
+	}
+
+	private void notifyApprover(Employee approver, AttendRecord newEntry) {
+		String subject = MailUtils.buildSubject(newEntry);
+		String body = MailUtils.buildBody(newEntry);
+		mailService.sendMail(approver.getEmail(), subject, body);
 	}
 
 	private void setEmployeeLeave(AttendRecord record) {
@@ -161,37 +219,50 @@ public class EventServiceImpl implements EventService {
 			logger.debug("Time Range is not over dateOfJoined");
 			long years = getYearOfJoined(joinDate, startDate);
 			logger.debug("Employee joined years : {}", years);
-			Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(record.getType().getId(), years);
-			EmployeeLeave employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employee.getId(),
-					leavesetting.getId());
+			Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(
+					record.getType().getId(), years);
+			EmployeeLeave employeeLeave = employeeLeaveDao
+					.findByEmployeeIdAndLeavesettingId(employee.getId(),
+							leavesetting.getId());
 			employeeLeave.setUsedDays((employeeLeave.getUsedDays() - duration));
 			employeeLeaveDao.save(employeeLeave);
 		} else {
-			if (startC.get(Calendar.DAY_OF_MONTH) == joinC.get(Calendar.DAY_OF_MONTH)) {
+			if (startC.get(Calendar.DAY_OF_MONTH) == joinC
+					.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("Start date is joined date");
 				long years = getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
-				Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(record.getType().getId(), years);
-				EmployeeLeave employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employee.getId(),
-						leavesetting.getId());
-				employeeLeave.setUsedDays((employeeLeave.getUsedDays() - duration));
+				Leavesetting leavesetting = leavesettingDao
+						.findByTypeIdAndYear(record.getType().getId(), years);
+				EmployeeLeave employeeLeave = employeeLeaveDao
+						.findByEmployeeIdAndLeavesettingId(employee.getId(),
+								leavesetting.getId());
+				employeeLeave
+						.setUsedDays((employeeLeave.getUsedDays() - duration));
 				employeeLeaveDao.save(employeeLeave);
-			} else if (endC.get(Calendar.DAY_OF_MONTH) == joinC.get(Calendar.DAY_OF_MONTH)) {
+			} else if (endC.get(Calendar.DAY_OF_MONTH) == joinC
+					.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("End date is joined date");
 				long years = getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
-				Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(record.getType().getId(), years);
-				EmployeeLeave employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employee.getId(),
-						leavesetting.getId());
+				Leavesetting leavesetting = leavesettingDao
+						.findByTypeIdAndYear(record.getType().getId(), years);
+				EmployeeLeave employeeLeave = employeeLeaveDao
+						.findByEmployeeIdAndLeavesettingId(employee.getId(),
+								leavesetting.getId());
 				double newDuartion = countDuration(joinDay, endDate);
 				logger.debug("Next Year Duration : {}", newDuartion);
-				employeeLeave.setUsedDays((employeeLeave.getUsedDays() - (duration - newDuartion)));
+				employeeLeave
+						.setUsedDays((employeeLeave.getUsedDays() - (duration - newDuartion)));
 				employeeLeaveDao.save(employeeLeave);
-				Leavesetting newLeavesetting = leavesettingDao.findByTypeIdAndYear(record.getType().getId(),
-						(years + 1));
-				employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employee.getId(),
-						newLeavesetting.getId());
-				employeeLeave.setUsedDays((employeeLeave.getUsedDays() - newDuartion));
+				Leavesetting newLeavesetting = leavesettingDao
+						.findByTypeIdAndYear(record.getType().getId(),
+								(years + 1));
+				employeeLeave = employeeLeaveDao
+						.findByEmployeeIdAndLeavesettingId(employee.getId(),
+								newLeavesetting.getId());
+				employeeLeave
+						.setUsedDays((employeeLeave.getUsedDays() - newDuartion));
 				employeeLeaveDao.save(employeeLeave);
 			} else {
 				Calendar calE = Calendar.getInstance();
@@ -202,17 +273,23 @@ public class EventServiceImpl implements EventService {
 				double pastDuration = countDuration(startDate, calE.getTime());
 
 				long years = getYearOfJoined(joinDate, startDate);
-				Leavesetting past = leavesettingDao.findByTypeIdAndYear(record.getType().getId(), years);
-				EmployeeLeave employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employee.getId(),
-						past.getId());
-				employeeLeave.setUsedDays((employeeLeave.getUsedDays() - pastDuration));
+				Leavesetting past = leavesettingDao.findByTypeIdAndYear(record
+						.getType().getId(), years);
+				EmployeeLeave employeeLeave = employeeLeaveDao
+						.findByEmployeeIdAndLeavesettingId(employee.getId(),
+								past.getId());
+				employeeLeave
+						.setUsedDays((employeeLeave.getUsedDays() - pastDuration));
 				employeeLeaveDao.save(employeeLeave);
 				double newDuration = countDuration(joinDay, endDate);
-				Leavesetting newLeavesetting = leavesettingDao.findByTypeIdAndYear(record.getType().getId(),
-						(years + 1));
-				employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employee.getId(),
-						newLeavesetting.getId());
-				employeeLeave.setUsedDays((employeeLeave.getUsedDays() - newDuration));
+				Leavesetting newLeavesetting = leavesettingDao
+						.findByTypeIdAndYear(record.getType().getId(),
+								(years + 1));
+				employeeLeave = employeeLeaveDao
+						.findByEmployeeIdAndLeavesettingId(employee.getId(),
+								newLeavesetting.getId());
+				employeeLeave
+						.setUsedDays((employeeLeave.getUsedDays() - newDuration));
 				employeeLeaveDao.save(employeeLeave);
 			}
 		}
@@ -232,20 +309,23 @@ public class EventServiceImpl implements EventService {
 	private AttendRecord permit(AttendRecord record) {
 		record.setStatus(AttendRecordTransfer.Status.permit.name());
 		record = attendRecordDao.save(record);
-		com.google.api.services.calendar.model.Event calendarEvent = CalendarUtil.toEvent(record);
+		com.google.api.services.calendar.model.Event calendarEvent = CalendarUtil
+				.toEvent(record);
 		calendarEventDao.save(calendarEvent);
 		return record;
 	}
 
 	@Transactional
 	@Override
-	public Page<EventTransfer> findAll(EventSpecification spec, Pageable pageable) {
+	public Page<EventTransfer> findAll(EventSpecification spec,
+			Pageable pageable) {
 		List<EventTransfer> transfers = new ArrayList<EventTransfer>();
 		Page<Event> events = eventDao.findAll(spec, pageable);
 		for (Event event : events) {
 			transfers.add(toEventTransfer(event));
 		}
-		Page<EventTransfer> rets = new PageImpl<EventTransfer>(transfers, pageable, events.getTotalElements());
+		Page<EventTransfer> rets = new PageImpl<EventTransfer>(transfers,
+				pageable, events.getTotalElements());
 		return rets;
 	}
 

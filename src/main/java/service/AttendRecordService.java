@@ -1,9 +1,12 @@
 package service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import resources.specification.AttendRecordSpecification;
+import transfer.AttendRecordReport;
 import transfer.AttendRecordTransfer;
 
 /**
@@ -23,5 +26,7 @@ public interface AttendRecordService {
 
 	public AttendRecordTransfer update(long id,
 			AttendRecordTransfer attendRecord);
+
+	public List<AttendRecordReport> findAll(AttendRecordSpecification spec);
 
 }

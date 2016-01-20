@@ -4,7 +4,8 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 				'$scope',
 				'$http',
 				'recordService',
-				function($scope, $http, recordService) {
+				'reportService',
+				function($scope, $http, recordService,reportService) {
 					var lastState = {
 							pagination : {
 								start : 0,
@@ -18,6 +19,41 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 								predicateObject : {}
 							}
 						};
+					
+					var forEachSorted = function(obj, iterator, context) {
+					    var keys = sortedKeys(obj);
+					    for (var i = 0; i < keys.length; i++) {
+					        iterator.call(context, obj[keys[i]], keys[i]);
+					    }
+					    return keys;
+					};
+
+					var sortedKeys = function(obj) {
+					    var keys = [];
+					    for (var key in obj) {
+					        if (obj.hasOwnProperty(key)) {
+					            keys.push(key);
+					        }
+					    }
+					    return keys.sort();
+					};
+
+					var buildUrl = function(url, params) {
+					    if (!params) return url;
+					    var parts = [];
+					    forEachSorted(params, function (value, key) {
+					        if (value == null || value == undefined) return;
+					        if (angular.isObject(value)) {
+					            value = angular.toJson(value);
+					        }
+					        parts.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+					    });
+					    return url + ((url.indexOf('?') == -1) ? '?' : '&') + parts.join('&');
+					};
+					
+					
+					var serviceBase = 'rest/reports/records';
+					$scope.exportHref = buildUrl(serviceBase,lastState.search.predicateObject);
 					
 					var queryParams = function(tableState){
 						var pagination = tableState.pagination;
@@ -42,6 +78,8 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 						filters.pageSize = pageSize;
 						filters.page = page;
 						filters.dir = dir;
+						
+						$scope.exportHref = buildUrl(serviceBase,lastState.search.predicateObject);
 						return filters;
 					}
 
@@ -92,10 +130,32 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 
 						}
 					};
-				} ]).factory(
+					
+					$scope.exportToCsv=function(){ 
+						var filters = queryParams(lastState);
+						reportService.downloadRecords(filters).
+						success(function(data, status, headers, config) {
+							 if (window.navigator.msSaveOrOpenBlob) {
+								   var blob = new Blob([decodeURIComponent(encodeURI(data))], {
+								     type: "text/csv;charset=utf-8;"
+								   });
+								   navigator.msSaveBlob(blob, 'records.csv');
+								 } else {
+								   var a = document.createElement('a');
+								   a.href = 'data:attachment/csv;charset=utf-8,' + encodeURI(data);
+								   a.target = '_blank';
+								   a.download = 'records.csv';
+								   document.body.appendChild(a);
+								   a.click();
+								 }
+
+						  });
+			        }
+				} ])
+				.factory(
 						'recordService',
 						['$http', function($http) {
-									var serviceBase = 'rest/record/';
+									var serviceBase = 'rest/records/';
 									var obj = {};
 									obj.list = function(queries) {
 										return $http.get(serviceBase, {params:queries});
@@ -116,6 +176,22 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 									
 									obj.remove = function(id) {
 										return $http.delete(serviceBase + id);
+									};
+									
+									obj.export = function(queries) {
+										return $http.get(serviceBase+'export', {params:queries});
+									};
+
+									return obj;
+								} ])
+								
+								.factory(
+						'reportService',
+						['$http', function($http) {
+									var serviceBase = 'rest/reports/';
+									var obj = {};
+									obj.downloadRecords = function(queries) {
+										return $http.get(serviceBase+'records', {params:queries});
 									};
 
 									return obj;

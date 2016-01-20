@@ -35,6 +35,10 @@ public class EventSpecification implements Specification<Event> {
 	private String recordTypeName;
 	@QueryParam("action")
 	private String action;
+	@QueryParam("recordStartDate")
+	private Date recordStartDate;
+	@QueryParam("recordEndDate")
+	private Date recordEndDate;
 
 	private Long id;
 
@@ -55,6 +59,16 @@ public class EventSpecification implements Specification<Event> {
 			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("bookDate"),
 					bookDate));
 		}
+		if (recordStartDate != null) {
+			predicates.add(cb.greaterThanOrEqualTo(
+					root.<AttendRecord> get("attendRecord").<Date> get(
+							"startDate"), recordStartDate));
+		}
+		if (recordEndDate != null) {
+			predicates.add(cb.lessThanOrEqualTo(
+					root.<AttendRecord> get("attendRecord").<Date> get(
+							"endDate"), recordEndDate));
+		}
 
 		if (approverId != null) {
 			predicates.add(cb.equal(
@@ -67,9 +81,8 @@ public class EventSpecification implements Specification<Event> {
 		}
 
 		if (approverName != null) {
-			predicates.add(cb.equal(
-					root.<Employee> get("employee").<Long> get("name"),
-					approverName));
+			predicates.add(cb.like(root.<Employee> get("employee")
+					.<String> get("name"), "%" + approverName + "%"));
 		}
 
 		if (applicantId != null) {
@@ -77,9 +90,9 @@ public class EventSpecification implements Specification<Event> {
 					.<Employee> get("employee").<Long> get("id"), applicantId));
 		}
 		if (applicantName != null) {
-			predicates.add(cb.equal(root.<AttendRecord> get("attendRecord")
-					.<Employee> get("employee").<Long> get("name"),
-					applicantName));
+			predicates.add(cb.like(root.<AttendRecord> get("attendRecord")
+					.<Employee> get("employee").<String> get("name"), "%"
+					+ applicantName + "%"));
 		}
 
 		if (predicates.isEmpty()) {

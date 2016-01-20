@@ -17,8 +17,8 @@ import entity.Employee;
 
 public class EmployeeSpecification implements Specification<Employee> {
 
-	@QueryParam("department")
-	private String department;
+	@QueryParam("departmentName")
+	private String departmentName;
 	@QueryParam("name")
 	private String name;
 	@QueryParam("username")
@@ -42,9 +42,9 @@ public class EmployeeSpecification implements Specification<Employee> {
 			predicates
 					.add(cb.like(root.<String> get("name"), "%" + name + "%"));
 		}
-		if (!Strings.isNullOrEmpty(department)) {
+		if (!Strings.isNullOrEmpty(departmentName)) {
 			predicates.add(cb.like(root.get("department").<String> get("name"),
-					"%" + department + "%"));
+					"%" + departmentName + "%"));
 		}
 
 		if (predicates.isEmpty()) {
@@ -54,12 +54,12 @@ public class EmployeeSpecification implements Specification<Employee> {
 		return cb.and(predicates.toArray(new Predicate[0]));
 	}
 
-	public String getDepartment() {
-		return department;
+	public String getDepartmentName() {
+		return departmentName;
 	}
 
-	public void setDepartment(String department) {
-		this.department = department;
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
 	}
 
 	public String getName() {

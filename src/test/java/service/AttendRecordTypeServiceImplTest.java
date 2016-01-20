@@ -17,13 +17,13 @@ import org.junit.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-import resources.specification.RoleSpecification;
+import resources.specification.AttendRecordTypeSpecification;
 import resources.specification.SimplePageRequest;
-import transfer.RoleTransfer;
-import dao.RoleDao;
-import entity.Role;
+import transfer.AttendRecordTypeTransfer;
+import dao.AttendRecordTypeDao;
+import entity.AttendRecordType;
 
-public class RoleServiceImplTest {
+public class AttendRecordTypeServiceImplTest {
 
 	protected Mockery context = new JUnit4Mockery() {
 
@@ -32,16 +32,16 @@ public class RoleServiceImplTest {
 		}
 	};
 
-	private RoleDao roleDao;
-	private RoleServiceImpl roleService;
+	private AttendRecordTypeDao rttendRecordTypeDao;
+	private AttendRecordTypeServiceImpl roleService;
 
-	private Role role;
+	private AttendRecordType role;
 
 	@Before
 	public void setUp() throws Exception {
-		roleDao = context.mock(RoleDao.class);
-		roleService = new RoleServiceImpl(roleDao);
-		role = new Role();
+		rttendRecordTypeDao = context.mock(AttendRecordTypeDao.class);
+		roleService = new AttendRecordTypeServiceImpl(rttendRecordTypeDao);
+		role = new AttendRecordType();
 		role.setId(1L);
 		role.setName("demo");
 
@@ -56,11 +56,11 @@ public class RoleServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(roleDao).findOne(1l);
+				exactly(1).of(rttendRecordTypeDao).findOne(1l);
 				will(returnValue(role));
 			}
 		});
-		RoleTransfer ret = roleService.retrieve(1);
+		AttendRecordTypeTransfer ret = roleService.retrieve(1);
 		assertEquals(1, ret.getId().longValue());
 		assertEquals("demo", ret.getName());
 
@@ -71,7 +71,7 @@ public class RoleServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(roleDao).delete(1L);
+				exactly(1).of(rttendRecordTypeDao).delete(1L);
 			}
 		});
 		roleService.delete(1l);
@@ -79,26 +79,28 @@ public class RoleServiceImplTest {
 
 	@Test
 	public void testSave() {
-		final RoleTransfer newEntry = new RoleTransfer();
+		final AttendRecordTypeTransfer newEntry = new AttendRecordTypeTransfer();
 		newEntry.setName("name");
 
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(roleDao).save(with(any(Role.class)));
+				exactly(1).of(rttendRecordTypeDao).save(
+						with(any(AttendRecordType.class)));
 				will(new CustomAction("save  role") {
 
 					@Override
 					public Object invoke(Invocation invocation)
 							throws Throwable {
-						Role e = (Role) invocation.getParameter(0);
+						AttendRecordType e = (AttendRecordType) invocation
+								.getParameter(0);
 						e.setId(2L);
 						return e;
 					}
 				});
 			}
 		});
-		RoleTransfer ret = roleService.save(newEntry);
+		AttendRecordTypeTransfer ret = roleService.save(newEntry);
 		assertEquals(2l, ret.getId().longValue());
 		assertEquals("name", ret.getName());
 
@@ -106,20 +108,20 @@ public class RoleServiceImplTest {
 
 	@Test
 	public void testUpdate() {
-		final RoleTransfer newEntry = new RoleTransfer();
+		final AttendRecordTypeTransfer newEntry = new AttendRecordTypeTransfer();
 		newEntry.setName("name");
 
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(roleDao).findOne(1l);
+				exactly(1).of(rttendRecordTypeDao).findOne(1l);
 				will(returnValue(role));
 
-				exactly(1).of(roleDao).save(role);
+				exactly(1).of(rttendRecordTypeDao).save(role);
 				will(returnValue(role));
 			}
 		});
-		RoleTransfer ret = roleService.update(1l, newEntry);
+		AttendRecordTypeTransfer ret = roleService.update(1l, newEntry);
 		assertEquals(1, ret.getId().longValue());
 		assertEquals("name", ret.getName());
 
@@ -127,22 +129,24 @@ public class RoleServiceImplTest {
 
 	@Test
 	public void testFindAll() {
-		final RoleSpecification spec = new RoleSpecification();
+		final AttendRecordTypeSpecification spec = new AttendRecordTypeSpecification();
 		final SimplePageRequest pageable = new SimplePageRequest(0, 20, "id",
 				"ASC");
-		List<Role> roles = new ArrayList<Role>();
+		List<AttendRecordType> roles = new ArrayList<AttendRecordType>();
 		roles.add(role);
-		final Page<Role> page = new PageImpl<Role>(roles);
+		final Page<AttendRecordType> page = new PageImpl<AttendRecordType>(
+				roles);
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(roleDao).findAll(spec, pageable);
+				exactly(1).of(rttendRecordTypeDao).findAll(spec, pageable);
 				will(returnValue(page));
 			}
 		});
-		Page<RoleTransfer> rets = roleService.findAll(spec, pageable);
+		Page<AttendRecordTypeTransfer> rets = roleService.findAll(spec,
+				pageable);
 		assertEquals(1, rets.getTotalElements());
-		RoleTransfer ret = rets.iterator().next();
+		AttendRecordTypeTransfer ret = rets.iterator().next();
 		assertEquals(1l, ret.getId().longValue());
 		assertEquals("demo", ret.getName());
 	}

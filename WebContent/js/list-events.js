@@ -109,7 +109,7 @@ angular
 							};
 						} ]).factory('eventService',
 				[ '$http', function($http) {
-					var serviceBase = 'rest/event/';
+					var serviceBase = 'rest/events/';
 					var obj = {};
 					obj.list = function(queries) {
 						return $http.get(serviceBase, {

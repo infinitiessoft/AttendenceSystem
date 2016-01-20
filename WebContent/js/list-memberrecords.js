@@ -63,7 +63,7 @@ angular.module('list-memberrecords', [ 'ngResource','auth' ]).controller(
 						[
 								'auth','$http',
 								function(auth, $http) {
-									var serviceBase = 'rest/employee/'+auth.user.principal.id+'/records/';
+									var serviceBase = 'rest/employees/'+auth.user.principal.id+'/records/';
 									var obj = {};
 									obj.list = function(queries) {
 										return $http.get(serviceBase, {params:queries});

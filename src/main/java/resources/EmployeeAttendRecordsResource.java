@@ -13,14 +13,13 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import resources.specification.AttendRecordSpecification;
 import resources.specification.SimplePageRequest;
 import service.AttendRecordService;
-import service.EmployeeService;
 import transfer.AttendRecordTransfer;
-import transfer.EmployeeTransfer;
 import transfer.AttendRecordTransfer.Employee;
 import exceptions.AttendRecordNotFoundException;
 
@@ -32,14 +31,15 @@ public class EmployeeAttendRecordsResource {
 	@Autowired
 	private AttendRecordService attendRecordService;
 
-	@Autowired
-	private EmployeeService employeeService;
+	// @Autowired
+	// private EmployeeService employeeService;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
 	public Page<AttendRecordTransfer> findAll(@PathParam("id") long id,
+			@BeanParam AttendRecordSpecification spec,
 			@BeanParam SimplePageRequest pageRequest) {
-		AttendRecordSpecification spec = new AttendRecordSpecification();
 		spec.setApplicantId(id);
 		return attendRecordService.findAll(spec, pageRequest);
 	}
@@ -47,29 +47,31 @@ public class EmployeeAttendRecordsResource {
 	@GET
 	@Path(value = "{recordid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public AttendRecordTransfer getAttendRecord(
-			@PathParam("id") long employeeId, @PathParam("recordid") long id) {
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
+	public AttendRecordTransfer getAttendRecord(@PathParam("id") long id,
+			@PathParam("recordid") long recordId) {
 		AttendRecordSpecification spec = new AttendRecordSpecification();
-		spec.setApplicantId(employeeId);
-		spec.setId(id);
+		spec.setApplicantId(id);
+		spec.setId(recordId);
 		Page<AttendRecordTransfer> lists = attendRecordService.findAll(spec,
 				null);
 		AttendRecordTransfer ret = lists.getContent().size() > 0 ? lists
 				.getContent().get(0) : null;
 		if (ret == null) {
-			throw new AttendRecordNotFoundException(id);
+			throw new AttendRecordNotFoundException(recordId);
 		}
 		return ret;
 	}
 
 	// **Method to save or create
 	@POST
-	public AttendRecordTransfer saveAttendRecord(@Context SecurityContext sc,
-			AttendRecordTransfer attendRecord) {
-		EmployeeTransfer employee = employeeService.findByUsername(sc
-				.getUserPrincipal().getName());
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
+	public AttendRecordTransfer saveAttendRecord(@PathParam("id") long id,
+			@Context SecurityContext sc, AttendRecordTransfer attendRecord) {
+		// EmployeeTransfer employee = employeeService.findByUsername(sc
+		// .getUserPrincipal().getName());
 		Employee e = new Employee();
-		e.setId(employee.getId());
+		e.setId(id);
 		attendRecord.setApplicant(e);
 		return attendRecordService.save(attendRecord);
 	}

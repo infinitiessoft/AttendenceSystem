@@ -73,9 +73,8 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 		}
 
 		if (applicantName != null) {
-			predicates.add(cb.equal(
-					root.<Employee> get("employee").<Long> get("name"),
-					applicantName));
+			predicates.add(cb.like(root.<Employee> get("employee")
+					.<String> get("name"), "%" + applicantName + "%"));
 		}
 
 		if (predicates.isEmpty()) {
