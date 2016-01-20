@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 
 import resources.specification.DepartmentSpecification;
 import resources.specification.SimplePageRequest;
+import service.impl.DepartmentServiceImpl;
 import transfer.DepartmentTransfer;
 import dao.DepartmentDao;
 import entity.Department;

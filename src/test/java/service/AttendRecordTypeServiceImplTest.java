@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 
 import resources.specification.AttendRecordTypeSpecification;
 import resources.specification.SimplePageRequest;
+import service.impl.AttendRecordTypeServiceImpl;
 import transfer.AttendRecordTypeTransfer;
 import dao.AttendRecordTypeDao;
 import entity.AttendRecordType;

@@ -103,7 +103,7 @@
 		</property>
 	</bean>
 
-	<bean id="mailService" class="service.MailServiceImpl">
+	<bean id="mailService" class="service.impl.MailServiceImpl">
 		<constructor-arg ref="mailSender" />
 	</bean>
 
@@ -154,32 +154,32 @@
 			advice-ref="calendarRetryAdvice" />
 	</aop:config>
 
-	<bean id="employeeService" class="service.EmployeeServiceImpl">
+	<bean id="employeeService" class="service.impl.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="departmentDao" />
 		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
-	<bean id="departmentService" class="service.DepartmentServiceImpl">
+	<bean id="departmentService" class="service.impl.DepartmentServiceImpl">
 		<constructor-arg ref="departmentDao" />
 	</bean>
 
-	<bean id="roleService" class="service.RoleServiceImpl">
+	<bean id="roleService" class="service.impl.RoleServiceImpl">
 		<constructor-arg ref="roleDao" />
 	</bean>
 
 
-	<bean id="attendRecordTypeService" class="service.AttendRecordTypeServiceImpl">
+	<bean id="attendRecordTypeService" class="service.impl.AttendRecordTypeServiceImpl">
 		<constructor-arg ref="attendRecordTypeDao" />
 	</bean>
 
-	<bean id="employeeRoleService" class="service.EmployeeRoleServiceImpl">
+	<bean id="employeeRoleService" class="service.impl.EmployeeRoleServiceImpl">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="roleDao" />
 		<constructor-arg ref="employeeRoleDao" />
 	</bean>
 
-	<bean id="attendRecordService" class="service.AttendRecordServiceImpl">
+	<bean id="attendRecordService" class="service.impl.AttendRecordServiceImpl">
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
@@ -189,18 +189,18 @@
 		<constructor-arg ref="employeeLeaveDao" />
 	</bean>
 
-	<bean id="leavesettingService" class="service.LeavesettingServiceImpl">
+	<bean id="leavesettingService" class="service.impl.LeavesettingServiceImpl">
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
 	</bean>
 
-	<bean id="employeeLeaveService" class="service.EmployeeLeaveServiceImpl">
+	<bean id="employeeLeaveService" class="service.impl.EmployeeLeaveServiceImpl">
 		<constructor-arg ref="employeeLeaveDao" />
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="leavesettingDao" />
 	</bean>
 
-	<bean id="eventService" class="service.EventServiceImpl">
+	<bean id="eventService" class="service.impl.EventServiceImpl">
 		<constructor-arg ref="eventDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="calendarService" />
@@ -211,7 +211,7 @@
 	</bean>
 
 
-	<bean id="userDetailService" class="service.UserDetailServiceImpl">
+	<bean id="userDetailService" class="service.impl.UserDetailServiceImpl">
 		<constructor-arg ref="employeeDao" />
 	</bean>
 

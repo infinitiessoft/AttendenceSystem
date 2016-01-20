@@ -19,12 +19,6 @@ public class EmployeeTransfer {
 			super();
 		}
 
-		public Role(Long id, String name) {
-			super();
-			this.id = id;
-			this.name = name;
-		}
-
 		public Long getId() {
 			return id;
 		}
@@ -63,12 +57,6 @@ public class EmployeeTransfer {
 
 		public Department() {
 			super();
-		}
-
-		public Department(Long id, String name) {
-			super();
-			this.id = id;
-			this.name = name;
 		}
 
 		public Long getId() {

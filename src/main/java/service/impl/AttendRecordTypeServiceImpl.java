@@ -1,4 +1,4 @@
-package service;
+package service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import service.AttendRecordTypeService;
 import transfer.AttendRecordTypeTransfer;
 import dao.AttendRecordTypeDao;
 import entity.AttendRecordType;

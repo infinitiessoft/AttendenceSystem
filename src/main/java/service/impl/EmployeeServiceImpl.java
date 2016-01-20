@@ -1,4 +1,4 @@
-package service;
+package service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import resources.specification.EmployeeSpecification;
+import service.EmployeeService;
 import transfer.EmployeeTransfer;
-import transfer.EmployeeTransfer.Department;
 import dao.DepartmentDao;
 import dao.EmployeeDao;
 import entity.Employee;
@@ -27,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeDao employeeDao;
 	private DepartmentDao departmentDao;
 	private PasswordEncoder passwordEncoder;
-	
+
 	public EmployeeServiceImpl(EmployeeDao employeeDao,
 			DepartmentDao departmentDao, PasswordEncoder passwordEncoder) {
 		this.employeeDao = employeeDao;
@@ -127,8 +127,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		ret.setEmail(employee.getEmail());
 		ret.setGender(employee.getGender());
 		// ret.setPassword(employee.getPassword());
-		ret.setDepartment(new Department(employee.getDepartment().getId(),
-				employee.getDepartment().getName()));
+		EmployeeTransfer.Department dep = new EmployeeTransfer.Department();
+		dep.setId(employee.getDepartment().getId());
+		dep.setName(employee.getDepartment().getName());
+		ret.setDepartment(dep);
 		return ret;
 	}
 

@@ -1,4 +1,4 @@
-package service;
+package service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.EventSpecification;
+import service.EventService;
+import service.MailService;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
 import transfer.AttendRecordTransfer.Type;

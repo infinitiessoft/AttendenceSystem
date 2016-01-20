@@ -1,8 +1,10 @@
-package service;
+package service.impl;
 
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
+
+import service.MailService;
 
 public class MailServiceImpl implements MailService {
 

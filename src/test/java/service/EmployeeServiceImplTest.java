@@ -3,7 +3,6 @@ package service;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -15,11 +14,17 @@ import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import resources.specification.EmployeeSpecification;
+import resources.specification.SimplePageRequest;
+import service.impl.EmployeeServiceImpl;
 import transfer.EmployeeTransfer;
 import dao.DepartmentDao;
 import dao.EmployeeDao;
+import entity.Department;
 import entity.Employee;
 import entity.Role;
 
@@ -37,6 +42,7 @@ public class EmployeeServiceImplTest {
 	private PasswordEncoder passwordEncoder;
 	private EmployeeServiceImpl employeeService;
 
+	private Department department;
 	private Employee employee;
 	private Role admin;
 
@@ -52,7 +58,11 @@ public class EmployeeServiceImplTest {
 		employee.setUsername("demo");
 		admin = new Role();
 		admin.setName("admin");
-		employee.getRoles().add(admin);
+		department = new Department();
+		department.setId(1L);
+		department.setName("sale");
+		employee.setDepartment(department);
+		// employee.getRoles().add(admin);
 	}
 
 	@After
@@ -64,13 +74,14 @@ public class EmployeeServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeDao).find(1L);
+				exactly(1).of(employeeDao).findOne(1L);
 				will(returnValue(employee));
 			}
 		});
 		EmployeeTransfer ret = employeeService.retrieve(1);
 		assertEquals(1l, ret.getId().longValue());
-		assertEquals("demo", ret.getName());
+		assertEquals(employee.getName(), ret.getName());
+		assertEquals(department.getId(), ret.getDepartment().getId());
 	}
 
 	@Test
@@ -87,10 +98,16 @@ public class EmployeeServiceImplTest {
 	@Test
 	public void testSave() {
 		final EmployeeTransfer newEntry = new EmployeeTransfer();
-		newEntry.setUsername("name");
+		newEntry.setName("name");
+		EmployeeTransfer.Department dep = new EmployeeTransfer.Department();
+		dep.setId(1L);
+		newEntry.setDepartment(dep);
 		context.checking(new Expectations() {
 
 			{
+				exactly(1).of(departmentDao).findOne(1L);
+				will(returnValue(department));
+
 				exactly(1).of(employeeDao).save(with(any(Employee.class)));
 				will(new CustomAction("save employee") {
 
@@ -106,41 +123,48 @@ public class EmployeeServiceImplTest {
 		});
 		EmployeeTransfer ret = employeeService.save(newEntry);
 		assertEquals(2l, ret.getId().longValue());
-		assertEquals("name", ret.getName());
+		assertEquals(newEntry.getName(), ret.getName());
 	}
 
 	@Test
 	public void testUpdate() {
 		EmployeeTransfer newEntry = new EmployeeTransfer();
-		newEntry.setUsername("name");
+		newEntry.setName("name");
 		context.checking(new Expectations() {
 
 			{
+				exactly(1).of(employeeDao).findOne(employee.getId());
+				will(returnValue(employee));
+
 				exactly(1).of(employeeDao).save(employee);
 				will(returnValue(employee));
 			}
 		});
 		EmployeeTransfer ret = employeeService.update(1l, newEntry);
 		assertEquals(1l, ret.getId().longValue());
-		assertEquals("name", ret.getName());
+		assertEquals(newEntry.getName(), ret.getName());
 	}
 
 	@Test
 	public void testFindAll() {
+		final EmployeeSpecification spec = new EmployeeSpecification();
+		final SimplePageRequest pageable = new SimplePageRequest(0, 20, "id",
+				"ASC");
 		final List<Employee> employees = new ArrayList<Employee>();
 		employees.add(employee);
+		final Page<Employee> page = new PageImpl<Employee>(employees);
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeDao).findAll();
-				will(returnValue(employees));
+				exactly(1).of(employeeDao).findAll(spec, pageable);
+				will(returnValue(page));
 			}
 		});
-		Collection<EmployeeTransfer> rets = employeeService.findAll();
-		assertEquals(1, rets.size());
+		Page<EmployeeTransfer> rets = employeeService.findAll(spec, pageable);
+		assertEquals(1, rets.getTotalElements());
 		EmployeeTransfer ret = rets.iterator().next();
 		assertEquals(1l, ret.getId().longValue());
-		assertEquals("demo", ret.getName());
+		assertEquals(employee.getUsername(), ret.getUsername());
 	}
 
 	@Test
@@ -148,12 +172,14 @@ public class EmployeeServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeDao).findByName("demo");
+				exactly(1).of(employeeDao).findByUsername(
+						employee.getUsername());
 				will(returnValue(employee));
 			}
 		});
-		EmployeeTransfer ret = employeeService.findByUsername("demo");
+		EmployeeTransfer ret = employeeService.findByUsername(employee
+				.getUsername());
 		assertEquals(1l, ret.getId().longValue());
-		assertEquals("demo", ret.getName());
+		assertEquals(employee.getUsername(), ret.getUsername());
 	}
 }

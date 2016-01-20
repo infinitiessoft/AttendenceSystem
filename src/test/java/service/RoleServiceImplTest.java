@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageImpl;
 
 import resources.specification.RoleSpecification;
 import resources.specification.SimplePageRequest;
+import service.impl.RoleServiceImpl;
 import transfer.RoleTransfer;
 import dao.RoleDao;
 import entity.Role;

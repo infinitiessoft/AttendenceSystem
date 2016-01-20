@@ -1,4 +1,4 @@
-package service;
+package service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.AttendRecordSpecification;
 import resources.specification.CalendarEventSpecification;
+import service.AttendRecordService;
+import service.EventService;
 import transfer.AttendRecordReport;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
