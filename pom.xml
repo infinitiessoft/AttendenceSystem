@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<javaCompilerVersion>1.6</javaCompilerVersion>
+		<javaCompilerVersion>1.7</javaCompilerVersion>
 		<!-- Spring Security is based on Spring 3.0.7 -->
 		<spring.version>4.1.9.RELEASE</spring.version>
 		<spring.security.version>4.0.2.RELEASE</spring.security.version>
