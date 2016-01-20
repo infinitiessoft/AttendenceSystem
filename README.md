@@ -54,8 +54,19 @@ When you login as admin you can find list of Records, Events, Employees, Roles, 
 
 `Events:` when an employee is willing to attend some events that are available he can book the date and wait for the reply from the admin. Once admin is ready with his answer he provides the action based on his decision.
 
+
+
+**SnapShot of Event**
+
+  ![Alt text](https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160120_1.png "Event")
+
+
 `Leave-setting:` Mainly there are two types **official and unofficial leaves**
  
+ **SnapShot of Leave Setting**
+ 
+   ![Alt text](https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160120_2.png "Leave Setting")
+
  ***Official***- where the employee can apply in the Annual leave provided by the company, so he can keep the record of used and unused days of leave from Annual Leave.
 
 ***UnOfficial***- are the Employees Personal or Sick Leave. 
@@ -66,6 +77,9 @@ When you login as admin you can find list of Records, Events, Employees, Roles, 
 ######Employee:
 
 When you login in as employee you can give all your personal details and apply for Leaves  or events 
+
+**Employee Info**
+   ![Alt text](https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160120_4.png "Employee Info")
 
 
 
