@@ -1,4 +1,4 @@
-package calendar;
+package util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,15 +24,15 @@ import entity.AttendRecord;
 import entity.Employee;
 import exceptions.InvalidStartAndEndDateException;
 
-public class CalendarUtil {
+public class CalendarUtils {
 
 	private final static Logger logger = LoggerFactory
-			.getLogger(CalendarUtil.class);
+			.getLogger(CalendarUtils.class);
 	private final static String ADJUSTED_WORKING_DAY = "\u88dc\u73ed";
 	private static final String COLOR_ID = "4";
 	private static final String CONFIRMED = "confirmed";
 
-	private CalendarUtil() {
+	private CalendarUtils() {
 
 	}
 

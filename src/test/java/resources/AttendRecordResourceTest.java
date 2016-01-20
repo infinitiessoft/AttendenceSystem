@@ -45,7 +45,6 @@ public class AttendRecordResourceTest extends ResourceTest {
 		Response response = target("record").register(JacksonFeature.class)
 				.request().post(Entity.json(record));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
-
 	}
 
 	@Override

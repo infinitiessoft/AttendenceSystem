@@ -3,21 +3,21 @@ package service;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.api.Invocation;
 import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.action.CustomAction;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
+import resources.specification.EmployeeRoleSpecification;
+import resources.specification.SimplePageRequest;
 import service.impl.EmployeeRoleServiceImpl;
-import transfer.EmployeeRoleTransfer;
 import transfer.RoleTransfer;
 import dao.EmployeeDao;
 import dao.EmployeeRoleDao;
@@ -92,71 +92,59 @@ public class EmployeeRoleServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeroleDao).delete(1L);
+				exactly(1).of(employeeroleDao).findByEmployeeIdAndRoleId(
+						employee.getId(), admin.getId());
+				will(returnValue(employeerole));
+
+				exactly(1).of(employeeroleDao).delete(employeerole);
 			}
 		});
-		employeeroleService.delete(employee.getId(), admin.getId());
+		employeeroleService.revokeRoleFromEmployee(employee.getId(),
+				admin.getId());
 	}
 
 	@Test
 	public void testSave() {
-		final EmployeeRole newEntry = new EmployeeRole();
-		// newEntry.setEmployee_id("101");
-
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeroleDao).save(newEntry);
-				will(new CustomAction("save employeerole") {
+				exactly(1).of(employeeDao).findOne(employee.getId());
+				will(returnValue(employee));
 
-					@Override
-					public Object invoke(Invocation invocation)
-							throws Throwable {
-						EmployeeRole e = (EmployeeRole) invocation
-								.getParameter(0);
-						e.setEmployee_id(2L);
-						return e;
-					}
-				});
-			}
-		});
-		EmployeeRoleTransfer ret = employeeroleService.save(newEntry);
-		assertEquals("200", ret.getEmployee_id());
-		assertEquals("1", ret.getRole_id());
+				exactly(1).of(roleDao).findOne(admin.getId());
+				will(returnValue(admin));
 
-	}
-
-	@Test
-	public void testUpdate() {
-		// employeerole.setRole_id("111");
-		context.checking(new Expectations() {
-
-			{
-				exactly(1).of(employeeroleDao).save(employeerole);
+				exactly(1).of(employeeroleDao).save(
+						with(any(EmployeeRole.class)));
 				will(returnValue(employeerole));
 			}
 		});
-		EmployeeRoleTransfer ret = employeeroleService.update(1l, employeerole);
-		assertEquals("100", ret.getEmployee_id());
-		assertEquals("1", ret.getRole_id());
+		employeeroleService
+				.grantRoleToEmployee(employee.getId(), admin.getId());
 	}
 
 	@Test
 	public void testFindAll() {
+		final EmployeeRoleSpecification spec = new EmployeeRoleSpecification();
+		final SimplePageRequest pageable = new SimplePageRequest(0, 20, "id",
+				"ASC");
 		final List<EmployeeRole> employeeroles = new ArrayList<EmployeeRole>();
 		employeeroles.add(employeerole);
+		final Page<EmployeeRole> page = new PageImpl<EmployeeRole>(
+				employeeroles);
+
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeroleDao).findAll();
-				will(returnValue(employeeroles));
+				exactly(1).of(employeeroleDao).findAll(spec, pageable);
+				will(returnValue(page));
 			}
 		});
-		Collection<EmployeeRoleTransfer> rets = employeeroleService.findAll();
-		assertEquals(1, rets.size());
-		EmployeeRoleTransfer ret = rets.iterator().next();
-		assertEquals("100", ret.getEmployee_id());
-		assertEquals("1", ret.getRole_id());
+		Page<RoleTransfer> rets = employeeroleService.findAll(spec, pageable);
+		assertEquals(1, rets.getTotalElements());
+		RoleTransfer ret = rets.iterator().next();
+		assertEquals(admin.getId(), ret.getId());
+		assertEquals(admin.getName(), ret.getName());
 
 	}
 

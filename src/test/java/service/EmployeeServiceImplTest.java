@@ -26,7 +26,6 @@ import dao.DepartmentDao;
 import dao.EmployeeDao;
 import entity.Department;
 import entity.Employee;
-import entity.Role;
 
 public class EmployeeServiceImplTest {
 
@@ -44,7 +43,6 @@ public class EmployeeServiceImplTest {
 
 	private Department department;
 	private Employee employee;
-	private Role admin;
 
 	@Before
 	public void setUp() throws Exception {
@@ -56,13 +54,10 @@ public class EmployeeServiceImplTest {
 		employee = new Employee();
 		employee.setId(1L);
 		employee.setUsername("demo");
-		admin = new Role();
-		admin.setName("admin");
 		department = new Department();
 		department.setId(1L);
 		department.setName("sale");
 		employee.setDepartment(department);
-		// employee.getRoles().add(admin);
 	}
 
 	@After
@@ -79,7 +74,7 @@ public class EmployeeServiceImplTest {
 			}
 		});
 		EmployeeTransfer ret = employeeService.retrieve(1);
-		assertEquals(1l, ret.getId().longValue());
+		assertEquals(employee.getId(), ret.getId());
 		assertEquals(employee.getName(), ret.getName());
 		assertEquals(department.getId(), ret.getDepartment().getId());
 	}
@@ -141,7 +136,7 @@ public class EmployeeServiceImplTest {
 			}
 		});
 		EmployeeTransfer ret = employeeService.update(1l, newEntry);
-		assertEquals(1l, ret.getId().longValue());
+		assertEquals(employee.getId(), ret.getId());
 		assertEquals(newEntry.getName(), ret.getName());
 	}
 
@@ -163,7 +158,7 @@ public class EmployeeServiceImplTest {
 		Page<EmployeeTransfer> rets = employeeService.findAll(spec, pageable);
 		assertEquals(1, rets.getTotalElements());
 		EmployeeTransfer ret = rets.iterator().next();
-		assertEquals(1l, ret.getId().longValue());
+		assertEquals(employee.getId(), ret.getId());
 		assertEquals(employee.getUsername(), ret.getUsername());
 	}
 
@@ -179,7 +174,7 @@ public class EmployeeServiceImplTest {
 		});
 		EmployeeTransfer ret = employeeService.findByUsername(employee
 				.getUsername());
-		assertEquals(1l, ret.getId().longValue());
+		assertEquals(employee.getId(), ret.getId());
 		assertEquals(employee.getUsername(), ret.getUsername());
 	}
 }

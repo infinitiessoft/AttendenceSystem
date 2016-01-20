@@ -55,6 +55,9 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	public EmployeeLeaveTransfer save(EmployeeLeaveTransfer employeeLeave) {
 		employeeLeave.setId(null);
 		EmployeeLeave newEntry = new EmployeeLeave();
+		if (employeeLeave.getUsedDays() == null) {
+			employeeLeave.setUsedDays(0d);
+		}
 		setUpEmployeeLeave(employeeLeave, newEntry);
 		return toEmployeeLeaveTransfer(employeeLeaveDao.save(newEntry));
 	}
@@ -76,9 +79,12 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	@Override
 	public EmployeeLeaveTransfer findByEmployeeIdAndLeavesettingId(
 			long employeeId, long leavesettingId) {
-		EmployeeLeave leave = employeeLeaveDao
+		EmployeeLeave employeeLeave = employeeLeaveDao
 				.findByEmployeeIdAndLeavesettingId(employeeId, leavesettingId);
-		return toEmployeeLeaveTransfer(leave);
+		if (employeeLeave == null) {
+			throw new EmployeeLeaveNotFoundException(employeeId, leavesettingId);
+		}
+		return toEmployeeLeaveTransfer(employeeLeave);
 	}
 
 	@Override
@@ -87,7 +93,9 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		if (employeeLeave == null) {
 			throw new EmployeeLeaveNotFoundException(id);
 		}
-		setUpEmployeeLeave(updated, employeeLeave);
+		if (updated.isUsedDaysSet()) {
+			employeeLeave.setUsedDays(updated.getUsedDays());
+		}
 		return toEmployeeLeaveTransfer(employeeLeaveDao.save(employeeLeave));
 	}
 

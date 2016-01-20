@@ -17,6 +17,7 @@ import entity.Employee;
 import entity.EmployeeRole;
 import entity.Role;
 import exceptions.EmployeeNotFoundException;
+import exceptions.RoleAssignmentNotFoundException;
 import exceptions.RoleNotFoundException;
 
 public class EmployeeRoleServiceImpl implements EmployeeRoleService {
@@ -50,18 +51,24 @@ public class EmployeeRoleServiceImpl implements EmployeeRoleService {
 	public RoleTransfer findByEmployeeIdAndRoleId(long employeeId, long roleId) {
 		EmployeeRole employeeRole = employeeRoleDao.findByEmployeeIdAndRoleId(
 				employeeId, roleId);
+		if (employeeRole == null) {
+			throw new RoleAssignmentNotFoundException(employeeId, roleId);
+		}
 		return RoleServiceImpl.toRoleTransfer(employeeRole.getRole());
 	}
 
 	@Override
-	public void delete(long employeeId, long roleId) {
+	public void revokeRoleFromEmployee(long employeeId, long roleId) {
 		EmployeeRole employeeRole = employeeRoleDao.findByEmployeeIdAndRoleId(
 				employeeId, roleId);
+		if (employeeRole == null) {
+			throw new RoleAssignmentNotFoundException(employeeId, roleId);
+		}
 		employeeRoleDao.delete(employeeRole);
 	}
 
 	@Override
-	public void assignRoleToEmployee(long employeeId, long roleId) {
+	public void grantRoleToEmployee(long employeeId, long roleId) {
 		Employee employee = employeeDao.findOne(employeeId);
 		if (employee == null) {
 			throw new EmployeeNotFoundException(employeeId);

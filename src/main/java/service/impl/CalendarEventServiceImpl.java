@@ -1,4 +1,4 @@
-package calendar;
+package service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Order;
 
 import resources.specification.CalendarEventSpecification;
+import service.CalendarEventService;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;

@@ -1,4 +1,4 @@
-package calendar;
+package service;
 
 import java.util.List;
 

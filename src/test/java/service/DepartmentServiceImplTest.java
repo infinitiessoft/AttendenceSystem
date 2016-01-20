@@ -102,7 +102,7 @@ public class DepartmentServiceImplTest {
 		});
 		DepartmentTransfer ret = departmentService.save(newEntry);
 		assertEquals(2l, ret.getId().longValue());
-		assertEquals("D_name", ret.getName());
+		assertEquals(newEntry.getName(), ret.getName());
 	}
 
 	@Test
@@ -114,14 +114,14 @@ public class DepartmentServiceImplTest {
 			{
 				exactly(1).of(departmentDao).save(department);
 				will(returnValue(department));
-				
+
 				exactly(1).of(departmentDao).findOne(1l);
 				will(returnValue(department));
 			}
 		});
 		DepartmentTransfer ret = departmentService.update(1l, newEntry);
 		assertEquals(1l, ret.getId().longValue());
-		assertEquals("D_name", ret.getName());
+		assertEquals(newEntry.getName(), ret.getName());
 	}
 
 	@Test
@@ -144,6 +144,6 @@ public class DepartmentServiceImplTest {
 		assertEquals(1, rets.getTotalElements());
 		DepartmentTransfer ret = rets.iterator().next();
 		assertEquals(1l, ret.getId().longValue());
-		assertEquals("demo", ret.getName());
+		assertEquals(department.getName(), ret.getName());
 	}
 }

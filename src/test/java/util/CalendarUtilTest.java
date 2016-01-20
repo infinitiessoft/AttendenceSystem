@@ -1,4 +1,4 @@
-package calendar;
+package util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,6 +10,8 @@ import org.joda.time.Interval;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import util.CalendarUtils;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -62,7 +64,7 @@ public class CalendarUtilTest {
 		events.add(event1);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test
@@ -99,7 +101,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.HOUR_OF_DAY, 9);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test
@@ -136,7 +138,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.HOUR_OF_DAY, 7);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test
@@ -171,7 +173,7 @@ public class CalendarUtilTest {
 		events.add(event);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test(expected = InvalidStartAndEndDateException.class)
@@ -214,7 +216,7 @@ public class CalendarUtilTest {
 		events.add(event1);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test(expected = InvalidStartAndEndDateException.class)
@@ -257,7 +259,7 @@ public class CalendarUtilTest {
 		events.add(event1);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test(expected = InvalidStartAndEndDateException.class)
@@ -289,7 +291,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.HOUR_OF_DAY, 9);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test(expected = InvalidStartAndEndDateException.class)
@@ -319,7 +321,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.HOUR_OF_DAY, 7);
 		Interval interval = new Interval(startCalendar.getTimeInMillis(),
 				endCalendar.getTimeInMillis());
-		CalendarUtil.checkNotOverlaps(interval, events);
+		CalendarUtils.checkNotOverlaps(interval, events);
 	}
 
 	@Test
@@ -333,7 +335,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 
-		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+		double duration = CalendarUtils.countDuration(startCalendar.getTime(),
 				endCalendar.getTime());
 		assertEquals(0.5d, duration, 0.01d);
 	}
@@ -349,7 +351,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 
-		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+		double duration = CalendarUtils.countDuration(startCalendar.getTime(),
 				endCalendar.getTime());
 		assertEquals(1d, duration, 0.01d);
 	}
@@ -365,7 +367,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 
-		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+		double duration = CalendarUtils.countDuration(startCalendar.getTime(),
 				endCalendar.getTime());
 		assertEquals(1d, duration, 0.01d);
 	}
@@ -382,7 +384,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 
-		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+		double duration = CalendarUtils.countDuration(startCalendar.getTime(),
 				endCalendar.getTime());
 		assertEquals(1d, duration, 0.01d);
 	}
@@ -399,7 +401,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 
-		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+		double duration = CalendarUtils.countDuration(startCalendar.getTime(),
 				endCalendar.getTime());
 		assertEquals(3.5d, duration, 0.01d);
 	}
@@ -416,7 +418,7 @@ public class CalendarUtilTest {
 		endCalendar.set(Calendar.MINUTE, 0);
 		endCalendar.set(Calendar.SECOND, 0);
 
-		double duration = CalendarUtil.countDuration(startCalendar.getTime(),
+		double duration = CalendarUtils.countDuration(startCalendar.getTime(),
 				endCalendar.getTime());
 		assertEquals(3.5d, duration, 0.01d);
 	}

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.EventSpecification;
+import service.CalendarEventService;
 import service.EventService;
 import service.MailService;
 import transfer.AttendRecordTransfer;
@@ -22,9 +23,8 @@ import transfer.AttendRecordTransfer.Status;
 import transfer.AttendRecordTransfer.Type;
 import transfer.EventTransfer;
 import transfer.EventTransfer.Action;
+import util.CalendarUtils;
 import util.MailUtils;
-import calendar.CalendarEventService;
-import calendar.CalendarUtil;
 
 import com.google.common.base.Strings;
 
@@ -50,19 +50,19 @@ public class EventServiceImpl implements EventService {
 			.getLogger(EventServiceImpl.class);
 	private EventDao eventDao;
 	private AttendRecordDao attendRecordDao;
-	private CalendarEventService calendarEventDao;
+	private CalendarEventService calendarEventService;
 	private LeavesettingDao leavesettingDao;
 	private EmployeeLeaveDao employeeLeaveDao;
 	private EmployeeDao employeeDao;
 	private MailService mailService;
 
 	public EventServiceImpl(EventDao eventDao, AttendRecordDao attendRecordDao,
-			CalendarEventService calendarEventDao, LeavesettingDao leavesettingDao,
+			CalendarEventService calendarEventService, LeavesettingDao leavesettingDao,
 			EmployeeLeaveDao employeeLeaveDao, EmployeeDao employeeDao,
 			MailService mailService) {
 		this.eventDao = eventDao;
 		this.attendRecordDao = attendRecordDao;
-		this.calendarEventDao = calendarEventDao;
+		this.calendarEventService = calendarEventService;
 		this.leavesettingDao = leavesettingDao;
 		this.employeeLeaveDao = employeeLeaveDao;
 		this.employeeDao = employeeDao;
@@ -100,7 +100,6 @@ public class EventServiceImpl implements EventService {
 
 	private Event save(Event event) {
 		event = eventDao.save(event);
-		event = eventDao.findOne(event.getId());
 		try {
 			notifyApprover(event.getEmployee(), event.getAttendRecord());
 		} catch (Throwable t) {
@@ -217,7 +216,7 @@ public class EventServiceImpl implements EventService {
 		joinY.set(Calendar.YEAR, startC.get(Calendar.YEAR));
 		Date joinDay = joinY.getTime();
 
-		if (!CalendarUtil.overDateOfJoined(startDate, endDate, joinDate)) {
+		if (!CalendarUtils.overDateOfJoined(startDate, endDate, joinDate)) {
 			logger.debug("Time Range is not over dateOfJoined");
 			long years = getYearOfJoined(joinDate, startDate);
 			logger.debug("Employee joined years : {}", years);
@@ -298,7 +297,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private double countDuration(Date startDate, Date endDate) {
-		return CalendarUtil.countDuration(startDate, endDate);
+		return CalendarUtils.countDuration(startDate, endDate);
 	}
 
 	private long getYearOfJoined(Date joinedDate, Date startDate) {
@@ -311,9 +310,9 @@ public class EventServiceImpl implements EventService {
 	private AttendRecord permit(AttendRecord record) {
 		record.setStatus(AttendRecordTransfer.Status.permit.name());
 		record = attendRecordDao.save(record);
-		com.google.api.services.calendar.model.Event calendarEvent = CalendarUtil
+		com.google.api.services.calendar.model.Event calendarEvent = CalendarUtils
 				.toEvent(record);
-		calendarEventDao.save(calendarEvent);
+		calendarEventService.save(calendarEvent);
 		return record;
 	}
 

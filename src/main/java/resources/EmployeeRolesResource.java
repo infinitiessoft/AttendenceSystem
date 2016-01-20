@@ -55,7 +55,7 @@ public class EmployeeRolesResource {
 	@PreAuthorize("hasAuthority('admin')")
 	public Response assignRoleToEmployee(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
-		employeeRoleService.assignRoleToEmployee(id, roleId);
+		employeeRoleService.grantRoleToEmployee(id, roleId);
 		return Response.status(Status.NO_CONTENT)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
@@ -66,7 +66,7 @@ public class EmployeeRolesResource {
 	@PreAuthorize("hasAuthority('admin')")
 	public Response revokeRoleToEmployee(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
-		employeeRoleService.delete(id, roleId);
+		employeeRoleService.revokeRoleFromEmployee(id, roleId);
 		return Response.status(Status.NO_CONTENT)
 				.type(MediaType.APPLICATION_JSON).build();
 	}

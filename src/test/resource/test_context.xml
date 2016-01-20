@@ -80,7 +80,7 @@
 						<constructor-arg index="1">
 							<util:map>
 								<!-- true means will retry, false means won't -->
-								<entry key="exceptions.CalendarInsertionException" value="true" />
+								<entry key="java.io.IOException" value="true" />
 							</util:map>
 						</constructor-arg>
 					</bean>
@@ -152,12 +152,12 @@
 	<jpa:repositories base-package="dao" />
 
 
-	<bean id="calendarService" class="calendar.CalendarEventServiceImpl">
+	<bean id="calendarService" class="service.impl.CalendarEventServiceImpl">
 	</bean>
 
 	<aop:config>
 		<aop:advisor
-			pointcut="execution(public * calendar.CalendarEventServiceImpl.save(..))"
+			pointcut="execution(public * com.google.api.client.googleapis.services.AbstractGoogleClientRequest.execute(..))"
 			advice-ref="calendarRetryAdvice" />
 	</aop:config>
 

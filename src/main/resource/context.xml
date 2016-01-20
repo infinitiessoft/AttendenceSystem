@@ -145,12 +145,12 @@
 
 	<jpa:repositories base-package="dao" />
 
-	<bean id="calendarService" class="calendar.CalendarEventServiceImpl">
+	<bean id="calendarService" class="service.impl.CalendarEventServiceImpl">
 	</bean>
 	
 	<aop:config>
 		<aop:advisor
-			pointcut="execution(public * calendar.CalendarEventServiceImpl.save(..))"
+			pointcut="execution(public * com.google.api.client.googleapis.services.AbstractGoogleClientRequest.execute(..))"
 			advice-ref="calendarRetryAdvice" />
 	</aop:config>
 

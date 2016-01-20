@@ -8,13 +8,13 @@ import transfer.RoleTransfer;
 
 public interface EmployeeRoleService {
 
-	public void delete(long employeeId, long roleId);
+	public void revokeRoleFromEmployee(long employeeId, long roleId);
 
 	public Page<RoleTransfer> findAll(EmployeeRoleSpecification spec,
 			Pageable pageable);
 
 	public RoleTransfer findByEmployeeIdAndRoleId(long employeeId, long roleId);
 
-	public void assignRoleToEmployee(long employeeId, long roleId);
+	public void grantRoleToEmployee(long employeeId, long roleId);
 
 }
