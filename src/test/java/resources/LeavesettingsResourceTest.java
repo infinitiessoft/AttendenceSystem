@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 
+import entity.PageModel;
 import transfer.LeavesettingTransfer;
 import assertion.AssertUtils;
 
@@ -60,7 +61,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		LeavesettingTransfer.Type type = new LeavesettingTransfer.Type();
 		type.setId(2L);
 		leavesetting.setType(type);
-		
+
 		Response response = target("leavesettings")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").post(Entity.json(leavesetting));
@@ -73,7 +74,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		assertEquals(leavesetting.getYear(), transfer.getYear());
 		assertEquals(leavesetting.getDays(), transfer.getDays());
 	}
-	
+
 	@Test
 	public void testSaveLeavesettingWithDuplicateYearType() {
 		LeavesettingTransfer leavesetting = new LeavesettingTransfer();
@@ -82,7 +83,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		LeavesettingTransfer.Type type = new LeavesettingTransfer.Type();
 		type.setId(1L);
 		leavesetting.setType(type);
-		
+
 		Response response = target("leavesettings")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").post(Entity.json(leavesetting));
@@ -119,13 +120,13 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		LeavesettingTransfer.Type type = new LeavesettingTransfer.Type();
 		type.setId(1L);
 		leavesetting.setType(type);
-		
+
 		Response response = target("leavesettings").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").put(Entity.json(leavesetting));
 		AssertUtils.assertNotFound(response);
 	}
-	
+
 	@Test
 	public void testUpdateLeavesettingWithDuplicateYearType() {
 		LeavesettingTransfer leavesetting = new LeavesettingTransfer();
@@ -134,7 +135,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		LeavesettingTransfer.Type type = new LeavesettingTransfer.Type();
 		type.setId(1L);
 		leavesetting.setType(type);
-		
+
 		Response response = target("leavesettings").path("1")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").put(Entity.json(leavesetting));
@@ -154,8 +155,8 @@ public class LeavesettingsResourceTest extends ResourceTest {
 	}
 
 	@Override
-	Class<?> getResource() {
-		return LeavesettingsResource.class;
+	Class<?>[] getResource() {
+		return new Class<?>[] { LeavesettingsResource.class };
 	}
 
 }

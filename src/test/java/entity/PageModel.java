@@ -1,4 +1,4 @@
-package resources;
+package entity;
 
 import java.util.List;
 

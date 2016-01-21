@@ -6,3 +6,4 @@ record_type
 leave_setting
 employee_leave
 attend_record
+event

@@ -64,7 +64,7 @@ public abstract class ResourceTest extends JerseyTest {
 		return rc;
 	}
 
-	abstract Class<?> getResource();
+	abstract Class<?>[] getResource();
 
 	@Before
 	public void initData() throws HibernateException, DatabaseUnitException,
@@ -88,6 +88,7 @@ public abstract class ResourceTest extends JerseyTest {
 		@Override
 		public void filter(ContainerRequestContext requestContext)
 				throws IOException {
+
 			final UserDetails userDetails = userDetailsService
 					.loadUserByUsername(requestContext.getHeaderString("user"));
 			Authentication authToken = new UsernamePasswordAuthenticationToken(

@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 
+import entity.PageModel;
 import transfer.EmployeeLeaveTransfer;
 import transfer.EmployeeLeaveTransfer.Employee;
 import transfer.EmployeeLeaveTransfer.Leavesetting;
@@ -139,8 +140,8 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 	}
 
 	@Override
-	Class<?> getResource() {
-		return EmployeeLeaveResource.class;
+	Class<?>[] getResource() {
+		return new Class<?>[] { EmployeeLeaveResource.class };
 	}
 
 }

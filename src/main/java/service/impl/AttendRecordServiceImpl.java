@@ -326,11 +326,13 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				Calendar calE = Calendar.getInstance();
 				calE.setTime(joinDay);
 				calE.add(Calendar.DATE, -1);
-				calE.set(Calendar.AM_PM, 1);
-				calE.set(Calendar.HOUR, 6);
+				calE.set(Calendar.HOUR_OF_DAY, 18);
 				double pastDuration = countDuration(startDate, calE.getTime());
-
 				long years = getYearOfJoined(joinDate, startDate);
+				logger.debug(
+						"year:{}, pastDuration:{}, startDate:{}, endDate:{}",
+						new Object[] { years, pastDuration, startDate,
+								calE.getTime() });
 				Leavesetting past = leavesettingDao.findByTypeIdAndYear(
 						attendRecord.getType().getId(), years);
 				if (past == null) {

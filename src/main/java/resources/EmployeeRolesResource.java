@@ -52,7 +52,7 @@ public class EmployeeRolesResource {
 	@PUT
 	@Path(value = "{roleid}")
 	@Produces(MediaType.APPLICATION_JSON)
-	@PreAuthorize("hasAuthority('admin')")
+	@PreAuthorize("#id == principal.id")
 	public Response assignRoleToEmployee(@PathParam("id") long id,
 			@PathParam("roleid") long roleId) {
 		employeeRoleService.grantRoleToEmployee(id, roleId);

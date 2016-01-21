@@ -16,6 +16,7 @@ import org.junit.Test;
 import transfer.EmployeeTransfer;
 import assertion.AssertUtils;
 import entity.Gender;
+import entity.PageModel;
 
 public class EmployeesResourceTest extends ResourceTest {
 
@@ -152,8 +153,8 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Override
-	Class<?> getResource() {
-		return EmployeesResource.class;
+	Class<?>[] getResource() {
+		return new Class<?>[] { EmployeesResource.class };
 	}
 
 }

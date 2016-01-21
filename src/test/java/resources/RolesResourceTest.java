@@ -8,21 +8,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.Test;
 
 import transfer.RoleTransfer;
 import assertion.AssertUtils;
+import entity.PageModel;
 
 public class RolesResourceTest extends ResourceTest {
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
 
 	@Test
 	public void testGetRole() {
@@ -116,8 +108,8 @@ public class RolesResourceTest extends ResourceTest {
 	}
 
 	@Override
-	Class<?> getResource() {
-		return RolesResource.class;
+	Class<?>[] getResource() {
+		return new Class<?>[] { RolesResource.class };
 	}
 
 }

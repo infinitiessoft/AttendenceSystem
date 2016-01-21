@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,7 +57,7 @@ public class AttendRecord extends AbstractEntity {
 	@JoinColumn(name = "type_id", nullable = false)
 	private AttendRecordType type;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attendRecord")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attendRecord", cascade = CascadeType.REMOVE)
 	private Set<Event> events = new HashSet<Event>(0);
 
 	public Long getId() {
