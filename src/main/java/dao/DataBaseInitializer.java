@@ -66,8 +66,6 @@ public class DataBaseInitializer {
 		recordTypeDao.save(other);
 
 		Department dep = new Department();
-		dep.setManager_id(1l);
-		dep.setResponseto(1l);
 		dep.setName("sale");
 		dep = depDao.save(dep);
 

@@ -13,6 +13,7 @@ import transfer.AttendRecordTypeTransfer;
 import dao.AttendRecordTypeDao;
 import entity.AttendRecordType;
 import exceptions.AttendRecordTypeNotFoundException;
+import exceptions.RemovingIntegrityViolationException;
 
 public class AttendRecordTypeServiceImpl implements AttendRecordTypeService {
 
@@ -35,7 +36,10 @@ public class AttendRecordTypeServiceImpl implements AttendRecordTypeService {
 	public void delete(long id) {
 		try {
 			attendRecordTypeDao.delete(id);
-		} catch (NullPointerException e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(
+					AttendRecordType.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new AttendRecordTypeNotFoundException(id);
 		}
 	}

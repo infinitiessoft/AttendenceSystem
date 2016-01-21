@@ -17,6 +17,8 @@ import entity.Employee;
 import entity.Gender;
 import exceptions.DepartmentNotFoundException;
 import exceptions.EmployeeNotFoundException;
+import exceptions.InvalidGenderException;
+import exceptions.RemovingIntegrityViolationException;
 
 /**
  * One implementation of the interface for Employee Service
@@ -48,7 +50,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public void delete(long id) {
 		try {
 			employeeDao.delete(id);
-		} catch (NullPointerException e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(Employee.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new EmployeeNotFoundException(id);
 		}
 	}
@@ -75,7 +79,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 			newEntry.setUsername(transfer.getUsername());
 		}
 		if (transfer.isGenderSet()) {
-			Gender.valueOf(transfer.getGender());
+			try {
+				Gender.valueOf(transfer.getGender());
+			} catch (Exception e) {
+				throw new InvalidGenderException(transfer.getGender());
+			}
 			newEntry.setGender(transfer.getGender());
 		}
 		if (transfer.isPasswordSet()) {
@@ -92,7 +100,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 				newEntry.setDepartment(department);
 			}
 		}
-
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import entity.AttendRecordType;
 import entity.Leavesetting;
 import exceptions.AttendRecordTypeNotFoundException;
 import exceptions.LeavesettingNotFoundException;
+import exceptions.RemovingIntegrityViolationException;
 
 public class LeavesettingServiceImpl implements LeavesettingService {
 
@@ -42,7 +43,9 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 	public void delete(long id) {
 		try {
 			leavesettingDao.delete(id);
-		} catch (Exception e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(Leavesetting.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new LeavesettingNotFoundException(id);
 		}
 	}
@@ -78,10 +81,11 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 				transfers, pageable, leavesettings.getTotalElements());
 		return rets;
 	}
-	
+
 	@Override
 	public LeavesettingTransfer findByTypeIdAndYear(long typeId, long year) {
-		Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(typeId, year);
+		Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(typeId,
+				year);
 		return toLeavesettingTransfer(leavesetting);
 	}
 
@@ -98,14 +102,14 @@ public class LeavesettingServiceImpl implements LeavesettingService {
 				newEntry.setType(type);
 			}
 		}
-		
+
 		if (transfer.isYearSet()) {
 			newEntry.setYear(transfer.getYear());
 		}
 		if (transfer.isDaysSet()) {
 			newEntry.setDays(transfer.getDays());
 		}
-		
+
 		newEntry.setName(transfer.getName());
 	}
 

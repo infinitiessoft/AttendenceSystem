@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
@@ -23,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 
 @Entity
-@Table(name = "department")
+@Table(name = "department", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Department extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;
 
@@ -31,12 +32,8 @@ public class Department extends AbstractEntity {
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@Column(name = "name", nullable = false)
+	@Column(name = "name", unique = true, nullable = false)
 	private String name;
-	@Column(name = "manager_id", nullable = true)
-	private Long manager_id;
-	@Column(name = "responseto", nullable = true)
-	private Long responseto;
 	@XmlTransient
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "department", cascade = CascadeType.REMOVE)
 	private Set<Employee> employees = new HashSet<Employee>(0);
@@ -57,22 +54,6 @@ public class Department extends AbstractEntity {
 		this.name = name;
 	}
 
-	public Long getManager_id() {
-		return manager_id;
-	}
-
-	public void setManager_id(Long manager_id) {
-		this.manager_id = manager_id;
-	}
-
-	public Long getResponseto() {
-		return responseto;
-	}
-
-	public void setResponseto(Long responseto) {
-		this.responseto = responseto;
-	}
-
 	@XmlTransient
 	public Set<Employee> getEmployees() {
 		return employees;
@@ -84,15 +65,6 @@ public class Department extends AbstractEntity {
 
 	public Department() {
 		super();
-
-	}
-
-	public Department(Long id, String name, Long manager_id, Long responseto) {
-		super();
-		this.id = id;
-		this.manager_id = manager_id;
-		this.name = name;
-		this.responseto = responseto;
 
 	}
 

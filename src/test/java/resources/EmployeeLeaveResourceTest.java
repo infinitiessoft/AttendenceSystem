@@ -13,118 +13,129 @@ import org.junit.Test;
 import transfer.EmployeeLeaveTransfer;
 import transfer.EmployeeLeaveTransfer.Employee;
 import transfer.EmployeeLeaveTransfer.Leavesetting;
-import entity.EmployeeLeave;
+import assertion.AssertUtils;
 
 public class EmployeeLeaveResourceTest extends ResourceTest {
 
 	@Test
 	public void testGetEmployeeLeave() {
-		Response response = target("employeeleave").path("1")
-				.register(JacksonFeature.class).request().get();
+		Response response = target("employeeleaves").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeLeaveTransfer transfer = response
 				.readEntity(EmployeeLeaveTransfer.class);
-		assertEquals(1L, transfer.getId().longValue());
+		assertEquals(1l, transfer.getId().longValue());
 	}
 
 	@Test
 	public void testGetEmployeeLeaveWithNotFoundException() {
-		Response response = target("employeeleave").path("2")
-				.register(JacksonFeature.class).request().get();
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+		Response response = target("employeeleaves").path("3")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testDeleteEmployeeLeave() {
-		Response response = target("employeeleave").path("1")
-				.register(JacksonFeature.class).request().delete();
+		Response response = target("employeeleaves").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
 
 	@Test
 	public void testDeleteEmployeeLeaveWithNotFoundException() {
-		Response response = target("employeeleave").path("2")
-				.register(JacksonFeature.class).request().delete();
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+		Response response = target("employeeleaves").path("3")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testSaveEmployeeLeave() {
 		EmployeeLeaveTransfer employeeLeave = new EmployeeLeaveTransfer();
-		employeeLeave.setUsedDays(3L);
+		employeeLeave.setUsedDays(3d);
+		Employee employee = new Employee();
+		employee.setId(2L);
+		employeeLeave.setEmployee(employee);
+		Leavesetting leavesetting = new Leavesetting();
+		leavesetting.setId(1L);
+		employeeLeave.setLeavesetting(leavesetting);
+
+		Response response = target("employeeleaves")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").post(Entity.json(employeeLeave));
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		EmployeeLeaveTransfer transfer = response
+				.readEntity(EmployeeLeaveTransfer.class);
+		assertEquals(3L, transfer.getId().longValue());
+		assertEquals(employeeLeave.getLeavesetting().getId(), transfer
+				.getLeavesetting().getId());
+		assertEquals(employeeLeave.getEmployee().getId(), transfer
+				.getEmployee().getId());
+		assertEquals(employeeLeave.getUsedDays(), transfer.getUsedDays());
+	}
+
+	@Test
+	public void testSaveEmployeeLeaveWithDuplicateLeavesettingAndEmployee() {
+		EmployeeLeaveTransfer employeeLeave = new EmployeeLeaveTransfer();
+		employeeLeave.setUsedDays(3d);
 		Employee employee = new Employee();
 		employee.setId(1L);
 		employeeLeave.setEmployee(employee);
 		Leavesetting leavesetting = new Leavesetting();
 		leavesetting.setId(1L);
 		employeeLeave.setLeavesetting(leavesetting);
-
-		Response response = target("employeeleave")
+		Response response = target("employeeleaves")
 				.register(JacksonFeature.class).request()
-				.post(Entity.json(employeeLeave));
-		assertEquals(Status.OK.getStatusCode(), response.getStatus());
-		EmployeeLeaveTransfer transfer = response
-				.readEntity(EmployeeLeaveTransfer.class);
-		assertEquals(2L, transfer.getId().longValue());
-		assertEquals(employeeLeave.getLeavesetting().getId(),
-				leavesetting.getId());
+				.header("user", "demo").post(Entity.json(employeeLeave));
+		AssertUtils.assertBadRequest(response);
 	}
 
 	@Test
 	public void testUpdateEmployeeLeave() {
-		EmployeeLeave employeeLeave = new EmployeeLeave();
-		employeeLeave.setUsedDays(5L);
+		EmployeeLeaveTransfer employeeLeave = new EmployeeLeaveTransfer();
+		employeeLeave.setUsedDays(5d);
 
-		entity.Employee employee = new entity.Employee();
-		employee.setId(1L);
-		employeeLeave.setEmployee(employee);
-
-		entity.Leavesetting leavesetting = new entity.Leavesetting();
-		leavesetting.setId(1L);
-		employeeLeave.setLeavesetting(leavesetting);
-		Response response = target("employeeleave").path("1")
+		Response response = target("employeeleaves").path("1")
 				.register(JacksonFeature.class).request()
-				.put(Entity.json(employeeLeave));
+				.header("user", "demo").put(Entity.json(employeeLeave));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeLeaveTransfer transfer = response
 				.readEntity(EmployeeLeaveTransfer.class);
 		assertEquals(1L, transfer.getId().longValue());
-		assertEquals(employeeLeave.getLeavesetting().getId(),
-				leavesetting.getId());
+		assertEquals(employeeLeave.getUsedDays(), employeeLeave.getUsedDays());
 	}
 
 	@Test
 	public void testUpdateEmployeeLeaveWithNotFoundException() {
-		EmployeeLeave employeeLeave = new EmployeeLeave();
-		employeeLeave.setUsedDays(5L);
+		EmployeeLeaveTransfer employeeLeave = new EmployeeLeaveTransfer();
+		employeeLeave.setUsedDays(5d);
 
-		entity.Employee employee = new entity.Employee();
+		EmployeeLeaveTransfer.Employee employee = new EmployeeLeaveTransfer.Employee();
 		employee.setId(1L);
 		employeeLeave.setEmployee(employee);
 
-		entity.Leavesetting leavesetting = new entity.Leavesetting();
+		EmployeeLeaveTransfer.Leavesetting leavesetting = new EmployeeLeaveTransfer.Leavesetting();
 		leavesetting.setId(1L);
 		employeeLeave.setLeavesetting(leavesetting);
-		Response response = target("employeeleave").path("2")
+		Response response = target("employeeleaves").path("3")
 				.register(JacksonFeature.class).request()
-				.put(Entity.json(employeeLeave));
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+				.header("user", "demo").put(Entity.json(employeeLeave));
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testFindAllEmployeeLeave() {
-		Response response = target("employeeleave")
-				.register(JacksonFeature.class).request().get();
+		Response response = target("employeeleaves")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		PageModel<EmployeeLeaveTransfer> rets = response
 				.readEntity(new GenericType<PageModel<EmployeeLeaveTransfer>>() {
 				});
-		assertEquals(1, rets.getTotalElements());
-		EmployeeLeaveTransfer transfer = rets.getContent().get(0);
-		assertEquals(1L, transfer.getId().longValue());
+		assertEquals(2, rets.getTotalElements());
 	}
 
 	@Override

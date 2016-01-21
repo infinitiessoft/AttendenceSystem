@@ -3,7 +3,6 @@ package entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,13 +34,13 @@ public class Leavesetting extends AbstractEntity {
 	private Double days;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "type_id")
+	@JoinColumn(name = "type_id", nullable = false)
 	private AttendRecordType type;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "leavesetting", cascade = CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "leavesetting")
 	private Set<EmployeeLeave> employeeLeaves = new HashSet<EmployeeLeave>(0);
 
-	@Column(name = "name")
+	@Column(name = "name", unique = true, nullable = false)
 	private String name;
 
 	public Long getId() {

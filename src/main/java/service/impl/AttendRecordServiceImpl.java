@@ -47,6 +47,7 @@ import exceptions.InvalidEndDateException;
 import exceptions.InvalidStartAndEndDateException;
 import exceptions.LeavesettingNotFoundException;
 import exceptions.NoEnoughLeaveDaysException;
+import exceptions.RemovingIntegrityViolationException;
 
 public class AttendRecordServiceImpl implements AttendRecordService {
 
@@ -89,7 +90,9 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 	public void delete(long id) {
 		try {
 			attendRecordDao.delete(id);
-		} catch (NullPointerException e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(AttendRecord.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new AttendRecordNotFoundException(id);
 		}
 	}
@@ -98,7 +101,6 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 	@Override
 	public AttendRecordTransfer save(AttendRecordTransfer attendRecord) {
 		Preconditions.checkNotNull(attendRecord.getApplicant());
-		Preconditions.checkNotNull(attendRecord.getApplicant().getId());
 		Preconditions.checkNotNull(attendRecord.getApplicant().getId());
 
 		attendRecord.setId(null);
@@ -115,7 +117,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		assertIsBusinessDays(newEntry.getType(), newEntry.getStartDate(),
 				newEntry.getEndDate());
 		assertEnoughAvailableLeaveDays(newEntry);
-		
+
 		// if there is a manager the employee response to then send it an
 		// blank
 		// event else it being permit automatically
@@ -429,7 +431,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		}
 		newEntry.setDuration(countDuration(newEntry.getStartDate(),
 				newEntry.getEndDate()));
-		if (transfer.isTypeSet()) {
+		if (transfer.isTypeSet() && transfer.getType() != null) {
 			if (transfer.getType().isIdSet()) {
 				entity.AttendRecordType type = attendRecordTypeDao
 						.findOne(transfer.getType().getId());
@@ -440,7 +442,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				newEntry.setType(type);
 			}
 		}
-		if (transfer.isEmployeeSet()) {
+		if (transfer.isEmployeeSet() && transfer.getApplicant() != null) {
 			if (transfer.getApplicant().isIdSet()) {
 				entity.Employee employee = employeeDao.findOne(transfer
 						.getApplicant().getId());

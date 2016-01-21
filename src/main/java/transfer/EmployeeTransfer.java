@@ -224,7 +224,7 @@ public class EmployeeTransfer {
 
 	@XmlTransient
 	public boolean isDepartmentSet() {
-		return isDepartmentSet;
+		return isDepartmentSet && department != null;
 	}
 
 	@XmlTransient

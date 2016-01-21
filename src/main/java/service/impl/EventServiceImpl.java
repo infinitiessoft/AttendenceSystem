@@ -43,6 +43,7 @@ import exceptions.DuplicateApproveException;
 import exceptions.EmployeeNotFoundException;
 import exceptions.EventNotFoundException;
 import exceptions.InvalidActionException;
+import exceptions.RemovingIntegrityViolationException;
 
 public class EventServiceImpl implements EventService {
 
@@ -57,9 +58,9 @@ public class EventServiceImpl implements EventService {
 	private MailService mailService;
 
 	public EventServiceImpl(EventDao eventDao, AttendRecordDao attendRecordDao,
-			CalendarEventService calendarEventService, LeavesettingDao leavesettingDao,
-			EmployeeLeaveDao employeeLeaveDao, EmployeeDao employeeDao,
-			MailService mailService) {
+			CalendarEventService calendarEventService,
+			LeavesettingDao leavesettingDao, EmployeeLeaveDao employeeLeaveDao,
+			EmployeeDao employeeDao, MailService mailService) {
 		this.eventDao = eventDao;
 		this.attendRecordDao = attendRecordDao;
 		this.calendarEventService = calendarEventService;
@@ -83,7 +84,9 @@ public class EventServiceImpl implements EventService {
 	public void delete(long id) {
 		try {
 			eventDao.delete(id);
-		} catch (NullPointerException e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(Event.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new EventNotFoundException(id);
 		}
 	}

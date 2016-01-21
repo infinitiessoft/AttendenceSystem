@@ -19,6 +19,7 @@ import entity.EmployeeLeave;
 import exceptions.EmployeeLeaveNotFoundException;
 import exceptions.EmployeeNotFoundException;
 import exceptions.LeavesettingNotFoundException;
+import exceptions.RemovingIntegrityViolationException;
 
 public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
@@ -46,7 +47,9 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	public void delete(long id) {
 		try {
 			employeeLeaveDao.delete(id);
-		} catch (Exception e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(EmployeeLeave.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new EmployeeLeaveNotFoundException(id);
 		}
 	}

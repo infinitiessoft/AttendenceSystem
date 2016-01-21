@@ -1,8 +1,8 @@
 package resources;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.ws.rs.client.Entity;
@@ -14,126 +14,141 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 
 import transfer.EmployeeTransfer;
-import entity.Department;
-import entity.Employee;
+import assertion.AssertUtils;
 import entity.Gender;
 
 public class EmployeesResourceTest extends ResourceTest {
 
 	@Test
 	public void testGetEmployee() {
-		Response response = target("employee").path("1")
-				.register(JacksonFeature.class).request().get();
+		Response response = target("employees").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
 		assertEquals(1l, transfer.getId().longValue());
-		assertEquals("pohsun", transfer.getName());
+		assertNull(transfer.getPassword());
 	}
 
 	@Test
 	public void testGetEmployeeWithNotFoundException() {
-		Response response = target("employee").path("2")
-				.register(JacksonFeature.class).request().get();
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+		Response response = target("employees").path("3")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testDeleteEmployee() {
-		Response response = target("employee").path("1")
-				.register(JacksonFeature.class).request().delete();
+		Response response = target("employees").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
 
 	@Test
 	public void testDeleteEmployeeWithNotFoundException() {
-		Response response = target("employee").path("2")
-				.register(JacksonFeature.class).request().delete();
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+		Response response = target("employees").path("3")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testUpdateEmployee() {
-		Employee admin = new Employee();
-		admin.setDateofjoined(new Date());
+		EmployeeTransfer admin = new EmployeeTransfer();
+		admin.setDateOfJoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
 		admin.setGender(Gender.male.name());
-		Department dep = new Department();
-		dep.setId(1L);
+		EmployeeTransfer.Department dep = new EmployeeTransfer.Department();
+		dep.setId(2L);
 		admin.setDepartment(dep);
-		Response response = target("employee").path("1")
+		Response response = target("employees").path("1")
 				.register(JacksonFeature.class).request()
-				.put(Entity.json(admin));
+				.header("user", "demo").put(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
 		assertEquals(1l, transfer.getId().longValue());
-		assertEquals(admin.getUsername(), transfer.getName());
+		assertEquals(admin.getName(), transfer.getName());
+		assertEquals(admin.getDateOfJoined(), transfer.getDateOfJoined());
+		assertEquals(admin.getEmail(), transfer.getEmail());
+		assertEquals(admin.getGender(), transfer.getGender());
+		assertEquals(admin.getDepartment().getId(), transfer.getDepartment()
+				.getId());
+		assertNull(transfer.getPassword());
+		assertEquals(admin.getUsername(), transfer.getUsername());
 	}
 
 	@Test
 	public void testUpdateEmployeeWithNotFoundException() {
-		Employee admin = new Employee();
-		admin.setDateofjoined(new Date());
+		EmployeeTransfer admin = new EmployeeTransfer();
+		admin.setDateOfJoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
-		Response response = target("employee").path("2")
+		Response response = target("employees").path("3")
 				.register(JacksonFeature.class).request()
-				.put(Entity.json(admin));
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+				.header("user", "demo").put(Entity.json(admin));
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testSaveEmployee() {
-		Employee admin = new Employee();
-		admin.setDateofjoined(new Date());
+		EmployeeTransfer admin = new EmployeeTransfer();
+		admin.setDateOfJoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
 		admin.setGender(Gender.male.name());
-		Department dep = new Department();
+		EmployeeTransfer.Department dep = new EmployeeTransfer.Department();
 		dep.setId(1L);
 		admin.setDepartment(dep);
-		Response response = target("employee").register(JacksonFeature.class)
-				.request().post(Entity.json(admin));
+		Response response = target("employees").register(JacksonFeature.class)
+				.request().header("user", "demo").post(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
-		assertEquals(2l, transfer.getId().longValue());
-		assertEquals(admin.getUsername(), transfer.getName());
+		assertEquals(3l, transfer.getId().longValue());
+		assertEquals(admin.getName(), transfer.getName());
+		assertEquals(admin.getDateOfJoined(), transfer.getDateOfJoined());
+		assertEquals(admin.getEmail(), transfer.getEmail());
+		assertEquals(admin.getGender(), transfer.getGender());
+		assertEquals(admin.getDepartment().getId(), transfer.getDepartment()
+				.getId());
+		assertNull(transfer.getPassword());
+		assertEquals(admin.getUsername(), transfer.getUsername());
 	}
 
 	@Test
-	public void testSaveEmployeeWithDuplicateName() {
-		Employee admin = new Employee();
-		admin.setDateofjoined(new Date());
+	public void testSaveEmployeeWithDuplicateUsername() {
+		EmployeeTransfer admin = new EmployeeTransfer();
+		admin.setDateOfJoined(new Date());
 		admin.setEmail("admin@gmail.com");
 		admin.setName("administrator");
 		admin.setPassword("secret");
-		admin.setUsername("pohsun");
-		Response response = target("employee").register(JacksonFeature.class)
-				.request().post(Entity.json(admin));
-		assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+		admin.setUsername("demo");
+		admin.setGender("male");
+		EmployeeTransfer.Department dep = new EmployeeTransfer.Department();
+		dep.setId(1l);
+		admin.setDepartment(dep);
+		Response response = target("employees").register(JacksonFeature.class)
+				.request().header("user", "demo").post(Entity.json(admin));
+		AssertUtils.assertBadRequest(response);
 	}
 
 	@Test
 	public void testFindallEmployee() {
-		Response response = target("employee").register(JacksonFeature.class)
-				.request().get();
+		Response response = target("employees").register(JacksonFeature.class)
+				.request().header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
-		Collection<EmployeeTransfer> rets = response
-				.readEntity(new GenericType<Collection<EmployeeTransfer>>() {
+		PageModel<EmployeeTransfer> rets = response
+				.readEntity(new GenericType<PageModel<EmployeeTransfer>>() {
 				});
-		assertEquals(1, rets.size());
-		EmployeeTransfer transfer = rets.iterator().next();
-		assertEquals(1l, transfer.getId().longValue());
-		assertEquals("pohsun", transfer.getName());
+		assertEquals(2, rets.getTotalElements());
 	}
 
 	@Override

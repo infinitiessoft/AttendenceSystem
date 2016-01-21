@@ -13,6 +13,7 @@ import transfer.DepartmentTransfer;
 import dao.DepartmentDao;
 import entity.Department;
 import exceptions.DepartmentNotFoundException;
+import exceptions.RemovingIntegrityViolationException;
 
 public class DepartmentServiceImpl implements DepartmentService {
 
@@ -35,7 +36,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public void delete(long id) {
 		try {
 			departmentDao.delete(id);
-		} catch (NullPointerException e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(Department.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new DepartmentNotFoundException(id);
 		}
 	}
@@ -45,7 +48,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 		department.setId(null);
 		Department dep = new Department();
 		setUpDepartment(department, dep);
-		return toDepartmentTransfer(departmentDao.save(dep));
+		dep = departmentDao.save(dep);
+		return toDepartmentTransfer(dep);
 	}
 
 	private void setUpDepartment(DepartmentTransfer transfer, Department dep) {

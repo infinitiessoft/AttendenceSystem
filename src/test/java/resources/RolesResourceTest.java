@@ -2,101 +2,117 @@ package resources;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collection;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.Test;
 
-import entity.Role;
 import transfer.RoleTransfer;
+import assertion.AssertUtils;
 
 public class RolesResourceTest extends ResourceTest {
+	protected Mockery context = new JUnit4Mockery() {
+
+		{
+			setThreadingPolicy(new Synchroniser());
+		}
+	};
 
 	@Test
 	public void testGetRole() {
-		Response response = target("role").path("1").register(JacksonFeature.class).request().get();
+		Response response = target("roles").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		RoleTransfer transfer = response.readEntity(RoleTransfer.class);
-		assertEquals("1", transfer.getId());
-		assertEquals("pohsun", transfer.getName());
+		assertEquals(1l, transfer.getId().longValue());
+		assertEquals("admin", transfer.getName());
 
 	}
 
 	@Test
 	public void testGetRoleWithNotFoundException() {
-		Response response = target("role").path("2").register(JacksonFeature.class).request().get();
+		Response response = target("roles").path("4")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
 	}
 
 	@Test
 	public void testDeleteRole() {
-		Response response = target("put").path("1").register(JacksonFeature.class).request().delete();
+		Response response = target("roles").path("3")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
 
 	@Test
 	public void testDeleteRoleWithNotFoundException() {
-		Response response = target("role").path("2").register(JacksonFeature.class).request().delete();
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+		Response response = target("roles").path("4")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testUpdateRole() {
-		Role admin = new Role();
+		RoleTransfer admin = new RoleTransfer();
 		admin.setName("administrator");
-		Response response = target("role").path("1").register(JacksonFeature.class).request().put(Entity.json(admin));
+		Response response = target("roles").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").put(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		RoleTransfer transfer = response.readEntity(RoleTransfer.class);
-		assertEquals("1", transfer.getId());
+		assertEquals(1l, transfer.getId().longValue());
 		assertEquals(admin.getName(), transfer.getName());
 	}
 
 	@Test
 	public void testUpdateRoleWithNotFoundException() {
-		Role admin = new Role();
+		RoleTransfer admin = new RoleTransfer();
 		admin.setName("administrator");
-		Response response = target("role").path("2").register(JacksonFeature.class).request().put(Entity.json(admin));
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+		Response response = target("roles").path("4")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").put(Entity.json(admin));
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testSaveRole() {
-		Role admin = new Role();
-		admin.setName("administrator");
-		Response response = target("role").register(JacksonFeature.class).request().post(Entity.json(admin));
+		RoleTransfer newEntry = new RoleTransfer();
+		newEntry.setName("new");
+		Response response = target("roles").register(JacksonFeature.class)
+				.request().header("user", "demo").post(Entity.json(newEntry));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		RoleTransfer transfer = response.readEntity(RoleTransfer.class);
-		assertEquals("2", transfer.getId());
-		assertEquals("Poshun", transfer.getName());
+		assertEquals(4l, transfer.getId().longValue());
+		assertEquals(newEntry.getName(), transfer.getName());
 	}
 
 	@Test
 	public void testSaveRoleWithDuplicateName() {
-		Role admin = new Role();
-		admin.setName("administrator");
-		Response response = target("role").register(JacksonFeature.class).request().post(Entity.json(admin));
-		assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+		RoleTransfer admin = new RoleTransfer();
+		admin.setName("admin");
+		Response response = target("roles").register(JacksonFeature.class)
+				.request().header("user", "demo").post(Entity.json(admin));
+		AssertUtils.assertBadRequest(response);
 	}
 
 	@Test
 	public void testFindallRole() {
-		Response response = target("role").register(JacksonFeature.class).request().get();
+		Response response = target("roles").register(JacksonFeature.class)
+				.request().header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
-		Collection<RoleTransfer> rets = response.readEntity(new GenericType<Collection<RoleTransfer>>() {
-		});
-		assertEquals(1, rets.size());
-		RoleTransfer transfer = rets.iterator().next();
-		assertEquals("1", transfer.getId());
-		assertEquals("pohsun", transfer.getName());
-
+		PageModel<RoleTransfer> rets = response
+				.readEntity(new GenericType<PageModel<RoleTransfer>>() {
+				});
+		assertEquals(3, rets.getTotalElements());
 	}
 
 	@Override

@@ -21,100 +21,11 @@
 	<task:annotation-driven executor="executor" />
 	<task:executor id="executor" pool-size="1" />
 
-	<!-- retry advice for external service call -->
-	<bean id="mailRetryAdvice"
-		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
-		<description>
-			Advice for mail service call, any exceptions listed
-			in map
-			and specify
-			value to 'true'
-			will result in a complete retry.
-		</description>
-		<property name="retryOperations">
-			<bean class="org.springframework.retry.support.RetryTemplate">
-				<property name="backOffPolicy">
-					<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
-						<property name="initialInterval" value="1000" />
-						<property name="multiplier" value="30" />
-						<property name="maxInterval" value="600000" />
-					</bean>
-				</property>
-				<property name="retryPolicy">
-					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
-						<!-- maxAttempts -->
-						<constructor-arg index="0" value="5" />
-						<constructor-arg index="1">
-							<util:map>
-								<!-- true means will retry, false means won't -->
-								<entry key="org.springframework.mail.MailException" value="true" />
-							</util:map>
-						</constructor-arg>
-					</bean>
-				</property>
-			</bean>
-		</property>
-	</bean>
-
-	<bean id="calendarRetryAdvice"
-		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
-		<description>
-			Advice for google calendar service call, any exceptions
-			listed
-			in map and specify
-			value to 'true'
-			will result in a complete
-			retry.
-		</description>
-		<property name="retryOperations">
-			<bean class="org.springframework.retry.support.RetryTemplate">
-				<property name="backOffPolicy">
-					<bean class="org.springframework.retry.backoff.FixedBackOffPolicy">
-						<property name="backOffPeriod" value="1000" />
-					</bean>
-				</property>
-				<property name="retryPolicy">
-					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
-						<!-- maxAttempts -->
-						<constructor-arg index="0" value="3" />
-						<constructor-arg index="1">
-							<util:map>
-								<!-- true means will retry, false means won't -->
-								<entry key="java.io.IOException" value="true" />
-							</util:map>
-						</constructor-arg>
-					</bean>
-				</property>
-			</bean>
-		</property>
-	</bean>
-
 
 	<!-- SET default mail properties -->
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.gmail.com" />
-		<property name="port" value="25" />
-		<property name="username" value="attendance@infinitiessoft.com" />
-		<property name="password" value="attendance0123" />
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.transport.protocol">smtp</prop>
-				<prop key="mail.smtp.auth">true</prop>
-				<prop key="mail.smtp.starttls.enable">true</prop>
-				<prop key="mail.debug">true</prop>
-			</props>
-		</property>
-	</bean>
 
-	<bean id="mailService" class="service.impl.MailServiceImpl">
-		<constructor-arg ref="mailSender" />
+	<bean id="mailService" class="mock.MockMailService">
 	</bean>
-
-	<aop:config>
-		<aop:advisor
-			pointcut="execution(public * org.springframework.mail.javamail.JavaMailSenderImpl.send(..))"
-			advice-ref="mailRetryAdvice" />
-	</aop:config>
 
 
 	<!-- DATABASE SETUP -->
@@ -152,14 +63,8 @@
 	<jpa:repositories base-package="dao" />
 
 
-	<bean id="calendarService" class="service.impl.CalendarEventServiceImpl">
+	<bean id="calendarService" class="mock.MockCalendarService">
 	</bean>
-
-	<aop:config>
-		<aop:advisor
-			pointcut="execution(public * com.google.api.client.googleapis.services.AbstractGoogleClientRequest.execute(..))"
-			advice-ref="calendarRetryAdvice" />
-	</aop:config>
 
 	<bean id="employeeService" class="service.impl.EmployeeServiceImpl">
 		<constructor-arg ref="employeeDao" />
@@ -238,19 +143,6 @@
 	<bean id="csrfTokenRepository"
 		class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository">
 		<property name="headerName" value="X-XSRF-TOKEN" />
-	</bean>
-
-	<bean id="dataBaseInitializer" class="dao.DataBaseInitializer"
-		init-method="initDataBase">
-		<constructor-arg ref="employeeDao" />
-		<constructor-arg ref="roleDao" />
-		<constructor-arg ref="departmentDao" />
-		<constructor-arg ref="attendRecordTypeDao" />
-		<constructor-arg ref="employeeRoleDao" />
-		<constructor-arg ref="leavesettingDao" />
-		<constructor-arg ref="attendRecordDao" />
-		<constructor-arg ref="employeeLeaveDao" />
-		<constructor-arg ref="passwordEncoder" />
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">

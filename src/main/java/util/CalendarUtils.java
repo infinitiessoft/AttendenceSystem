@@ -41,8 +41,10 @@ public class CalendarUtils {
 
 		// looking for adjusted working days in list
 		for (Event event : events) {
-			logger.debug("event: {} ({})", new Object[] { event.getSummary(),
-					event.getStart() });
+			logger.debug(
+					"event: {} ({} - {})",
+					new Object[] { event.getSummary(), event.getStart(),
+							event.getEnd() });
 			if (event.getSummary().contains(ADJUSTED_WORKING_DAY)) {
 				long eventStart = event.getStart() != null ? event.getStart()
 						.getDate().getValue() : event.getStart().getDateTime()
@@ -83,12 +85,14 @@ public class CalendarUtils {
 
 			for (Interval removed : removedOverlaps) {
 				if (removed.overlaps(eventInterval)) {
-					DateTime date = event.getStart().getDate() != null ? event
+					DateTime start = event.getStart().getDate() != null ? event
 							.getStart().getDate() : event.getStart()
 							.getDateTime();
+					DateTime end = event.getEnd().getDate() != null ? event
+							.getEnd().getDate() : event.getEnd().getDateTime();
 					String msg = String.format(
-							"Invalid interval, it overlap %s(%s)",
-							new Object[] { event.getSummary(), date });
+							"Invalid interval, it overlap %s(%s - %s)",
+							new Object[] { event.getSummary(), start, end });
 					throw new InvalidStartAndEndDateException(msg);
 				}
 			}

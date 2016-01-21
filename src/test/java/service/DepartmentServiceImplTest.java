@@ -45,9 +45,6 @@ public class DepartmentServiceImplTest {
 		department = new Department();
 		department.setId(1L);
 		department.setName("demo");
-		department.setManager_id(1L);
-		department.setResponseto(1L);
-
 	}
 
 	@After

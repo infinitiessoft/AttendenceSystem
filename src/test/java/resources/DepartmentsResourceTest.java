@@ -2,8 +2,6 @@ package resources;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Collection;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
@@ -12,111 +10,106 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 
-import entity.Department;
 import transfer.DepartmentTransfer;
+import assertion.AssertUtils;
+import entity.Department;
 
 public class DepartmentsResourceTest extends ResourceTest {
 
 	@Test
 	public void testGetDepartment() {
-		Response response = target("department").path("1")
-				.register(JacksonFeature.class).request().get();
+		Response response = target("departments").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		DepartmentTransfer transfer = response
 				.readEntity(DepartmentTransfer.class);
 		assertEquals(1l, transfer.getId().longValue());
-		assertEquals("pohsun", transfer.getName());
-
+		assertEquals("Sales", transfer.getName());
 	}
 
 	@Test
 	public void testGetDepartmentWithNotFoundException() {
-		Response response = target("department").path("2")
-				.register(JacksonFeature.class).request().get();
+		Response response = target("departments").path("4")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
 	}
 
 	@Test
 	public void testDeleteDepartment() {
-		Response response = target("department").path("1")
-				.register(JacksonFeature.class).request().delete();
+		Response response = target("departments").path("3")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
 
 	@Test
 	public void testDeleteDepartmentWithNotFoundException() {
-		Response response = target("department").path("2")
-				.register(JacksonFeature.class).request().delete();
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+		Response response = target("departments").path("4")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testUpdateDepartment() {
-		Department admin = new Department();
+		DepartmentTransfer admin = new DepartmentTransfer();
 		admin.setName("administrator");
-		Response response = target("department").path("1")
+		Response response = target("departments").path("1")
 				.register(JacksonFeature.class).request()
-				.put(Entity.json(admin));
+				.header("user", "demo").put(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		DepartmentTransfer transfer = response
 				.readEntity(DepartmentTransfer.class);
 		assertEquals(1l, transfer.getId().longValue());
 		assertEquals(admin.getName(), transfer.getName());
-		assertEquals("1", transfer.getManager_id());
-		assertEquals("2", transfer.getResponseto());
 	}
 
 	@Test
 	public void testUpdateDepartmentWithNotFoundException() {
 		Department admin = new Department();
 		admin.setName("administrator");
-		Response response = target("department").path("2")
+		Response response = target("departments").path("4")
 				.register(JacksonFeature.class).request()
-				.put(Entity.json(admin));
-		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
-		assertEquals("true", response.getHeaderString("safe"));
+				.header("user", "demo").put(Entity.json(admin));
+		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
 	public void testSaveDepartment() {
-		Department admin = new Department();
+		DepartmentTransfer admin = new DepartmentTransfer();
 		admin.setName("administrator");
-		Response response = target("department").register(JacksonFeature.class)
-				.request().post(Entity.json(admin));
+		Response response = target("departments")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").post(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		DepartmentTransfer transfer = response
 				.readEntity(DepartmentTransfer.class);
-		assertEquals(2l, transfer.getId().longValue());
+		assertEquals(5l, transfer.getId().longValue());
 		assertEquals(admin.getName(), transfer.getName());
-		assertEquals("1", transfer.getManager_id());
-		assertEquals("2", transfer.getResponseto());
 	}
 
 	@Test
 	public void testSaveDepartmentWithDuplicateName() {
-		Department admin = new Department();
-		admin.setName("administrator");
-		Response response = target("department").register(JacksonFeature.class)
-				.request().post(Entity.json(admin));
-		assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+		DepartmentTransfer admin = new DepartmentTransfer();
+		admin.setName("Sales");
+		Response response = target("departments")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").post(Entity.json(admin));
+		AssertUtils.assertBadRequest(response);
 	}
 
 	@Test
 	public void testFindallDepartment() {
-		Response response = target("department").register(JacksonFeature.class)
-				.request().get();
+		Response response = target("departments")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").get();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
-		Collection<DepartmentTransfer> rets = response
-				.readEntity(new GenericType<Collection<DepartmentTransfer>>() {
+		PageModel<DepartmentTransfer> rets = response
+				.readEntity(new GenericType<PageModel<DepartmentTransfer>>() {
 				});
-		assertEquals(1, rets.size());
-		DepartmentTransfer transfer = rets.iterator().next();
-		assertEquals(1l, transfer.getId().longValue());
-		assertEquals("pohsun", transfer.getName());
-		assertEquals("1", transfer.getManager_id());
-		assertEquals("2", transfer.getResponseto());
+		assertEquals(3, rets.getTotalElements());
 	}
 
 	@Override

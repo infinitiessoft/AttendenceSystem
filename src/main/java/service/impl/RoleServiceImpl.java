@@ -12,6 +12,7 @@ import service.RoleService;
 import transfer.RoleTransfer;
 import dao.RoleDao;
 import entity.Role;
+import exceptions.RemovingIntegrityViolationException;
 import exceptions.RoleNotFoundException;
 
 public class RoleServiceImpl implements RoleService {
@@ -35,7 +36,9 @@ public class RoleServiceImpl implements RoleService {
 	public void delete(long id) {
 		try {
 			roleDao.delete(id);
-		} catch (NullPointerException e) {
+		} catch (org.springframework.dao.DataIntegrityViolationException e) {
+			throw new RemovingIntegrityViolationException(Role.class);
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			throw new RoleNotFoundException(id);
 		}
 	}

@@ -11,7 +11,7 @@ public class NoEnoughLeaveDaysException extends BadRequestException {
 			double used, double total, long year) {
 		super(
 				String.format(
-						"You don't have enough available %s %s leave days.(used:%s, total:%s in %s)",
+						"You don't have enough available %s %s leave days.(used:%s, total:%s in year %s)",
 						duration, type, used, total, year));
 	}
 
