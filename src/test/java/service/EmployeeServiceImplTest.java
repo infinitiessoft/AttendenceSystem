@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.jmock.api.Invocation;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.action.CustomAction;
-import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,14 +24,7 @@ import dao.EmployeeDao;
 import entity.Department;
 import entity.Employee;
 
-public class EmployeeServiceImplTest {
-
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
+public class EmployeeServiceImplTest extends ServiceTest {
 
 	private EmployeeDao employeeDao;
 	private DepartmentDao departmentDao;
@@ -84,7 +74,10 @@ public class EmployeeServiceImplTest {
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(employeeDao).delete(1L);
+				exactly(1).of(employeeDao).delete(employee);
+
+				exactly(1).of(employeeDao).findOne(1L);
+				will(returnValue(employee));
 			}
 		});
 		employeeService.delete(1l);

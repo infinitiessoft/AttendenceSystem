@@ -336,7 +336,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 				.header("user", "demo").delete();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 	}
-
+	
 	@Test
 	public void testDeleteAttendRecordWithNotFoundException() {
 		Response response = target("records").path("4")

@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.jmock.api.Invocation;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.action.CustomAction;
-import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +21,7 @@ import transfer.AttendRecordTypeTransfer;
 import dao.AttendRecordTypeDao;
 import entity.AttendRecordType;
 
-public class AttendRecordTypeServiceImplTest {
-
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
+public class AttendRecordTypeServiceImplTest extends ServiceTest {
 
 	private AttendRecordTypeDao attendRecordTypeDao;
 	private AttendRecordTypeServiceImpl attendRecordService;
@@ -41,7 +31,8 @@ public class AttendRecordTypeServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		attendRecordTypeDao = context.mock(AttendRecordTypeDao.class);
-		attendRecordService = new AttendRecordTypeServiceImpl(attendRecordTypeDao);
+		attendRecordService = new AttendRecordTypeServiceImpl(
+				attendRecordTypeDao);
 		type = new AttendRecordType();
 		type.setId(1L);
 		type.setName("demo");

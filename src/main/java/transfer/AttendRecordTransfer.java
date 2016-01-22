@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import entity.AttendRecord;
+
 public class AttendRecordTransfer implements Serializable {
 
 	/**
@@ -269,6 +271,29 @@ public class AttendRecordTransfer implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	@XmlTransient
+	public static AttendRecordTransfer toAttendRecordTransfer(
+			AttendRecord attendRecord) {
+		AttendRecordTransfer ret = new AttendRecordTransfer();
+		ret.setId(attendRecord.getId());
+		AttendRecordTransfer.Employee employee = new AttendRecordTransfer.Employee();
+		employee.setId(attendRecord.getEmployee().getId());
+		employee.setName(attendRecord.getEmployee().getName());
+		AttendRecordTransfer.Type type = new AttendRecordTransfer.Type();
+		type.setId(attendRecord.getType().getId());
+		type.setName(attendRecord.getType().getName());
+		ret.setType(type);
+		ret.setBookDate(attendRecord.getBookDate());
+		ret.setDuration(attendRecord.getDuration());
+		ret.setApplicant(employee);
+		ret.setReason(attendRecord.getReason());
+		ret.setStartDate(attendRecord.getStartDate());
+		ret.setEndDate(attendRecord.getEndDate());
+		ret.setStatus(Status.valueOf(attendRecord.getStatus()));
+
+		return ret;
 	}
 
 }

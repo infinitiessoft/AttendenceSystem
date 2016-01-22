@@ -10,9 +10,9 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 
-import entity.PageModel;
 import transfer.LeavesettingTransfer;
 import assertion.AssertUtils;
+import entity.PageModel;
 
 public class LeavesettingsResourceTest extends ResourceTest {
 
@@ -30,15 +30,23 @@ public class LeavesettingsResourceTest extends ResourceTest {
 
 	@Test
 	public void testGetLeavesettingWithNotFoundException() {
-		Response response = target("leavesettings").path("3")
+		Response response = target("leavesettings").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();
 		AssertUtils.assertNotFound(response);
 	}
 
 	@Test
-	public void testDeleteLeavesetting() {
+	public void testDeleteLeavesettingWithRemovingIntegrityViolationException() {
 		Response response = target("leavesettings").path("2")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		AssertUtils.assertConflict(response);
+	}
+
+	@Test
+	public void testDeleteLeavesetting() {
+		Response response = target("leavesettings").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
@@ -46,7 +54,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 
 	@Test
 	public void testDeleteLeavesettingWithNotFoundException() {
-		Response response = target("leavesettings").path("3")
+		Response response = target("leavesettings").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
 		AssertUtils.assertNotFound(response);
@@ -68,7 +76,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		LeavesettingTransfer transfer = response
 				.readEntity(LeavesettingTransfer.class);
-		assertEquals(3L, transfer.getId().longValue());
+		assertEquals(4L, transfer.getId().longValue());
 		assertEquals(leavesetting.getType().getId(), transfer.getType().getId());
 		assertEquals(leavesetting.getName(), transfer.getName());
 		assertEquals(leavesetting.getYear(), transfer.getYear());
@@ -121,7 +129,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		type.setId(1L);
 		leavesetting.setType(type);
 
-		Response response = target("leavesettings").path("3")
+		Response response = target("leavesettings").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").put(Entity.json(leavesetting));
 		AssertUtils.assertNotFound(response);
@@ -151,7 +159,7 @@ public class LeavesettingsResourceTest extends ResourceTest {
 		PageModel<LeavesettingTransfer> rets = response
 				.readEntity(new GenericType<PageModel<LeavesettingTransfer>>() {
 				});
-		assertEquals(2, rets.getTotalElements());
+		assertEquals(3, rets.getTotalElements());
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class AttendRecordsResource {
 	@Path(value = "{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteAttendRecord(@PathParam("id") long id) {
-		attendRecordService.delete(id);
+		attendRecordService.delete(id, true);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
 				.build();
 	}
@@ -63,7 +63,7 @@ public class AttendRecordsResource {
 	@Path(value = "{id}")
 	public AttendRecordTransfer updateAttendRecord(@PathParam("id") long id,
 			AttendRecordTransfer attendRecord) {
-		return attendRecordService.update(id, attendRecord);
+		return attendRecordService.update(id, attendRecord, true);
 	}
 
 	// **Method to save or create

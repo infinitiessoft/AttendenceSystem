@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.jmock.api.Invocation;
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.lib.action.CustomAction;
-import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,14 +23,7 @@ import dao.LeavesettingDao;
 import entity.AttendRecordType;
 import entity.Leavesetting;
 
-public class LeavesettingServiceImplTest {
-
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
+public class LeavesettingServiceImplTest extends ServiceTest {
 
 	private LeavesettingDao leavesettingDao;
 	private AttendRecordTypeDao attendRecordTypeDao;

@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import transfer.DepartmentTransfer;
 import assertion.AssertUtils;
-import entity.Department;
 import entity.PageModel;
 
 public class DepartmentsResourceTest extends ResourceTest {
@@ -69,7 +68,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 
 	@Test
 	public void testUpdateDepartmentWithNotFoundException() {
-		Department admin = new Department();
+		DepartmentTransfer admin = new DepartmentTransfer();
 		admin.setName("administrator");
 		Response response = target("departments").path("4")
 				.register(JacksonFeature.class).request()

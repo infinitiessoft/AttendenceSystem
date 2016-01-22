@@ -3,9 +3,6 @@ package service;
 import static org.junit.Assert.assertEquals;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,14 +12,7 @@ import service.impl.UserDetailServiceImpl;
 import dao.EmployeeDao;
 import entity.Employee;
 
-public class UserDetailServiceImplTest {
-
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
+public class UserDetailServiceImplTest extends ServiceTest {
 
 	private EmployeeDao employeeDao;
 	private UserDetailServiceImpl userDetailService;

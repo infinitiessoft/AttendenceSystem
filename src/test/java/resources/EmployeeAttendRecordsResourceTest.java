@@ -50,21 +50,95 @@ public class EmployeeAttendRecordsResourceTest extends ResourceTest {
 		assertEquals(Status.NOT_FOUND.getStatusCode(), response.getStatus());
 	}
 
-	// @Test
-	// public void testDeleteAttendRecord() {
-	// Response response = target("records").path("1")
-	// .register(JacksonFeature.class).request()
-	// .header("user", "demo").delete();
-	// assertEquals(Status.OK.getStatusCode(), response.getStatus());
-	// }
-	//
-	// @Test
-	// public void testDeleteAttendRecordWithNotFoundException() {
-	// Response response = target("records").path("4")
-	// .register(JacksonFeature.class).request()
-	// .header("user", "demo").delete();
-	// AssertUtils.assertNotFound(response);
-	// }
+	@Test
+	public void testDeleteAttendRecord() {
+		Response response = target("employees").path("1").path("records")
+				.path("1").register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+	}
+
+	@Test
+	public void testDeleteAttendRecordWithNotFoundException() {
+		Response response = target("employees").path("1").path("records")
+				.path("4").register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		AssertUtils.assertNotFound(response);
+	}
+
+	@Test
+	public void testUpdateAttendRecord() {
+		Calendar startDateC = Calendar.getInstance();
+		startDateC.set(2015, 1, 10, 10, 0);
+		Calendar endDateC = Calendar.getInstance();
+		endDateC.set(2015, 1, 10, 18, 0);
+		AttendRecordTransfer record = new AttendRecordTransfer();
+		AttendRecordTransfer.Type type = new AttendRecordTransfer.Type();
+		type.setId(1L);
+		record.setType(type);
+		record.setStartDate(startDateC.getTime());
+		record.setEndDate(endDateC.getTime());
+		record.setReason("reason");
+
+		Response response = target("employees").path("1").path("records")
+				.path("1").register(JacksonFeature.class)
+				.register(ObjectMapperContextResolver.class).request()
+				.header("user", "demo").put(Entity.json(record));
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		AttendRecordTransfer transfer = response
+				.readEntity(AttendRecordTransfer.class);
+		assertEquals(1L, transfer.getId().longValue());
+		assertEquals(record.getType().getId(), transfer.getType().getId());
+		assertEquals(record.getStartDate(), transfer.getStartDate());
+		assertEquals(record.getEndDate(), transfer.getEndDate());
+		assertEquals(record.getReason(), transfer.getReason());
+		assertEquals(1l, transfer.getApplicant().getId().longValue());
+		assertEquals(AttendRecordTransfer.Status.pending, transfer.getStatus());
+	}
+
+	@Test
+	public void testUpdateAttendRecordWithModificationNotAllow() {
+		Calendar startDateC = Calendar.getInstance();
+		startDateC.set(2015, 1, 10, 10, 0);
+		Calendar endDateC = Calendar.getInstance();
+		endDateC.set(2015, 1, 10, 18, 0);
+		AttendRecordTransfer record = new AttendRecordTransfer();
+		AttendRecordTransfer.Type type = new AttendRecordTransfer.Type();
+		type.setId(1L);
+		record.setType(type);
+		record.setStartDate(startDateC.getTime());
+		record.setEndDate(endDateC.getTime());
+		record.setReason("reason");
+
+		Response response = target("employees").path("1").path("records")
+				.path("2").register(JacksonFeature.class)
+				.register(ObjectMapperContextResolver.class).request()
+				.header("user", "demo").put(Entity.json(record));
+		AssertUtils.assertForbidden(response);
+	}
+
+	@Test
+	public void testUpdateAttendRecordWithNotFoundException() {
+		Calendar startDateC = Calendar.getInstance();
+		startDateC.set(2015, 1, 10, 10, 0);
+		Calendar endDateC = Calendar.getInstance();
+		endDateC.set(2015, 1, 10, 18, 0);
+		AttendRecordTransfer record = new AttendRecordTransfer();
+		AttendRecordTransfer.Employee applicant = new AttendRecordTransfer.Employee();
+		applicant.setId(1L);
+		record.setApplicant(applicant);
+		AttendRecordTransfer.Type type = new AttendRecordTransfer.Type();
+		type.setId(1L);
+		record.setType(type);
+		record.setStartDate(startDateC.getTime());
+		record.setEndDate(endDateC.getTime());
+		record.setReason("reason");
+
+		Response response = target("employees").path("1").path("records")
+				.path("3").register(JacksonFeature.class).request()
+				.header("user", "demo").put(Entity.json(record));
+		AssertUtils.assertNotFound(response);
+	}
 
 	@Test
 	public void testSaveAttendRecord() throws ParseException {

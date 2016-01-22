@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,14 +23,7 @@ import entity.Employee;
 import entity.EmployeeRole;
 import entity.Role;
 
-public class EmployeeRoleServiceImplTest {
-
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
+public class EmployeeRoleServiceImplTest extends ServiceTest {
 
 	private EmployeeDao employeeDao;
 	private RoleDao roleDao;

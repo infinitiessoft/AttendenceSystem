@@ -26,7 +26,8 @@
 		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
 		<description>
 			Advice for mail service call, any exceptions listed
-			in map and specify
+			in map
+			and specify
 			value to 'true'
 			will result in a complete retry.
 		</description>
@@ -58,10 +59,12 @@
 	<bean id="calendarRetryAdvice"
 		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
 		<description>
-			Advice for google calendar service call, any exceptions listed
+			Advice for google calendar service call, any exceptions
+			listed
 			in map and specify
 			value to 'true'
-			will result in a complete retry.
+			will result in a complete
+			retry.
 		</description>
 		<property name="retryOperations">
 			<bean class="org.springframework.retry.support.RetryTemplate">
@@ -147,7 +150,7 @@
 
 	<bean id="calendarService" class="service.impl.CalendarEventServiceImpl">
 	</bean>
-	
+
 	<aop:config>
 		<aop:advisor
 			pointcut="execution(public * com.google.api.client.googleapis.services.AbstractGoogleClientRequest.execute(..))"
@@ -183,7 +186,8 @@
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="attendRecordDao" />
 		<constructor-arg ref="attendRecordTypeDao" />
-		<constructor-arg ref="eventService" />
+		<constructor-arg ref="eventDao" />
+		<constructor-arg ref="mailService" />
 		<constructor-arg ref="calendarService" />
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="employeeLeaveDao" />
@@ -202,10 +206,7 @@
 
 	<bean id="eventService" class="service.impl.EventServiceImpl">
 		<constructor-arg ref="eventDao" />
-		<constructor-arg ref="attendRecordDao" />
-		<constructor-arg ref="calendarService" />
-		<constructor-arg ref="leavesettingDao" />
-		<constructor-arg ref="employeeLeaveDao" />
+		<constructor-arg ref="attendRecordService" />
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="mailService" />
 	</bean>

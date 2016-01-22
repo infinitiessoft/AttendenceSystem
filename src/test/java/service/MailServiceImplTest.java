@@ -1,9 +1,6 @@
 package service;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,14 +9,8 @@ import org.springframework.mail.SimpleMailMessage;
 
 import service.impl.MailServiceImpl;
 
-public class MailServiceImplTest {
+public class MailServiceImplTest extends ServiceTest {
 
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
 	private MailServiceImpl mailService;
 	private MailSender mailSender;
 

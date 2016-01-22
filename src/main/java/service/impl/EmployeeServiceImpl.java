@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.EmployeeSpecification;
 import service.EmployeeService;
@@ -16,6 +17,7 @@ import dao.EmployeeDao;
 import entity.Employee;
 import entity.Gender;
 import exceptions.DepartmentNotFoundException;
+import exceptions.EmployeeDeletionNotAllowException;
 import exceptions.EmployeeNotFoundException;
 import exceptions.InvalidGenderException;
 import exceptions.RemovingIntegrityViolationException;
@@ -46,10 +48,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return toEmployeeTransfer(employee);
 	}
 
+	@Transactional
 	@Override
 	public void delete(long id) {
 		try {
-			employeeDao.delete(id);
+			Employee employee = employeeDao.findOne(id);
+			if (employee == null) {
+				throw new EmployeeNotFoundException(id);
+			}
+			if (employee.getEmployees().size() > 0) {
+				throw new EmployeeDeletionNotAllowException(id);
+			}
+			employeeDao.delete(employee);
 		} catch (org.springframework.dao.DataIntegrityViolationException e) {
 			throw new RemovingIntegrityViolationException(Employee.class);
 		} catch (org.springframework.dao.EmptyResultDataAccessException e) {

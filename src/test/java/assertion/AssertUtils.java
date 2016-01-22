@@ -28,4 +28,13 @@ public class AssertUtils {
 		assertEquals(code, error.getCode());
 	}
 
+	public static void assertConflict(Response response) {
+		assertSafeError(Status.CONFLICT.getStatusCode(), response);
+	}
+	
+	public static void assertForbidden(Response response) {
+		assertSafeError(Status.FORBIDDEN.getStatusCode(), response);
+	}
+
+
 }

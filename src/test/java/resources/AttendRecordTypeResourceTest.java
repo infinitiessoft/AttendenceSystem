@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import transfer.AttendRecordTypeTransfer;
 import assertion.AssertUtils;
-import entity.AttendRecordType;
 import entity.PageModel;
 
 public class AttendRecordTypeResourceTest extends ResourceTest {
@@ -69,7 +68,7 @@ public class AttendRecordTypeResourceTest extends ResourceTest {
 
 	@Test
 	public void testUpdateAttendRecordTypeWithNotFoundException() {
-		AttendRecordType admin = new AttendRecordType();
+		AttendRecordTypeTransfer admin = new AttendRecordTypeTransfer();
 		admin.setName("official");
 		Response response = target("recordtypes").path("5")
 				.register(JacksonFeature.class).request()

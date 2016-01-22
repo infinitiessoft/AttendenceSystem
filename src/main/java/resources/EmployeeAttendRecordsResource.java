@@ -2,13 +2,17 @@ package resources;
 
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +57,38 @@ public class EmployeeAttendRecordsResource {
 		AttendRecordSpecification spec = new AttendRecordSpecification();
 		spec.setApplicantId(id);
 		spec.setId(recordId);
-		Page<AttendRecordTransfer> lists = attendRecordService.findAll(spec,
-				null);
-		AttendRecordTransfer ret = lists.getContent().size() > 0 ? lists
-				.getContent().get(0) : null;
+		AttendRecordTransfer ret = attendRecordService.retrieve(spec);
 		if (ret == null) {
 			throw new AttendRecordNotFoundException(recordId);
 		}
 		return ret;
+	}
+
+	@DELETE
+	@Path(value = "{recordid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
+	public Response deleteAttendRecord(@PathParam("id") long id,
+			@PathParam("recordid") long recordId) {
+		AttendRecordSpecification spec = new AttendRecordSpecification();
+		spec.setApplicantId(id);
+		spec.setId(recordId);
+		attendRecordService.delete(spec);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+				.build();
+	}
+
+	@PUT
+	@Path(value = "{recordid}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@PreAuthorize("isAuthenticated() and #id == principal.id or hasAuthority('admin')")
+	public AttendRecordTransfer updateAttendRecord(@PathParam("id") long id,
+			@PathParam("recordid") long recordId,
+			AttendRecordTransfer attendRecord) {
+		AttendRecordSpecification spec = new AttendRecordSpecification();
+		spec.setApplicantId(id);
+		spec.setId(recordId);
+		return attendRecordService.update(spec, attendRecord);
 	}
 
 	// **Method to save or create

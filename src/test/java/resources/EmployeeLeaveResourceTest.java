@@ -10,11 +10,11 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.junit.Test;
 
-import entity.PageModel;
 import transfer.EmployeeLeaveTransfer;
 import transfer.EmployeeLeaveTransfer.Employee;
 import transfer.EmployeeLeaveTransfer.Leavesetting;
 import assertion.AssertUtils;
+import entity.PageModel;
 
 public class EmployeeLeaveResourceTest extends ResourceTest {
 
@@ -70,7 +70,7 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeLeaveTransfer transfer = response
 				.readEntity(EmployeeLeaveTransfer.class);
-		assertEquals(3L, transfer.getId().longValue());
+		assertEquals(4L, transfer.getId().longValue());
 		assertEquals(employeeLeave.getLeavesetting().getId(), transfer
 				.getLeavesetting().getId());
 		assertEquals(employeeLeave.getEmployee().getId(), transfer

@@ -7,9 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.concurrent.Synchroniser;
+import org.jmock.api.Invocation;
+import org.jmock.lib.action.CustomAction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,32 +18,20 @@ import org.springframework.data.domain.PageImpl;
 import resources.specification.EventSpecification;
 import resources.specification.SimplePageRequest;
 import service.impl.EventServiceImpl;
+import transfer.AttendRecordTransfer;
 import transfer.EventTransfer;
 import util.MailUtils;
-import dao.AttendRecordDao;
 import dao.EmployeeDao;
-import dao.EmployeeLeaveDao;
 import dao.EventDao;
-import dao.LeavesettingDao;
 import entity.AttendRecord;
 import entity.AttendRecordType;
 import entity.Employee;
 import entity.Event;
 
-public class EventServiceImplTest {
-
-	protected Mockery context = new JUnit4Mockery() {
-
-		{
-			setThreadingPolicy(new Synchroniser());
-		}
-	};
+public class EventServiceImplTest extends ServiceTest {
 
 	private EventDao eventDao;
-	private AttendRecordDao attendRecordDao;
-	private CalendarEventService calendarEventService;
-	private LeavesettingDao leavesettingDao;
-	private EmployeeLeaveDao employeeLeaveDao;
+	private AttendRecordService attendRecordService;
 	private EmployeeDao employeeDao;
 	private MailService mailService;
 	private EventServiceImpl eventService;
@@ -58,14 +45,10 @@ public class EventServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		eventDao = context.mock(EventDao.class);
-		attendRecordDao = context.mock(AttendRecordDao.class);
-		calendarEventService = context.mock(CalendarEventService.class);
-		leavesettingDao = context.mock(LeavesettingDao.class);
-		employeeLeaveDao = context.mock(EmployeeLeaveDao.class);
+		attendRecordService = context.mock(AttendRecordService.class);
 		employeeDao = context.mock(EmployeeDao.class);
 		mailService = context.mock(MailService.class);
-		eventService = new EventServiceImpl(eventDao, attendRecordDao,
-				calendarEventService, leavesettingDao, employeeLeaveDao,
+		eventService = new EventServiceImpl(eventDao, attendRecordService,
 				employeeDao, mailService);
 
 		approver = new Employee();
@@ -147,12 +130,13 @@ public class EventServiceImplTest {
 		final String subject = MailUtils.buildSubject(record);
 		final String body = MailUtils.buildBody(record);
 
+		final AttendRecordTransfer transfer = AttendRecordTransfer
+				.toAttendRecordTransfer(record);
 		context.checking(new Expectations() {
 
 			{
-				exactly(1).of(attendRecordDao).findOne(
-						newEntry.getRecord().getId());
-				will(returnValue(record));
+				exactly(1).of(attendRecordService).retrieve(record.getId());
+				will(returnValue(transfer));
 				exactly(1).of(employeeDao).findOne(
 						newEntry.getApprover().getId());
 				will(returnValue(employee));
@@ -185,12 +169,17 @@ public class EventServiceImplTest {
 				exactly(1).of(eventDao).findOne(1l);
 				will(returnValue(event));
 
-				exactly(1).of(attendRecordDao).save(record);
-				will(returnValue(record));
+				exactly(1).of(attendRecordService).permit(record.getId());
+				will(with(new CustomAction("permit") {
 
-				exactly(1)
-						.of(calendarEventService)
-						.save(with(any(com.google.api.services.calendar.model.Event.class)));
+					@Override
+					public Object invoke(Invocation invocation)
+							throws Throwable {
+						record.setStatus("permit");
+						return AttendRecordTransfer
+								.toAttendRecordTransfer(record);
+					}
+				}));
 			}
 		});
 		EventTransfer ret = eventService.update(event.getId(), newEntry);

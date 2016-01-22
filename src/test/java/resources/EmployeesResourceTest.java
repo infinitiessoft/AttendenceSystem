@@ -40,8 +40,16 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteEmployee() {
+	public void testDeleteEmployeeWithDeletionNotAllow() {
 		Response response = target("employees").path("1")
+				.register(JacksonFeature.class).request()
+				.header("user", "demo").delete();
+		AssertUtils.assertForbidden(response);
+	}
+
+	@Test
+	public void testDeleteEmployee() {
+		Response response = target("employees").path("2")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
