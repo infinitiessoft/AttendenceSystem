@@ -29,7 +29,7 @@ public class Employee extends AbstractEntity {
 	private static final long serialVersionUID = 1154129853752708026L;
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)

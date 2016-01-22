@@ -78,8 +78,8 @@ angular
 				'edit-profile',
 				function($rootScope, $scope, $stateParams, $state,
 						formlyVersion, employee, employeeService,
-						departmentService, roleService, employeeRoleService) {
-					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
+						departmentService, roleService, employeeRoleService, auth) {
+					var id = auth.user.principal.id;
 					$rootScope.title = 'Profile'
 					$rootScope.buttonText = 'Update';
 					$scope.departments = [];

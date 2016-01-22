@@ -13,7 +13,7 @@ public class MailUtils {
 			+ "3.For leave that is less than a full day, the leave should be approved by your Line Manager. For periods in excess of 1 day, the leave must be approved at Senior Management level.\n"
 			+ "4.Any employee who falsely or fraudulently requests leave to which he is provides false or fraudulent documents is subject to appropriate disciplinary action including cancel the leave request and employment termination.\n"
 			+ "5.After the leave request is approved and posted, it can still be changed by the employee. Employees will need to make the applicable changes and re-submit it for approval again.\n";
-	private final static String ATTENDANCE_SYSTEM_URL = "http://192.168.0.148:8080/attendence";
+	private final static String ATTENDANCE_SYSTEM_URL = "http://192.168.0.148:8080/attendance";
 
 	private MailUtils() {
 

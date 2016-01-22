@@ -25,7 +25,7 @@ public class AttendRecord extends AbstractEntity {
 
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -59,6 +59,9 @@ public class AttendRecord extends AbstractEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "attendRecord", cascade = CascadeType.REMOVE)
 	private Set<Event> events = new HashSet<Event>(0);
+
+	@Column(name = "eid")
+	private String eid;
 
 	public Long getId() {
 		return id;
@@ -138,6 +141,14 @@ public class AttendRecord extends AbstractEntity {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getEid() {
+		return eid;
+	}
+
+	public void setEid(String eid) {
+		this.eid = eid;
 	}
 
 }

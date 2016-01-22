@@ -22,7 +22,7 @@ public class Role extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(name = "name", unique = true, nullable = false, length = 20)
 	private String name;

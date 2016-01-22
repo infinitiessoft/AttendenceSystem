@@ -26,7 +26,6 @@
 						<th st-sort="startDate">start date</th>
 						<th st-sort="endDate">end date</th>
 						<th>duration</th>
-						<th></th>
 					</tr>
 					<tr>
 						<th></th>
@@ -35,25 +34,17 @@
 						<th><input st-search="startDate" /></th>
 						<th><input st-search="endDate" /></th>
 						<th></th>
-						<th></th>
 					</tr>
 				</thead>
 				<tbody ng-show="!isLoading">
-					<tr ng-repeat="row in displayed">
-						<td popover="reason: {{row.reason}}" popover-placement="top"
-							popover-trigger="click">{{row.id}}</td>
-						<td popover="reason: {{row.reason}}" popover-placement="top"
-							popover-trigger="click">{{row.type.name}}</td>
-						<td popover="reason: {{row.reason}}" popover-placement="top"
-							popover-trigger="click">{{row.status}}</td>
-						<td popover="reason: {{row.reason}}" popover-placement="top"
-							popover-trigger="click">{{row.startDate| date:'yyyy-MM-dd
-							HH:mm:ss' }}</td>
-						<td popover="reason: {{row.reason}}" popover-placement="top"
-							popover-trigger="click">{{row.endDate| date:'yyyy-MM-dd
-							HH:mm:ss' }}</td>
-						<td popover="reason: {{row.reason}}" popover-placement="top"
-							popover-trigger="click">{{row.duration}}</td>
+					<tr ng-repeat="row in displayed" popover="reason: {{row.reason}}"
+						popover-placement="top" popover-trigger="click">
+						<td>{{row.id}}</td>
+						<td>{{row.type.name}}</td>
+						<td>{{row.status}}</td>
+						<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
+						<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
+						<td>{{row.duration}}</td>
 						<td><a ui-sref="dashboard.edit-memberrecord({id:row.id})"
 							class="btn btn-sm btn-primary"
 							ng-show="{{row.status == 'pending'}}"> <i
