@@ -13,7 +13,7 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 							},
 							sort : {
 								predicate : 'id',
-								reverse : false
+								reverse : true
 							},
 							search : {
 								predicateObject : {}
@@ -98,8 +98,8 @@ angular.module('list-records', [ 'ngResource' ]).controller(
 					};
 
 					$scope.removeEntry = function(newsEntry) {
-						if (confirm("Are you sure to delete employee: "
-								+ newsEntry.name) == true) {
+						if (confirm("Are you sure to delete record: "
+								+ newsEntry.id) == true) {
 							$scope.isLoading = true;
 							recordService
 									.remove(newsEntry.id)

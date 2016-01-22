@@ -12,7 +12,7 @@ angular.module('list-memberrecords', [ 'ngResource','auth' ]).controller(
 							},
 							sort : {
 								predicate : 'id',
-								reverse : false
+								reverse : true
 							},
 							search : {
 								predicateObject : {}
@@ -57,6 +57,40 @@ angular.module('list-memberrecords', [ 'ngResource','auth' ]).controller(
 											tableState.pagination.numberOfPages = status.data.totalPages;
 											$scope.isLoading = false;
 										});
+					};
+					
+					$scope.removeEntry = function(newsEntry) {
+						if (confirm("Are you sure to delete record: "
+								+ newsEntry.id) == true) {
+							$scope.isLoading = true;
+							memberRecordService
+									.remove(newsEntry.id)
+									.then(
+											function(status) {
+												var pagination = lastState.pagination;
+												var start = pagination.start || 0;
+												var pageSize = pagination.number || 10;
+												var sort = lastState.sort.predicate;
+												var dir = lastState.sort.reverse ? 'DESC'
+														: 'ASC';
+												var page = (start / pageSize);
+												if (page < 0) {
+													page = 0;
+												}
+
+												var filters = queryParams(lastState);
+
+												memberRecordService
+														.list(filters)
+														.then(
+																function(
+																		status) {
+																	$scope.displayed = status.data.content;
+																	$scope.isLoading = false;
+																});
+											});
+
+						}
 					};
 				} ]).factory(
 						'memberRecordService',

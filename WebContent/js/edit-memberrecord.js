@@ -71,7 +71,7 @@ angular
 		.controller(
 				'edit-memberrecord',
 				function($rootScope, $scope, $stateParams, $state,
-						formlyVersion, record, recordtypeService, recordService) {
+						formlyVersion, record, recordtypeService, memberRecordService) {
 					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit AttendRecord'
 							: 'Add AttendRecord';
@@ -193,12 +193,12 @@ angular
 					function onSubmit() {
 						if (vm.form.$valid) {
 							if (id > 0) {
-								recordService.update(id, vm.model).then(
+								memberRecordService.update(id, vm.model).then(
 										function(status) {
 											$state.go('dashboard.list-memberrecords');
 										});
 							} else {
-								recordService.insert(vm.model).then(
+								memberRecordService.insert(vm.model).then(
 										function(status) {
 											$state.go('dashboard.list-memberrecords');
 										});

@@ -27,7 +27,7 @@
 				class="table table-striped" stExport>
 				<thead>
 					<tr>
-						<th st-sort="id">id</th>
+						<th st-sort="id" st-sort-default="reverse">id</th>
 						<th st-sort="employeeName">applicant</th>
 						<th st-sort="typeName">type</th>
 						<th st-sort="status">status</th>
@@ -56,7 +56,7 @@
 						<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.duration}}</td>
 						<td><a ui-sref="dashboard.edit-record({id:row.id})"
-							class="btn btn-sm btn-primary" ng-show="hasRole('admin')"> <i
+							class="btn btn-sm btn-primary"> <i
 								class="glyphicon glyphicon-pencil"> </i>
 						</a>
 							<button type="button" ng-click="removeEntry(row)"

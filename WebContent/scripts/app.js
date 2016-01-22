@@ -90,12 +90,16 @@ angular
     .state('dashboard.edit-memberrecord',{
         templateUrl:'partials/edit.html',
         controller: 'edit-memberrecord',
-        url:'/edit-memberrecord',
+        url:'/edit-memberrecord/:id',
 		resolve : {
 			record : function(
-					recordService,
+					memberRecordService,
 					$stateParams) {
+				var id = $stateParams.id;
+				if(id == 0){
 					return {data:{}};
+				}
+				return memberRecordService.get(id);
 			}
 		}
     })

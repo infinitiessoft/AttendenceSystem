@@ -14,7 +14,7 @@ angular
 								},
 								sort : {
 									predicate : 'id',
-									reverse : false
+									reverse : true
 								},
 								search : {
 									predicateObject : {}
