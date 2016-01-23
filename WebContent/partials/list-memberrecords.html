@@ -26,6 +26,7 @@
 						<th st-sort="startDate">start date</th>
 						<th st-sort="endDate">end date</th>
 						<th>duration</th>
+						<th>reason</th>
 					</tr>
 					<tr>
 						<th></th>
@@ -34,6 +35,7 @@
 						<th><input st-search="startDate" /></th>
 						<th><input st-search="endDate" /></th>
 						<th></th>
+						<th><input st-search="reason" /></th>
 					</tr>
 				</thead>
 				<tbody ng-show="!isLoading">
@@ -45,6 +47,7 @@
 						<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.duration}}</td>
+						<td>{{row.reason|limitTo:10}}</td>
 						<td><a ui-sref="dashboard.edit-memberrecord({id:row.id})"
 							class="btn btn-sm btn-primary"
 							ng-show="{{row.status == 'pending'}}"> <i

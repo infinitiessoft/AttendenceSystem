@@ -76,15 +76,13 @@ angular
 							});
 				}).controller(
 				'edit-employeeleave',
-				function($rootScope, $scope, $stateParams, $state,
+				function($rootScope, $scope, $stateParams, $state, $q,
 						formlyVersion, employeeleave, employeeleaveService,
 						employeeService, leavesettingService) {
 					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit Employeeleave'
 							: 'Add Employeeleave';
 					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
-					$scope.employees = [];
-					$scope.leavesettings = [];
 					var vm = this;
 					$scope.vm = vm;
 					vm.onSubmit = onSubmit;
@@ -100,46 +98,40 @@ angular
 					vm.model = employeeleave.data;
 					vm.confirmationModel = {};
 
-					employeeService.list().then(function(status) {
-						var deps = status.data.content;
-						angular.forEach(deps, function(dep) {
-							$scope.employees.push({
-								name : dep.name,
-								value : dep.id
-							});
-						});
-					});
-
-					leavesettingService.list().then(function(status) {
-						var deps = status.data.content;
-						angular.forEach(deps, function(dep) {
-							$scope.leavesettings.push({
-								name : dep.name,
-								value : dep.id
-							});
-						});
-					});
-
 					vm.fields = [ {
 						key : 'employee',
 						fieldGroup : [ {
 							key : 'id',
-							type : 'select',
+							type: 'ui-select-single-search',
 							templateOptions : {
+								optionsAttr: 'bs-options',
+								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
+								valueProp: 'id',
+						        labelProp: 'name',
+						        placeholder: 'Search',
+						        options: [],
+						        refresh: refreshEmployees,
+						        refreshDelay: 0,
 								required : true,
-								label : 'Employee',
-								options : $scope.employees
+								label : 'Response To'
 							}
-						} ]
+						} ],
 					}, {
 						key : 'leavesetting',
 						fieldGroup : [ {
 							key : 'id',
-							type : 'select',
+							type: 'ui-select-single-search',
 							templateOptions : {
+								optionsAttr: 'bs-options',
+								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
+								valueProp: 'id',
+						        labelProp: 'name',
+						        placeholder: 'Search',
+						        options: [],
+						        refresh: refreshLeavesettings,
+						        refreshDelay: 0,
 								required : true,
-								label : 'Leavesetting',
-								options : $scope.leavesettings
+								label : 'Leavesetting'
 							}
 						} ]
 					}, {
@@ -152,6 +144,41 @@ angular
 							required : true
 						}
 					} ];
+					
+					function refreshEmployees(name, field) {
+					      var promise;
+					      if (!name) {
+					    	  if(id != 0){
+					    		  promise = $q.when({data: {content: [employeeleave.data.employee]}});
+					    	  }else{
+					    		  promise = employeeService.list({});
+					    	  }
+					      } else {
+					        var params = {name: name};
+					        promise = employeeService.list(params);
+					      }
+					      return promise.then(function(response) {
+					        field.templateOptions.options = response.data.content;
+					      });
+					 }
+					
+					function refreshLeavesettings(name, field) {
+					      var promise;
+					      if (!name) {
+					    	  if(id != 0){
+					    		  promise = $q.when({data: {content: [employeeleave.data.leavesetting]}});
+					    	  }else{
+					    		  promise = leavesettingService.list({});
+					    	  }
+					      } else {
+					        var params = {name: name};
+					        promise = leavesettingService.list(params);
+					      }
+					      return promise.then(function(response) {
+					        field.templateOptions.options = response.data.content;
+					      });
+					 }
+					
 					function onSubmit() {
 						console.log("Id : " + id);
 						if (id > 0) {

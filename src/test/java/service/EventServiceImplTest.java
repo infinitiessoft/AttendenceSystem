@@ -20,7 +20,7 @@ import resources.specification.SimplePageRequest;
 import service.impl.EventServiceImpl;
 import transfer.AttendRecordTransfer;
 import transfer.EventTransfer;
-import util.MailUtils;
+import util.MailWritter;
 import dao.EmployeeDao;
 import dao.EventDao;
 import entity.AttendRecord;
@@ -34,6 +34,7 @@ public class EventServiceImplTest extends ServiceTest {
 	private AttendRecordService attendRecordService;
 	private EmployeeDao employeeDao;
 	private MailService mailService;
+	private MailWritter writter;
 	private EventServiceImpl eventService;
 
 	private Event event;
@@ -44,12 +45,13 @@ public class EventServiceImplTest extends ServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		writter = context.mock(MailWritter.class);
 		eventDao = context.mock(EventDao.class);
 		attendRecordService = context.mock(AttendRecordService.class);
 		employeeDao = context.mock(EmployeeDao.class);
 		mailService = context.mock(MailService.class);
 		eventService = new EventServiceImpl(eventDao, attendRecordService,
-				employeeDao, mailService);
+				employeeDao, mailService, writter);
 
 		approver = new Employee();
 		approver.setId(2L);
@@ -127,8 +129,6 @@ public class EventServiceImplTest extends ServiceTest {
 		recordTransfer.setId(this.record.getId());
 		newEntry.setApprover(approverTransfer);
 		newEntry.setRecord(recordTransfer);
-		final String subject = MailUtils.buildSubject(record);
-		final String body = MailUtils.buildBody(record);
 
 		final AttendRecordTransfer transfer = AttendRecordTransfer
 				.toAttendRecordTransfer(record);
@@ -142,8 +142,14 @@ public class EventServiceImplTest extends ServiceTest {
 				will(returnValue(employee));
 				exactly(1).of(eventDao).save(with(any(Event.class)));
 				will(returnValue(event));
+				exactly(1).of(writter).buildBody(record);
+				will(returnValue("body"));
+
+				exactly(1).of(writter).buildSubject(record);
+				will(returnValue("subject"));
+
 				exactly(1).of(mailService).sendMail(approver.getEmail(),
-						subject, body);
+						"subject", "body");
 			}
 		});
 		EventTransfer ret = eventService.save(newEntry);

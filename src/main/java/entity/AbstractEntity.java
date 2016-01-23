@@ -2,8 +2,10 @@ package entity;
 
 import java.io.Serializable;
 
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
+@MappedSuperclass
 public class AbstractEntity implements Serializable {
 
 	/**

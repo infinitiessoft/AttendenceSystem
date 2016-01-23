@@ -24,6 +24,7 @@
 						<th st-sort="username">username</th>
 						<th st-sort="gender">gender</th>
 						<th st-sort="departmentName">department</th>
+						<th st-sort="employeeName">responseTo</th>
 						<th st-sort="dateOfJoined">dateOfJoined</th>
 					</tr>
 					<tr>
@@ -32,6 +33,7 @@
 						<th><input st-search="username" /></th>
 						<th><input st-search="gender" /></th>
 						<th><input st-search="departmentName" /></th>
+						<th><input st-search="employeeName" /></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -42,6 +44,7 @@
 						<td>{{row.username}}</td>
 						<td>{{row.gender}}</td>
 						<td>{{row.department.name}}</td>
+						<td>{{row.employee.name}}</td>
 						<td>{{row.dateOfJoined}}</td>
 						<td><a ui-sref="dashboard.edit-employee({id:row.id})"
 							class="btn btn-sm btn-primary"> <i

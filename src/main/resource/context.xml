@@ -21,6 +21,11 @@
 	<task:annotation-driven executor="executor" />
 	<task:executor id="executor" pool-size="1" />
 
+	<bean id="properties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="WEB-INF/system.properties" />
+	</bean>
+
 	<!-- retry advice for external service call -->
 	<bean id="mailRetryAdvice"
 		class="org.springframework.retry.interceptor.RetryOperationsInterceptor">
@@ -92,10 +97,10 @@
 
 	<!-- SET default mail properties -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.gmail.com" />
-		<property name="port" value="25" />
-		<property name="username" value="attendance@infinitiessoft.com" />
-		<property name="password" value="attendance0123" />
+		<property name="host" value="${smtp.host}" />
+		<property name="port" value="${smtp.port}" />
+		<property name="username" value="${smtp.username}" />
+		<property name="password" value="${smtp.password}" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.transport.protocol">smtp</prop>
@@ -104,6 +109,12 @@
 				<prop key="mail.debug">true</prop>
 			</props>
 		</property>
+	</bean>
+
+	<bean id="mailWritter" class="util.MailWritterImpl">
+		<property name="header" value="${mail.header}" />
+		<property name="footer" value="${mail.footer}" />
+		<property name="systemUrl" value="${mail.footer}" />
 	</bean>
 
 	<bean id="mailService" class="service.impl.MailServiceImpl">
@@ -126,8 +137,7 @@
 		<property name="username" value="postgres" />
 		<property name="password" value="2ggudoou" />
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url"
-			value="jdbc:postgresql://localhost:5432/demo" />
+		<property name="url" value="jdbc:postgresql://localhost:5432/demo2" />
 	</bean>
 
 
@@ -144,7 +154,7 @@
 		</property>
 		<property name="jpaProperties">
 			<props>
-				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
 			</props>
 		</property>
 	</bean>
@@ -156,6 +166,11 @@
 	<jpa:repositories base-package="dao" />
 
 	<bean id="calendarService" class="service.impl.CalendarEventServiceImpl">
+		<property name="applicationName" value="${google.calendar.application.name}" />
+		<property name="calendarId" value="${google.calendar.id}" />
+		<property name="serviceAccountEmail" value="${google.calendar.service.account.email}" />
+		<property name="serviceAccountUser" value="${google.calendar.account.user}" />
+		<property name="serviceAccountPrivateKeyFromP12File" value="${google.calendar.service.account.p12}" />
 	</bean>
 
 	<aop:config>
@@ -195,6 +210,7 @@
 		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="eventDao" />
 		<constructor-arg ref="mailService" />
+		<constructor-arg ref="mailWritter" />
 		<constructor-arg ref="calendarService" />
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="employeeLeaveDao" />
@@ -216,6 +232,7 @@
 		<constructor-arg ref="attendRecordService" />
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="mailService" />
+		<constructor-arg ref="mailWritter" />
 	</bean>
 
 
@@ -241,17 +258,26 @@
 		<property name="headerName" value="X-XSRF-TOKEN" />
 	</bean>
 
-	<bean id="dataBaseInitializer" class="dao.DataBaseInitializer"
-		init-method="initDataBase">
-		<constructor-arg ref="employeeDao" />
-		<constructor-arg ref="roleDao" />
-		<constructor-arg ref="departmentDao" />
-		<constructor-arg ref="attendRecordTypeDao" />
-		<constructor-arg ref="employeeRoleDao" />
-		<constructor-arg ref="leavesettingDao" />
-		<constructor-arg ref="attendRecordDao" />
-		<constructor-arg ref="employeeLeaveDao" />
-		<constructor-arg ref="passwordEncoder" />
+	<bean id="entryPoint"
+		class="org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint">
+		<constructor-arg>
+			<map>
+				<entry key="hasHeader('X-Requested-With','XMLHttpRequest')"
+					value-ref="ajaxEntyPoint" />
+			</map>
+		</constructor-arg>
+		<property name="defaultEntryPoint" ref="defaultEntryPoint" />
+	</bean>
+
+	<bean id="ajaxEntyPoint"
+		class="org.springframework.security.web.authentication.HttpStatusEntryPoint">
+		<constructor-arg name="httpStatus"
+			value="#{T(org.springframework.http.HttpStatus).UNAUTHORIZED}" />
+	</bean>
+
+	<bean id="defaultEntryPoint"
+		class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+		<property name="realmName" value="Protected API" />
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">
@@ -272,8 +298,8 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/login"
 			access="permitAll" />
-		<security:intercept-url pattern="/rest/auth"
-			access="permitAll" />
+		<security:intercept-url method="GET"
+			pattern="/rest/v1.0/auth" access="permitAll" />
 		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
 			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 
@@ -282,7 +308,7 @@
 		<security:csrf token-repository-ref="csrfTokenRepository" />
 		<security:custom-filter ref="csrfHeaderFilter"
 			after="CSRF_FILTER" />
-		<security:http-basic />
+		<security:http-basic entry-point-ref="entryPoint" />
 		<security:logout />
 	</security:http>
 

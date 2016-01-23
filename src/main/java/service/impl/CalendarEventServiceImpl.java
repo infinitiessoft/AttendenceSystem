@@ -33,9 +33,11 @@ public class CalendarEventServiceImpl implements CalendarEventService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(CalendarEventServiceImpl.class);
 	/** Application name. */
-	private static final String APPLICATION_NAME = "Attendance System2.0 with Google Calendar API";
-
-	private static final String SERVICE_ACCOUNT_EMAIL = "attendance@attendance-1183.iam.gserviceaccount.com";
+	private String applicationName;
+	private String calendarId;
+	private String serviceAccountEmail;
+	private String serviceAccountUser;
+	private String serviceAccountPrivateKeyFromP12File;
 
 	/** Directory to store user credentials for this application. */
 	// private static final java.io.File DATA_STORE_DIR = new java.io.File(
@@ -63,15 +65,6 @@ public class CalendarEventServiceImpl implements CalendarEventService {
 			logger.warn("fail to access google calendar", t);
 		}
 	}
-	private final String calendarId;
-
-	public CalendarEventServiceImpl(String calendarId) {
-		this.calendarId = calendarId;
-	}
-
-	public CalendarEventServiceImpl() {
-		this("attendance@infinitiessoft.com");
-	}
 
 	/**
 	 * Creates an authorized Credential object.
@@ -82,17 +75,14 @@ public class CalendarEventServiceImpl implements CalendarEventService {
 	 */
 	private Credential authorize() throws GeneralSecurityException, IOException {
 		// Load client secrets.
-
 		GoogleCredential credential = new GoogleCredential.Builder()
 				.setTransport(HTTP_TRANSPORT)
 				.setJsonFactory(JSON_FACTORY)
-				.setServiceAccountUser("attendance@infinitiessoft.com")
-				.setServiceAccountId(SERVICE_ACCOUNT_EMAIL)
+				.setServiceAccountUser(serviceAccountUser)
+				.setServiceAccountId(serviceAccountEmail)
 				.setServiceAccountScopes(SCOPES)
 				.setServiceAccountPrivateKeyFromP12File(
-						new File(
-								"/Users/pohsun/Documents/workspace/attendance2.0/AttendenceSystem/src/main/resource/attendance-174d40e80c26.p12"))
-				.build();
+						new File(serviceAccountPrivateKeyFromP12File)).build();
 		credential.refreshToken();
 		return credential;
 	}
@@ -109,7 +99,7 @@ public class CalendarEventServiceImpl implements CalendarEventService {
 		Credential credential = authorize();
 		return new com.google.api.services.calendar.Calendar.Builder(
 				HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-				APPLICATION_NAME).build();
+				applicationName).build();
 	}
 
 	/*
@@ -195,4 +185,46 @@ public class CalendarEventServiceImpl implements CalendarEventService {
 					"calendar api authentication error", e);
 		}
 	}
+
+	public String getApplicationName() {
+		return applicationName;
+	}
+
+	public void setApplicationName(String applicationName) {
+		this.applicationName = applicationName;
+	}
+
+	public String getCalendarId() {
+		return calendarId;
+	}
+
+	public void setCalendarId(String calendarId) {
+		this.calendarId = calendarId;
+	}
+
+	public String getServiceAccountEmail() {
+		return serviceAccountEmail;
+	}
+
+	public void setServiceAccountEmail(String serviceAccountEmail) {
+		this.serviceAccountEmail = serviceAccountEmail;
+	}
+
+	public String getServiceAccountUser() {
+		return serviceAccountUser;
+	}
+
+	public void setServiceAccountUser(String serviceAccountUser) {
+		this.serviceAccountUser = serviceAccountUser;
+	}
+
+	public String getServiceAccountPrivateKeyFromP12File() {
+		return serviceAccountPrivateKeyFromP12File;
+	}
+
+	public void setServiceAccountPrivateKeyFromP12File(
+			String serviceAccountPrivateKeyFromP12File) {
+		this.serviceAccountPrivateKeyFromP12File = serviceAccountPrivateKeyFromP12File;
+	}
+
 }

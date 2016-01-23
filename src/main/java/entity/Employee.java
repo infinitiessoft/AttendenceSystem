@@ -215,4 +215,10 @@ public class Employee extends AbstractEntity {
 		this.employeeLeaves = employeeLeaves;
 	}
 
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", username="
+				+ username + ", email=" + email + "]";
+	}
+
 }

@@ -29,7 +29,7 @@
 					</tr>
 				</thead>
 				<tbody ng-show="!isLoading">
-					<tr ng-repeat="row in displayed">
+					<tr ng-repeat="row in displayed"  popover="reason: {{row.record.reason}}" popover-placement="top" popover-trigger="click">
 						<td>{{row.id}}</td>
 						<td>{{row.record.employee.name}}</td>
 						<td>{{row.record.type.name}}</td>
@@ -42,7 +42,7 @@
 								<i class="glyphicon glyphicon-ok"> </i>
 							</button>
 							<button type="button" ng-click="reject(row)"
-								class="btn btn-sm btn-danger" ng-show="!row.action">
+								class="btn btn-sm btn-warning" ng-show="!row.action">
 								<i class="glyphicon glyphicon-remove"> </i>
 							</button></td>
 					</tr>

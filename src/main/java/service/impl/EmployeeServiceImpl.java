@@ -28,6 +28,8 @@ import exceptions.RemovingIntegrityViolationException;
  */
 public class EmployeeServiceImpl implements EmployeeService {
 
+	// private static final Logger logger =
+	// LoggerFactory.getLogger(EmployeeServiceImpl.class);
 	private EmployeeDao employeeDao;
 	private DepartmentDao departmentDao;
 	private PasswordEncoder passwordEncoder;
@@ -39,6 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
+	@Transactional
 	@Override
 	public EmployeeTransfer retrieve(long id) {
 		Employee employee = employeeDao.findOne(id);
@@ -67,6 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 	}
 
+	@Transactional
 	@Override
 	public EmployeeTransfer save(EmployeeTransfer employee) {
 		employee.setId(null);
@@ -110,8 +114,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 				newEntry.setDepartment(department);
 			}
 		}
+		if (transfer.isEmployeeSet()) {
+			if (transfer.getEmployee().isIdSet()) {
+				entity.Employee emp = employeeDao.findOne(transfer
+						.getEmployee().getId());
+				if (emp == null) {
+					throw new EmployeeNotFoundException(transfer.getEmployee()
+							.getId());
+				}
+				newEntry.setEmployee(emp);
+			}
+		}
 	}
 
+	@Transactional
 	@Override
 	public EmployeeTransfer update(long id, EmployeeTransfer updated) {
 		Employee employee = employeeDao.findOne(id);
@@ -122,6 +138,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return toEmployeeTransfer(employeeDao.save(employee));
 	}
 
+	@Transactional
 	@Override
 	public Page<EmployeeTransfer> findAll(EmployeeSpecification spec,
 			Pageable pageable) {
@@ -148,9 +165,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 		dep.setId(employee.getDepartment().getId());
 		dep.setName(employee.getDepartment().getName());
 		ret.setDepartment(dep);
+		if (employee.getEmployee() != null) {
+			EmployeeTransfer.Employee emp = new EmployeeTransfer.Employee();
+			emp.setId(employee.getEmployee().getId());
+			emp.setName(employee.getEmployee().getName());
+			ret.setEmployee(emp);
+		}
+
 		return ret;
 	}
 
+	@Transactional
 	@Override
 	public EmployeeTransfer findByUsername(String username) {
 		return toEmployeeTransfer(employeeDao.findByUsername(username));

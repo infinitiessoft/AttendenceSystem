@@ -24,7 +24,7 @@ import transfer.AttendRecordReport;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
 import util.CalendarUtils;
-import util.MailUtils;
+import util.MailWritter;
 
 import com.google.api.services.calendar.model.Event;
 import com.google.common.base.Preconditions;
@@ -61,13 +61,14 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 	private EmployeeDao employeeDao;
 	private EventDao eventDao;
 	private MailService mailService;
+	private MailWritter writter;
 	private CalendarEventService calendarEventService;
 	private LeavesettingDao leavesettingDao;
 	private EmployeeLeaveDao employeeLeaveDao;
 
 	public AttendRecordServiceImpl(AttendRecordDao attendRecordDao,
 			AttendRecordTypeDao attendRecordTypeDao, EmployeeDao employeeDao,
-			EventDao eventDao, MailService mailService,
+			EventDao eventDao, MailService mailService, MailWritter writter,
 			CalendarEventService calendarEventService,
 			LeavesettingDao leavesettingDao, EmployeeLeaveDao employeeLeaveDao) {
 		this.attendRecordDao = attendRecordDao;
@@ -78,6 +79,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		this.calendarEventService = calendarEventService;
 		this.leavesettingDao = leavesettingDao;
 		this.employeeLeaveDao = employeeLeaveDao;
+		this.writter = writter;
 	}
 
 	@Transactional
@@ -134,6 +136,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		newEntry.setBookDate(new Date());
 		newEntry.setStatus(Status.pending.name());
 		Employee applicant = newEntry.getEmployee();
+		logger.debug("applicant:{}", applicant);
 		assertStartDateAfterJoinDate(newEntry.getStartDate(),
 				applicant.getDateofjoined());
 		assetEndDateAfterStartDate(newEntry.getStartDate(),
@@ -148,6 +151,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		// event else it being permit automatically
 		Employee approver = applicant.getEmployee();
 		if (approver != null) {
+			logger.debug("approver exist:{}", approver);
 			newEntry = attendRecordDao.save(newEntry);
 			entity.Event event = new entity.Event();
 
@@ -155,14 +159,15 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			event.setAttendRecord(newEntry);
 			event = eventDao.save(event);
 			try {
-				String subject = MailUtils.buildSubject(newEntry);
-				String body = MailUtils.buildBody(newEntry);
+				String subject = writter.buildSubject(newEntry);
+				String body = writter.buildBody(newEntry);
 				mailService.sendMail(approver.getEmail(), subject, body);
 			} catch (Throwable t) {
 				logger.warn("send mail failed, ignore", t);
 			}
 
 		} else {
+			logger.debug("approver not exist");
 			newEntry.setStatus(Status.permit.name());
 			newEntry = attendRecordDao.save(newEntry);
 			Event event = CalendarUtils.toEvent(newEntry);

@@ -20,6 +20,7 @@ import resources.specification.CalendarEventSpecification;
 import resources.specification.SimplePageRequest;
 import service.impl.AttendRecordServiceImpl;
 import transfer.AttendRecordTransfer;
+import util.MailWritter;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -52,6 +53,7 @@ public class AttendRecordServiceImplTest extends ServiceTest {
 	private AttendRecordTypeDao attendRecordTypeDao;
 	private EmployeeDao employeeDao;
 	private EventDao eventDao;
+	private MailWritter writter;
 	private MailService mailService;
 	private CalendarEventService calendarEventService;
 	private LeavesettingDao leavesettingDao;
@@ -62,6 +64,7 @@ public class AttendRecordServiceImplTest extends ServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		writter = context.mock(MailWritter.class);
 		leavesettingDao = context.mock(LeavesettingDao.class);
 		employeeLeaveDao = context.mock(EmployeeLeaveDao.class);
 		attendRecordTypeDao = context.mock(AttendRecordTypeDao.class);
@@ -70,9 +73,11 @@ public class AttendRecordServiceImplTest extends ServiceTest {
 		employeeDao = context.mock(EmployeeDao.class);
 		mailService = context.mock(MailService.class);
 		eventDao = context.mock(EventDao.class);
+
 		attendrecordService = new AttendRecordServiceImpl(attendRecordDao,
 				attendRecordTypeDao, employeeDao, eventDao, mailService,
-				calendarEventService, leavesettingDao, employeeLeaveDao);
+				writter, calendarEventService, leavesettingDao,
+				employeeLeaveDao);
 
 		Calendar dateofjoinedC = Calendar.getInstance();
 		dateofjoinedC.set(2015, 1, 1, 0, 0, 0);
@@ -329,6 +334,12 @@ public class AttendRecordServiceImplTest extends ServiceTest {
 
 				exactly(1).of(eventDao).save(with(any(entity.Event.class)));
 				will(returnValue(event));
+
+				exactly(1).of(writter).buildBody(record);
+				will(returnValue("body"));
+				
+				exactly(1).of(writter).buildSubject(record);
+				will(returnValue("header"));
 
 				exactly(1).of(mailService).sendMail(with(any(String.class)),
 						with(any(String.class)), with(any(String.class)));

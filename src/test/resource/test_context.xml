@@ -21,10 +21,20 @@
 	<task:annotation-driven executor="executor" />
 	<task:executor id="executor" pool-size="1" />
 
+	<bean id="properties"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:system.properties" />
+	</bean>
 
 	<!-- SET default mail properties -->
 
 	<bean id="mailService" class="mock.MockMailService">
+	</bean>
+
+	<bean id="mailWritter" class="util.MailWritterImpl">
+		<property name="header" value="${mail.header}" />
+		<property name="footer" value="${mail.footer}" />
+		<property name="systemUrl" value="${mail.footer}" />
 	</bean>
 
 
@@ -97,6 +107,7 @@
 		<constructor-arg ref="attendRecordTypeDao" />
 		<constructor-arg ref="eventDao" />
 		<constructor-arg ref="mailService" />
+		<constructor-arg ref="mailWritter" />
 		<constructor-arg ref="calendarService" />
 		<constructor-arg ref="leavesettingDao" />
 		<constructor-arg ref="employeeLeaveDao" />
@@ -118,6 +129,7 @@
 		<constructor-arg ref="attendRecordService" />
 		<constructor-arg ref="employeeDao" />
 		<constructor-arg ref="mailService" />
+		<constructor-arg ref="mailWritter" />
 	</bean>
 
 
@@ -135,12 +147,7 @@
 	<bean id="passwordEncoder" class="security.SHA1PasswordEncoder">
 	</bean>
 
-	<bean id="csrfHeaderFilter" class="security.CsrfHeaderFilter">
-	</bean>
-
-	<bean id="csrfTokenRepository"
-		class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository">
-		<property name="headerName" value="X-XSRF-TOKEN" />
+	<bean id="mockUserHeaderFilter" class="resources.MockUserHeaderFilter">
 	</bean>
 
 	<security:authentication-manager id="authenticationManager">
@@ -161,16 +168,14 @@
 			access="permitAll" />
 		<security:intercept-url pattern="/login"
 			access="permitAll" />
-		<security:intercept-url pattern="/rest/auth"
-			access="permitAll" />
 		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
 			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> <security:intercept-url method="DELETE" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> -->
-		<security:csrf token-repository-ref="csrfTokenRepository" />
-		<security:custom-filter ref="csrfHeaderFilter"
-			after="CSRF_FILTER" />
+		<security:csrf disabled="true" />
+		<security:custom-filter ref="mockUserHeaderFilter"
+			after="SECURITY_CONTEXT_FILTER" />
 		<security:http-basic />
 		<security:logout />
 	</security:http>

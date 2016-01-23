@@ -32,7 +32,7 @@ angular
 									: {};
 
 							$http
-									.get('rest/auth', {
+									.get('rest/v1.0/auth', {
 										headers : headers
 									})
 									.success(
@@ -65,28 +65,14 @@ angular
 							$location.path(auth.loginPath);
 							auth.authenticated = false;
 							auth.user = {};
-							$http
-									.get('rest/auth')
-									.then(
-											function(data) {
-												$http
-														.post(auth.logoutPath,
-																{})
-														.success(
-																function() {
-																	console
-																			.log("Logout succeeded");
-																	$location
-																			.path(auth.loginPath);
-																})
-														.error(
-																function(data) {
-																	console
-																			.log("Logout failed");
-																	$location
-																			.path(auth.loginPath);
-																});
-											});
+							$http.post(auth.logoutPath, {}).success(function() {
+								console.log("Logout succeeded");
+								$location.path(auth.loginPath);
+							}).error(function(data) {
+								console.log("Logout failed");
+								$location.path(auth.loginPath);
+							});
+
 						},
 
 						init : function(homePath, loginPath, logoutPath) {

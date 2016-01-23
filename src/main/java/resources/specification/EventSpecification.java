@@ -12,6 +12,8 @@ import javax.ws.rs.QueryParam;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import util.DateUtils;
+
 import com.google.common.base.Strings;
 
 import entity.AttendRecord;
@@ -30,15 +32,15 @@ public class EventSpecification implements Specification<Event> {
 	@QueryParam("approverId")
 	private Long approverId;
 	@QueryParam("bookDate")
-	private Date bookDate;
+	private String bookDate;
 	@QueryParam("recordTypeName")
 	private String recordTypeName;
 	@QueryParam("action")
 	private String action;
 	@QueryParam("recordStartDate")
-	private Date recordStartDate;
+	private String recordStartDate;
 	@QueryParam("recordEndDate")
-	private Date recordEndDate;
+	private String recordEndDate;
 
 	private Long id;
 
@@ -56,18 +58,28 @@ public class EventSpecification implements Specification<Event> {
 					+ "%"));
 		}
 		if (bookDate != null) {
-			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("bookDate"),
-					bookDate));
+			Date date = DateUtils.parseString(bookDate);
+			if (date != null) {
+				predicates.add(cb.greaterThanOrEqualTo(
+						root.<Date> get("bookDate"), date));
+			}
 		}
 		if (recordStartDate != null) {
-			predicates.add(cb.greaterThanOrEqualTo(
-					root.<AttendRecord> get("attendRecord").<Date> get(
-							"startDate"), recordStartDate));
+			Date date = DateUtils.parseString(recordStartDate);
+			if (date != null) {
+				predicates.add(cb.greaterThanOrEqualTo(
+						root.<AttendRecord> get("attendRecord").<Date> get(
+								"startDate"), date));
+			}
 		}
 		if (recordEndDate != null) {
-			predicates.add(cb.lessThanOrEqualTo(
-					root.<AttendRecord> get("attendRecord").<Date> get(
-							"endDate"), recordEndDate));
+			Date date = DateUtils.parseString(recordEndDate);
+			if (date != null) {
+				predicates.add(cb.lessThanOrEqualTo(
+						root.<AttendRecord> get("attendRecord").<Date> get(
+								"endDate"), date));
+			}
+
 		}
 
 		if (approverId != null) {
@@ -108,14 +120,6 @@ public class EventSpecification implements Specification<Event> {
 
 	public void setApplicantId(Long applicantId) {
 		this.applicantId = applicantId;
-	}
-
-	public Date getBookDate() {
-		return bookDate;
-	}
-
-	public void setBookDate(Date bookDate) {
-		this.bookDate = bookDate;
 	}
 
 	public String getApplicantName() {
@@ -164,6 +168,30 @@ public class EventSpecification implements Specification<Event> {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getBookDate() {
+		return bookDate;
+	}
+
+	public void setBookDate(String bookDate) {
+		this.bookDate = bookDate;
+	}
+
+	public String getRecordStartDate() {
+		return recordStartDate;
+	}
+
+	public void setRecordStartDate(String recordStartDate) {
+		this.recordStartDate = recordStartDate;
+	}
+
+	public String getRecordEndDate() {
+		return recordEndDate;
+	}
+
+	public void setRecordEndDate(String recordEndDate) {
+		this.recordEndDate = recordEndDate;
 	}
 
 }

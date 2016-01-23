@@ -77,12 +77,11 @@ angular
 				}).controller(
 				'edit-profile',
 				function($rootScope, $scope, $stateParams, $state,
-						formlyVersion, employee, employeeService,
-						departmentService, roleService, employeeRoleService, auth) {
+						formlyVersion, employee, memberService,
+						memberDepartmentService, auth) {
 					var id = auth.user.principal.id;
 					$rootScope.title = 'Profile'
 					$rootScope.buttonText = 'Update';
-					$scope.departments = [];
 					var vm = this;
 					$scope.vm = vm;
 					vm.onSubmit = onSubmit;
@@ -97,16 +96,6 @@ angular
 
 					vm.model = employee.data;
 					vm.confirmationModel = {};
-
-					departmentService.list().then(function(status) {
-						var deps = status.data.content;
-						angular.forEach(deps, function(dep) {
-							$scope.departments.push({
-								name : dep.name,
-								value : dep.id
-							});
-						});
-					});
 
 					vm.fields = [ {
 						key : 'name',
@@ -178,11 +167,82 @@ angular
 					} ];
 					function onSubmit() {
 						if (vm.form.$valid) {
-							employeeService.update(id, vm.model).then(
+							memberService.update(id, vm.model).then(
 									function(status) {
 										$state.go('dashboard.home');
 									});
 						}
 					}
 
-				});
+				})
+				.factory(
+						'memberService',
+						[
+								'$http',
+								function($http) {
+									var serviceBase = 'rest/v1.0/employees/';
+									var obj = {};
+									obj.list = function(queries) {
+										return $http.get(serviceBase, {params:queries});
+									};
+
+									obj.get = function(id) {
+										return $http.get(serviceBase  + id);
+									};
+
+									obj.insert = function(employee) {
+										return $http.post(serviceBase, employee);
+									};
+
+									obj.update = function(id, employee) {
+										return $http.put(serviceBase  + id,
+												employee).then(function(results) {
+											return results;
+										});
+									};
+									
+									obj.remove = function(id) {
+										return $http.delete(serviceBase + id).then(function(status) {
+											return status;
+										});
+									};
+
+									return obj;
+								} ])
+								.factory(
+								'memberDepartmentService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/v1.0/departments/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											};
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											};
+
+											obj.insert = function(department) {
+												return $http.post(serviceBase, department).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, department) {
+												return $http.put(serviceBase  + id,
+														department).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ]);

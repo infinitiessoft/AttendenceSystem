@@ -12,11 +12,11 @@ angular
     'oc.lazyLoad',
     'ui.router',
     'ui.bootstrap',
-    'angular-loading-bar', 'ngCookies', 'formly', 'formlyBootstrap', 'ui.bootstrap',
+    'angular-loading-bar', 'ngCookies', 'formly', 'formlyBootstrap', 'ui.bootstrap','ui.select', 'ngSanitize',
 	'smart-table', 'auth',  'navigation','list-employees', 'edit-employee','edit-profile', 'list-departments', 'edit-department' ,'list-roles', 'edit-role' ,'list-recordtypes', 'edit-recordtype' ,'list-records','edit-record' ,'list-leavesettings' ,'edit-leavesetting' ,'list-employeeleaves' ,'edit-employeeleave','list-events','list-memberrecords','edit-memberrecord','list-memberevents'
   ])
   .config(['$stateProvider','$urlRouterProvider','$ocLazyLoadProvider','$httpProvider',
-			'formlyConfigProvider',function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider,$httpProvider,formlyConfigProvider) {
+			'formlyConfigProvider', function ($stateProvider,$urlRouterProvider,$ocLazyLoadProvider,$httpProvider, formlyConfigProvider) {
     
     $ocLazyLoadProvider.config({
       debug:false,
@@ -273,33 +273,33 @@ angular
 	 * failed requests or redirects to login page on
 	 * unauthenticated requests
 	 */
-	$httpProvider.interceptors.push(function($q,
-			$rootScope) {
-		return {
-			'responseError' : function(rejection) {
-				var data = rejection.data;
-				var status = rejection.status;
-				var config = rejection.config;
-				var method = config.method;
-				var url = config.url;
-				if (status == 401) {
-					$state.go("login");
-				} else {
-					$rootScope.error = method + " on "
-							+ url
-							+ " failed with status "
-							+ status+", message: "+JSON.stringify(data);
-				}
+	$httpProvider.interceptors.push('authHttpResponseInterceptor');
 
+	} ])
+.factory('authHttpResponseInterceptor',['$q','$location',function($q, $location) {
+		return {
+			response : function(response) {
+				if (response.status === 401) {
+					console.log("Response 401");
+				}
+				return response || $q.when(response);
+			},
+			responseError : function(rejection) {
+				if (rejection.status === 401) {
+					console.log("Response Error 401",
+							rejection);
+					$location.path('/login').search(
+							'returnTo', $location.path());
+				}
 				return $q.reject(rejection);
 			}
-		};
-
-	});
-    
-  }]).run(
+		}
+	} ])
+	.run(
 			function($rootScope, $location, $cookieStore, $http,
 					 auth, formlyConfig, formlyValidationMessages) {
+				
+				formlyConfig.extras.removeChromeAutoComplete = true;
 				
 				formlyConfig.extras.errorExistsAndShouldBeVisibleExpression = 'fc.$touched || form.$submitted';
 
@@ -362,6 +362,12 @@ angular
 						bound : binding
 					};
 				});
+				
+				formlyConfig.setType({
+				      name: 'ui-select-single-search',
+				      extends: 'select',
+				      templateUrl: 'ui-select-single-async-search.html'
+				    });
 
 				formlyConfig.setType({
 					name : 'datepicker',

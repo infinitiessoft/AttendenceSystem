@@ -1,7 +1,5 @@
 package entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +14,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "employee_role", uniqueConstraints = @UniqueConstraint(columnNames = {
 		"role_id", "employee_id" }))
-public class EmployeeRole implements Serializable {
+public class EmployeeRole extends AbstractEntity {
 	private static final long serialVersionUID = 7711505597348200997L;
 
 	@Id

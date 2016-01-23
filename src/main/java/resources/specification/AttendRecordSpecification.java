@@ -12,6 +12,8 @@ import javax.ws.rs.QueryParam;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import util.DateUtils;
+
 import com.google.common.base.Strings;
 
 import entity.AttendRecord;
@@ -25,15 +27,17 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 	@QueryParam("applicantId")
 	private Long applicantId;
 	@QueryParam("endDate")
-	private Date endDate;
+	private String endDate;
 	@QueryParam("bookDate")
-	private Date bookDate;
+	private String bookDate;
 	@QueryParam("startDate")
-	private Date startDate;
+	private String startDate;
 	@QueryParam("typeName")
 	private String typeName;
 	@QueryParam("status")
 	private String status;
+	@QueryParam("reason")
+	private String reason;
 
 	private Long id;
 
@@ -49,17 +53,30 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 			predicates.add(cb.like(root.<String> get("status"), "%" + status
 					+ "%"));
 		}
-		if (startDate != null) {
-			predicates.add(cb.greaterThanOrEqualTo(
-					root.<Date> get("startDate"), startDate));
+		if (!Strings.isNullOrEmpty(reason)) {
+			predicates.add(cb.like(root.<String> get("reason"), "%" + reason
+					+ "%"));
 		}
-		if (endDate != null) {
-			predicates.add(cb.lessThanOrEqualTo(root.<Date> get("endDate"),
-					endDate));
+		if (!Strings.isNullOrEmpty(startDate)) {
+			Date date = DateUtils.parseString(startDate);
+			if (date != null) {
+				predicates.add(cb.greaterThanOrEqualTo(
+						root.<Date> get("startDate"), date));
+			}
 		}
-		if (bookDate != null) {
-			predicates.add(cb.greaterThanOrEqualTo(root.<Date> get("bookDate"),
-					bookDate));
+		if (!Strings.isNullOrEmpty(endDate)) {
+			Date date = DateUtils.parseString(endDate);
+			if (date != null) {
+				predicates.add(cb.lessThanOrEqualTo(root.<Date> get("endDate"),
+						date));
+			}
+		}
+		if (!Strings.isNullOrEmpty(bookDate)) {
+			Date date = DateUtils.parseString(bookDate);
+			if (date != null) {
+				predicates.add(cb.greaterThanOrEqualTo(
+						root.<Date> get("bookDate"), date));
+			}
 		}
 
 		if (applicantId != null) {
@@ -92,30 +109,6 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 		this.applicantId = applicantId;
 	}
 
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public Date getBookDate() {
-		return bookDate;
-	}
-
-	public void setBookDate(Date bookDate) {
-		this.bookDate = bookDate;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
 	public String getTypeName() {
 		return typeName;
 	}
@@ -146,6 +139,38 @@ public class AttendRecordSpecification implements Specification<AttendRecord> {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getBookDate() {
+		return bookDate;
+	}
+
+	public void setBookDate(String bookDate) {
+		this.bookDate = bookDate;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 
 }

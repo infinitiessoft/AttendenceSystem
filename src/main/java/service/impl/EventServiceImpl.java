@@ -20,7 +20,7 @@ import transfer.AttendRecordTransfer.Status;
 import transfer.AttendRecordTransfer.Type;
 import transfer.EventTransfer;
 import transfer.EventTransfer.Action;
-import util.MailUtils;
+import util.MailWritter;
 
 import com.google.common.base.Strings;
 
@@ -44,14 +44,16 @@ public class EventServiceImpl implements EventService {
 	private AttendRecordService attendRecordService;
 	private EmployeeDao employeeDao;
 	private MailService mailService;
+	private MailWritter mailWritter;
 
 	public EventServiceImpl(EventDao eventDao,
 			AttendRecordService attendRecordService, EmployeeDao employeeDao,
-			MailService mailService) {
+			MailService mailService, MailWritter mailWritter) {
 		this.eventDao = eventDao;
 		this.attendRecordService = attendRecordService;
 		this.employeeDao = employeeDao;
 		this.mailService = mailService;
+		this.mailWritter = mailWritter;
 	}
 
 	@Transactional
@@ -194,8 +196,8 @@ public class EventServiceImpl implements EventService {
 	}
 
 	private void notifyApprover(Employee approver, AttendRecord newEntry) {
-		String subject = MailUtils.buildSubject(newEntry);
-		String body = MailUtils.buildBody(newEntry);
+		String subject = mailWritter.buildSubject(newEntry);
+		String body = mailWritter.buildBody(newEntry);
 		mailService.sendMail(approver.getEmail(), subject, body);
 	}
 

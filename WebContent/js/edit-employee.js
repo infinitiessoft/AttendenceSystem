@@ -77,15 +77,13 @@ angular
 				})
 		.controller(
 				'edit-employee',
-				function($rootScope, $scope, $stateParams, $state,
+				function($rootScope, $scope, $stateParams, $state, $q,
 						formlyVersion, employee, employeeService,
 						departmentService, roleService, employeeRoleService) {
 					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit Employee'
 							: 'Add Employee';
 					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
-					$scope.departments = [];
-					$scope.roles = [];
 					var vm = this;
 					$scope.vm = vm;
 					vm.onSubmit = onSubmit;
@@ -103,16 +101,7 @@ angular
 					vm.roles = {
 						role : {}
 					};
-
-					roleService.list().then(function(status) {
-						var deps = status.data.content;
-						angular.forEach(deps, function(dep) {
-							$scope.roles.push({
-								name : dep.name,
-								value : dep.id
-							});
-						});
-					});
+					
 					if (id > 0) {
 						employeeRoleService.list(id).then(function(status) {
 							var roles = status.data.content;
@@ -121,15 +110,6 @@ angular
 							});
 						});
 					}
-					departmentService.list().then(function(status) {
-						var deps = status.data.content;
-						angular.forEach(deps, function(dep) {
-							$scope.departments.push({
-								name : dep.name,
-								value : dep.id
-							});
-						});
-					});
 
 					vm.fields = [ {
 						key : 'name',
@@ -211,26 +191,112 @@ angular
 						key : 'department',
 						fieldGroup : [ {
 							key : 'id',
-							type : 'select',
+							type: 'ui-select-single-search',
 							templateOptions : {
+								optionsAttr: 'bs-options',
+								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
+								valueProp: 'id',
+						        labelProp: 'name',
+						        placeholder: 'Search',
+						        options: [],
+						        refresh: refreshDepartments,
+						        refreshDelay: 0,
 								required : true,
-								label : 'Department',
-								options : $scope.departments
+								label : 'Department'
 							}
 						} ],
-					}, {
+					}
+					, {
+						key : 'employee',
+						fieldGroup : [ {
+							key : 'id',
+							type: 'ui-select-single-search',
+							templateOptions : {
+								optionsAttr: 'bs-options',
+								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
+								valueProp: 'id',
+						        labelProp: 'name',
+						        placeholder: 'Search',
+						        options: [],
+						        refresh: refreshEmployees,
+						        refreshDelay: 0,
+								required : true,
+								label : 'Response To'
+							}
+						} ],
+					}
+					, {
 						key : 'role',
 						model : vm.roles,
 						fieldGroup : [ {
 							key : 'id',
-							type : 'radio',
+							type: 'ui-select-single-search',
 							templateOptions : {
-								label : 'Role',
+								optionsAttr: 'bs-options',
+								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
+								valueProp: 'id',
+						        labelProp: 'name',
+						        placeholder: 'Search',
+						        options: [],
+						        refresh: refreshRoles,
+						        refreshDelay: 0,
 								required : true,
-								options : $scope.roles
+								label : 'Role'
 							}
 						} ]
 					} ];
+					
+					function refreshDepartments(name, field) {
+					      var promise;
+					      if (!name) {
+					    	  if(id != 0){
+					    		  promise = $q.when({data: {content: [employee.data.department]}});
+					    	  }else{
+					    		  promise = departmentService.list({});
+					    	  }
+					      } else {
+					        var params = {name: name};
+					        promise = departmentService.list(params);
+					      }
+					      return promise.then(function(response) {
+					        field.templateOptions.options = response.data.content;
+					      });
+					 }
+					
+					function refreshEmployees(name, field) {
+					      var promise;
+					      if (!name) {
+					    	  if(id != 0){
+					    		  promise = $q.when({data: {content: [employee.data.employee]}});
+					    	  }else{
+					    		  promise = employeeService.list({});
+					    	  }
+					      } else {
+					        var params = {name: name};
+					        promise = employeeService.list(params);
+					      }
+					      return promise.then(function(response) {
+					        field.templateOptions.options = response.data.content;
+					      });
+					 }
+					
+					function refreshRoles(name, field) {
+					      var promise;
+					      if (!name) {
+					    	  if(id != 0){
+					    		  promise = $q.when({data: {content: [vm.roles.role]}});
+					    	  }else{
+					    		  promise = roleService.list({});
+					    	  }
+					      } else {
+					        var params = {name: name};
+					        promise = roleService.list(params);
+					      }
+					      return promise.then(function(response) {
+					        field.templateOptions.options = response.data.content;
+					      });
+					 }
+					
 					function onSubmit() {
 						if (vm.form.$valid) {
 							if (id > 0) {

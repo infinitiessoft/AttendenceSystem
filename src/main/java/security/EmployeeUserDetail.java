@@ -85,4 +85,11 @@ public class EmployeeUserDetail implements UserDetails {
 		return id;
 	}
 
+	@Override
+	public String toString() {
+		return "EmployeeUserDetail [id=" + id + ", username=" + username
+				+ ", password=" + password + ", authorities=" + authorities
+				+ "]";
+	}
+
 }

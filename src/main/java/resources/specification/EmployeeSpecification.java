@@ -25,6 +25,8 @@ public class EmployeeSpecification implements Specification<Employee> {
 	private String username;
 	@QueryParam("gender")
 	private String gender;
+	@QueryParam("employeeName")
+	private String employeeName;
 
 	@Override
 	public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> query,
@@ -46,7 +48,10 @@ public class EmployeeSpecification implements Specification<Employee> {
 			predicates.add(cb.like(root.get("department").<String> get("name"),
 					"%" + departmentName + "%"));
 		}
-
+		if (!Strings.isNullOrEmpty(employeeName)) {
+			predicates.add(cb.like(root.get("employee").<String> get("name"),
+					"%" + employeeName + "%"));
+		}
 		if (predicates.isEmpty()) {
 			return null;
 		}

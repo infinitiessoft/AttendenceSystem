@@ -68,17 +68,6 @@ angular
 										.update(id, entry)
 										.then(
 												function(status) {
-													var pagination = lastState.pagination;
-													var start = pagination.start || 0;
-													var pageSize = pagination.number || 10;
-													var sort = lastState.sort.predicate;
-													var dir = lastState.sort.reverse ? 'DESC'
-															: 'ASC';
-													var page = (start / pageSize);
-													if (page < 0) {
-														page = 0;
-													}
-
 													var filters = queryParams(lastState);
 
 													eventService
@@ -109,7 +98,7 @@ angular
 							};
 						} ]).factory('eventService',
 				[ '$http', function($http) {
-					var serviceBase = 'rest/events/';
+					var serviceBase = 'rest/v1.0/admin/events/';
 					var obj = {};
 					obj.list = function(queries) {
 						return $http.get(serviceBase, {

@@ -8,6 +8,46 @@ import javax.xml.bind.annotation.XmlTransient;
 
 public class EmployeeTransfer {
 
+	public static class Employee {
+
+		private Long id;
+		private String name;
+
+		private boolean isIdSet;
+
+		public Employee() {
+			super();
+		}
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			setIdSet(true);
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		@XmlTransient
+		public boolean isIdSet() {
+			return isIdSet;
+		}
+
+		@XmlTransient
+		public void setIdSet(boolean isIdSet) {
+			this.isIdSet = isIdSet;
+		}
+
+	}
+
 	public static class Role {
 
 		private Long id;
@@ -94,6 +134,7 @@ public class EmployeeTransfer {
 	private Date dateOfJoined;
 	private String email;
 	private String gender;
+	private Employee employee;
 	private Department department;
 	private String password;
 	private List<Role> roles = new ArrayList<Role>(0);
@@ -105,6 +146,7 @@ public class EmployeeTransfer {
 	private boolean isGenderSet;
 	private boolean isDepartmentSet;
 	private boolean isPasswordSet;
+	private boolean isEmployeeSet;
 
 	public EmployeeTransfer() {
 		super();
@@ -258,6 +300,25 @@ public class EmployeeTransfer {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Employee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(Employee employee) {
+		isEmployeeSet = true;
+		this.employee = employee;
+	}
+
+	@XmlTransient
+	public boolean isEmployeeSet() {
+		return isEmployeeSet;
+	}
+
+	@XmlTransient
+	public void setEmployeeSet(boolean isEmployeeSet) {
+		this.isEmployeeSet = isEmployeeSet;
 	}
 
 }
