@@ -3,7 +3,6 @@ angular.module('edit-department', []).controller(
 		function($rootScope, $scope, $stateParams, $state, formlyVersion,
 				department, departmentService) {
 			var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
-			$rootScope.listPage = '#!/list-departments'
 			$rootScope.title = (id > 0) ? 'Edit Department' : 'Add Department';
 			$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
 			var data = department.data;

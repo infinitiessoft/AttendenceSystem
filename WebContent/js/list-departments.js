@@ -1,5 +1,5 @@
 angular
-		.module('list-departments', [ 'ngResource' ])
+		.module('list-departments', [])
 		.controller(
 				'list-departments',
 				[
@@ -20,8 +20,8 @@ angular
 									predicateObject : {}
 								}
 							};
-							
-							var queryParams = function(tableState){
+
+							var queryParams = function(tableState) {
 								var pagination = tableState.pagination;
 								var start = pagination.start || 0;
 								var pageSize = pagination.number || 10;
@@ -46,11 +46,11 @@ angular
 								filters.dir = dir;
 								return filters;
 							}
-							
+
 							$scope.displayed = [];
 							$scope.callServer = function callServer(tableState) {
 								$scope.isLoading = true;
-								
+
 								var filters = queryParams(tableState);
 								departmentService
 										.list(filters)
@@ -84,40 +84,4 @@ angular
 
 								}
 							};
-						} ]).factory(
-								'departmentService',
-								[
-										'$http',
-										function($http) {
-											var serviceBase = 'rest/v1.0/admin/departments/';
-											var obj = {};
-											obj.list = function(queries) {
-												return $http.get(serviceBase, {params:queries});
-											};
-
-											obj.get = function(id) {
-												return $http.get(serviceBase  + id);
-											};
-
-											obj.insert = function(department) {
-												return $http.post(serviceBase, department).then(
-														function(results) {
-															return results;
-														});
-											};
-
-											obj.update = function(id, department) {
-												return $http.put(serviceBase  + id,
-														department).then(function(results) {
-													return results;
-												});
-											};
-											
-											obj.remove = function(id) {
-												return $http.delete(serviceBase + id).then(function(status) {
-													return status;
-												});
-											};
-
-											return obj;
-										} ]);
+						} ]);

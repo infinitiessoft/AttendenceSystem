@@ -42,7 +42,7 @@ public class DepartmentsResource {
 	@Path(value = "{id}")
 	public Response deleteDepartment(@PathParam("id") long id) {
 		departmentService.delete(id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON)
 				.build();
 	}
 

@@ -41,8 +41,7 @@ public class LeavesettingsResource {
 	@Path(value = "{id}")
 	public Response deleteLeavesetting(@PathParam("id") long id) {
 		leavesettingService.delete(id);
-		return Response.status(Status.OK)
-				.entity("leavesetting has been successfully deleted")
+		return Response.status(Status.NO_CONTENT)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
 

@@ -42,7 +42,7 @@ public class AttendRecordTypesResource {
 	@Path(value = "{id}")
 	public Response deleteAttendRecordType(@PathParam("id") long id) {
 		attendRecordTypeService.delete(id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON)
 				.build();
 	}
 

@@ -1,5 +1,5 @@
 angular
-		.module('list-leavesettings', [ 'ngResource' ])
+		.module('list-leavesettings', [])
 		.controller(
 				'list-leavesettings',
 				[
@@ -20,8 +20,8 @@ angular
 									predicateObject : {}
 								}
 							};
-							
-							var queryParams = function(tableState){
+
+							var queryParams = function(tableState) {
 								var pagination = tableState.pagination;
 								var start = pagination.start || 0;
 								var pageSize = pagination.number || 10;
@@ -46,11 +46,11 @@ angular
 								filters.dir = dir;
 								return filters;
 							}
-							
+
 							$scope.displayed = [];
 							$scope.callServer = function callServer(tableState) {
 								$scope.isLoading = true;
-								
+
 								var filters = queryParams(tableState);
 								leavesettingService
 										.list(filters)
@@ -84,40 +84,4 @@ angular
 
 								}
 							};
-						} ]).factory(
-								'leavesettingService',
-								[
-										'$http',
-										function($http) {
-											var serviceBase = 'rest/v1.0/admin/leavesettings/';
-											var obj = {};
-											obj.list = function(queries) {
-												return $http.get(serviceBase, {params:queries});
-											};
-
-											obj.get = function(id) {
-												return $http.get(serviceBase  + id);
-											};
-											
-											obj.insert = function(leavesetting) {
-												return $http.post(serviceBase, leavesetting).then(
-														function(results) {
-															return results;
-														});
-											};
-
-											obj.update = function(id, leavesetting) {
-												return $http.put(serviceBase  + id,
-														leavesetting).then(function(results) {
-													return results;
-												});
-											};
-											
-											obj.remove = function(id) {
-												return $http.delete(serviceBase + id).then(function(status) {
-													return status;
-												});
-											};
-
-											return obj;
-										} ]);
+						} ]);

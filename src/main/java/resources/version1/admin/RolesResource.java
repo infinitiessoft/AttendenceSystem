@@ -42,7 +42,7 @@ public class RolesResource {
 	@Path(value = "{id}")
 	public Response deleteRole(@PathParam("id") long id) {
 		roleService.delete(id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON)
 				.build();
 	}
 

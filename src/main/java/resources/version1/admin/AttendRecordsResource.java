@@ -50,7 +50,7 @@ public class AttendRecordsResource {
 	@Path(value = "{id}")
 	public Response deleteAttendRecord(@PathParam("id") long id) {
 		attendRecordService.delete(id, true);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON)
 				.build();
 	}
 

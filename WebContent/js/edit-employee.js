@@ -85,6 +85,7 @@ angular
 							: 'Add Employee';
 					$rootScope.buttonText = (id > 0) ? 'Update' : 'Add';
 					var vm = this;
+					var oldRoleId;
 					$scope.vm = vm;
 					vm.onSubmit = onSubmit;
 					vm.author = {
@@ -98,218 +99,258 @@ angular
 
 					vm.model = employee.data;
 					vm.confirmationModel = {};
+					$scope.roles = [];
 					vm.roles = {
 						role : {}
 					};
 					
+					roleService.list().then(function(status) {
+						var deps = status.data.content;
+						angular.forEach(deps, function(dep) {
+							$scope.roles.push({
+								name : dep.name,
+								value : dep.id
+							});
+						});
+					});
+
 					if (id > 0) {
 						employeeRoleService.list(id).then(function(status) {
 							var roles = status.data.content;
 							angular.forEach(roles, function(role) {
 								vm.roles.role = role;
+								oldRoleId = role.id;
 							});
 						});
 					}
 
-					vm.fields = [ {
-						key : 'name',
-						type : 'input',
-						templateOptions : {
-							label : 'Name',
-							placeholder : 'Name',
-							type : 'text',
-							required : true
-						}
-					}, {
-						key : 'username',
-						type : 'input',
-						templateOptions : {
-							label : 'Username',
-							placeholder : 'Username',
-							type : 'text',
-							required : true
-						}
-					}, {
-						key : 'password',
-						type : 'input',
-						templateOptions : {
-							type : 'password',
-							label : 'Password',
-							placeholder : 'Must be at least 3 characters',
-							required : true,
-							minlength : 3
-						}
-					}, {
-						key : 'confirmPassword',
-						type : 'input',
-						optionsTypes : [ 'matchField' ],
-						model : vm.confirmationModel,
-						templateOptions : {
-							type : 'password',
-							label : 'Confirm Password',
-							placeholder : 'Please re-enter your password',
-							required : true
-						},
-						data : {
-							fieldToMatch : 'password',
-							modelToMatch : vm.model
-						}
-					}, {
-						key : 'dateOfJoined',
-						type : 'datepicker',
-						templateOptions : {
-							label : 'Date of joined',
-							type : 'text',
-							datepickerPopup : 'dd-MMMM-yyyy',
-							required : true
-						}
-					}, {
-						key : 'email',
-						type : 'input',
-						templateOptions : {
-							label : 'Email',
-							placeholder : 'E-mail',
-							type : 'email',
-							required : true
-						}
-					}, {
-						key : 'gender',
-						type : 'radio',
-						templateOptions : {
-							label : 'Gender',
-							'default' : 'male',
-							required : true,
-							options : [ {
-								name : 'Female',
-								value : 'female'
-							}, {
-								name : 'Male',
-								value : 'male'
-							} ]
-						}
-					}, {
-						key : 'department',
-						fieldGroup : [ {
-							key : 'id',
-							type: 'ui-select-single-search',
-							templateOptions : {
-								optionsAttr: 'bs-options',
-								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
-								valueProp: 'id',
-						        labelProp: 'name',
-						        placeholder: 'Search',
-						        options: [],
-						        refresh: refreshDepartments,
-						        refreshDelay: 0,
-								required : true,
-								label : 'Department'
+					vm.fields = [
+							{
+								key : 'name',
+								type : 'input',
+								templateOptions : {
+									label : 'Name',
+									placeholder : 'Name',
+									type : 'text',
+									required : true
+								}
+							},
+							{
+								key : 'username',
+								type : 'input',
+								templateOptions : {
+									label : 'Username',
+									placeholder : 'Username',
+									type : 'text',
+									required : true
+								}
+							},
+							{
+								key : 'password',
+								type : 'input',
+								templateOptions : {
+									type : 'password',
+									label : 'Password',
+									placeholder : 'Must be at least 3 characters',
+									required : true,
+									minlength : 3
+								}
+							},
+							{
+								key : 'confirmPassword',
+								type : 'input',
+								optionsTypes : [ 'matchField' ],
+								model : vm.confirmationModel,
+								templateOptions : {
+									type : 'password',
+									label : 'Confirm Password',
+									placeholder : 'Please re-enter your password',
+									required : true
+								},
+								data : {
+									fieldToMatch : 'password',
+									modelToMatch : vm.model
+								}
+							},
+							{
+								key : 'dateOfJoined',
+								type : 'datepicker',
+								templateOptions : {
+									label : 'Date of joined',
+									type : 'text',
+									datepickerPopup : 'dd-MMMM-yyyy',
+									required : true
+								}
+							},
+							{
+								key : 'email',
+								type : 'input',
+								templateOptions : {
+									label : 'Email',
+									placeholder : 'E-mail',
+									type : 'email',
+									required : true
+								}
+							},
+							{
+								key : 'gender',
+								type : 'radio',
+								templateOptions : {
+									label : 'Gender',
+									'default' : 'male',
+									required : true,
+									options : [ {
+										name : 'Female',
+										value : 'female'
+									}, {
+										name : 'Male',
+										value : 'male'
+									} ]
+								}
+							},
+							{
+								key : 'department',
+								fieldGroup : [ {
+									key : 'id',
+									type : 'ui-select-single-search',
+									templateOptions : {
+										optionsAttr : 'bs-options',
+										ngOptions : 'option[to.valueProp] as option in to.options | filter: $select.search',
+										valueProp : 'id',
+										labelProp : 'name',
+										placeholder : 'Search',
+										options : [],
+										refresh : refreshDepartments,
+										refreshDelay : 0,
+										required : true,
+										label : 'Department'
+									}
+								} ],
+							},
+							{
+								key : 'employee',
+								fieldGroup : [ {
+									key : 'id',
+									type : 'ui-select-single-search',
+									templateOptions : {
+										optionsAttr : 'bs-options',
+										ngOptions : 'option[to.valueProp] as option in to.options | filter: $select.search',
+										valueProp : 'id',
+										labelProp : 'name',
+										placeholder : 'Search',
+										options : [],
+										refresh : refreshEmployees,
+										refreshDelay : 0,
+										required : true,
+										label : 'Response To'
+									}
+								} ],
 							}
-						} ],
-					}
-					, {
-						key : 'employee',
-						fieldGroup : [ {
-							key : 'id',
-							type: 'ui-select-single-search',
-							templateOptions : {
-								optionsAttr: 'bs-options',
-								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
-								valueProp: 'id',
-						        labelProp: 'name',
-						        placeholder: 'Search',
-						        options: [],
-						        refresh: refreshEmployees,
-						        refreshDelay: 0,
-								required : true,
-								label : 'Response To'
-							}
-						} ],
-					}
-					, {
-						key : 'role',
-						model : vm.roles,
-						fieldGroup : [ {
-							key : 'id',
-							type: 'ui-select-single-search',
-							templateOptions : {
-								optionsAttr: 'bs-options',
-								ngOptions: 'option[to.valueProp] as option in to.options | filter: $select.search',
-								valueProp: 'id',
-						        labelProp: 'name',
-						        placeholder: 'Search',
-						        options: [],
-						        refresh: refreshRoles,
-						        refreshDelay: 0,
-								required : true,
-								label : 'Role'
-							}
-						} ]
-					} ];
-					
+							, {
+								key : 'role',
+								model : vm.roles,
+								fieldGroup : [ {
+									key : 'id',
+									type : 'radio',
+									templateOptions : {
+										label : 'Role',
+										required : true,
+										options : $scope.roles
+									}
+								} ]
+							} ];
+
 					function refreshDepartments(name, field) {
-					      var promise;
-					      if (!name) {
-					    	  if(id != 0){
-					    		  promise = $q.when({data: {content: [employee.data.department]}});
-					    	  }else{
-					    		  promise = departmentService.list({});
-					    	  }
-					      } else {
-					        var params = {name: name};
-					        promise = departmentService.list(params);
-					      }
-					      return promise.then(function(response) {
-					        field.templateOptions.options = response.data.content;
-					      });
-					 }
-					
+						var promise;
+						if (!name) {
+							if (id != 0) {
+								promise = $q.when({
+									data : {
+										content : [ employee.data.department ]
+									}
+								});
+							} else {
+								promise = departmentService.list({});
+							}
+						} else {
+							var params = {
+								name : name
+							};
+							promise = departmentService.list(params);
+						}
+						return promise
+								.then(function(response) {
+									field.templateOptions.options = response.data.content;
+								});
+					}
+
 					function refreshEmployees(name, field) {
-					      var promise;
-					      if (!name) {
-					    	  if(id != 0){
-					    		  promise = $q.when({data: {content: [employee.data.employee]}});
-					    	  }else{
-					    		  promise = employeeService.list({});
-					    	  }
-					      } else {
-					        var params = {name: name};
-					        promise = employeeService.list(params);
-					      }
-					      return promise.then(function(response) {
-					        field.templateOptions.options = response.data.content;
-					      });
-					 }
-					
-					function refreshRoles(name, field) {
-					      var promise;
-					      if (!name) {
-					    	  if(id != 0){
-					    		  promise = $q.when({data: {content: [vm.roles.role]}});
-					    	  }else{
-					    		  promise = roleService.list({});
-					    	  }
-					      } else {
-					        var params = {name: name};
-					        promise = roleService.list(params);
-					      }
-					      return promise.then(function(response) {
-					        field.templateOptions.options = response.data.content;
-					      });
-					 }
-					
+						var promise;
+						if (!name) {
+							if (id != 0) {
+								promise = $q.when({
+									data : {
+										content : [ employee.data.employee ]
+									}
+								});
+							} else {
+								promise = employeeService.list({});
+							}
+						} else {
+							var params = {
+								name : name
+							};
+							promise = employeeService.list(params);
+						}
+						return promise
+								.then(function(response) {
+									field.templateOptions.options = response.data.content;
+								});
+					}
+
 					function onSubmit() {
 						if (vm.form.$valid) {
 							if (id > 0) {
-								employeeService.update(id, vm.model).then(
-										function(status) {
-											$state.go('dashboard.list-employees');
-										});
+								employeeService
+										.update(id, vm.model)
+										.then(
+												function(status) {
+													var newRoleId = vm.roles.role.id;
+													var employeeid = $stateParams.id;
+													if (oldRoleId != newRoleId) {
+														console
+																.log("remove role");
+														if (oldRoleId) {
+															employeeRoleService
+																	.remove(
+																			employeeid,
+																			oldRoleId);
+														}
+														if (newRoleId) {
+															employeeRoleService
+																	.insert(
+																			employeeid,
+																			newRoleId)
+																	.then(
+																			function(
+																					status) {
+																				$state
+																						.go('dashboard.list-employees');
+																			});
+														}
+													} else {
+														console
+																.log("role not change");
+														$state
+																.go('dashboard.list-employees');
+													}
+												});
 							} else {
 								employeeService
 										.insert(vm.model)
-										.success(
+										.then(
 												function(status) {
-													var employeeid = status.id;
+													var employeeid = status.data.id;
 													var roleid = vm.roles.role.id;
 													employeeRoleService
 															.insert(employeeid,
@@ -317,7 +358,8 @@ angular
 															.then(
 																	function(
 																			status) {
-																		$state.go('dashboard.list-employees');
+																		$state
+																				.go('dashboard.list-employees');
 																	});
 												});
 							}

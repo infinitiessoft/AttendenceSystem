@@ -41,8 +41,7 @@ public class EmployeeLeavesResource {
 	@Path(value = "{id}")
 	public Response deleteEmployeeLeave(@PathParam("id") long id) {
 		employeeLeaveService.delete(id);
-		return Response.status(Status.OK)
-				.entity("employeeleave has been successfully deleted")
+		return Response.status(Status.NO_CONTENT)
 				.type(MediaType.APPLICATION_JSON).build();
 	}
 

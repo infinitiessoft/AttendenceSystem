@@ -1,5 +1,5 @@
 angular
-		.module('list-events', [ 'ngResource' ])
+		.module('list-events', [])
 		.controller(
 				'list-events',
 				[
@@ -96,23 +96,4 @@ angular
 								update(newsEntry.id, entry);
 
 							};
-						} ]).factory('eventService',
-				[ '$http', function($http) {
-					var serviceBase = 'rest/v1.0/admin/events/';
-					var obj = {};
-					obj.list = function(queries) {
-						return $http.get(serviceBase, {
-							params : queries
-						});
-					};
-
-					obj.get = function(id) {
-						return $http.get(serviceBase + id);
-					};
-
-					obj.update = function(id, record) {
-						return $http.put(serviceBase + id, record);
-					};
-
-					return obj;
-				} ]);
+						} ]);
