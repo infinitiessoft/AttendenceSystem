@@ -755,22 +755,24 @@ angular
                     				    						  [
                     				    						   'auth',
                     				    						   '$http',
-                    				    						   function(auth, $http) {
-                    				    							   var serviceBase = 'rest/v1.0/employees/'
-                    				    								   + auth.user.principal.id + '/events/';
+                    				    						   function(auth, $http) {				   
+                    				    							   var serviceBase = 'rest/v1.0/employees/';
                     				    							   var obj = {};
                     				    							   obj.list = function(queries) {
-                    				    								   return $http.get(serviceBase, {
+                    				    								   var url  = serviceBase + auth.user.principal.id + '/events/';
+                    				    								   return $http.get(url, {
                     				    									   params : queries
                     				    								   });
                     				    							   };
 
                     				    							   obj.get = function(id) {
-                    				    								   return $http.get(serviceBase + id);
+                    				    								   var url  = serviceBase + auth.user.principal.id + '/events/';
+                    				    								   return $http.get(url + id);
                     				    							   };
 
                     				    							   obj.update = function(id, record) {
-                    				    								   return $http.put(serviceBase + id, record);
+                    				    								   var url  = serviceBase + auth.user.principal.id + '/events/';
+                    				    								   return $http.put(url + id, record);
                     				    							   };
 
                     				    							   return obj;
@@ -780,27 +782,32 @@ angular
                     				    								   [
                     				    								    'auth','$http',
                     				    								    function(auth, $http) {
-                    				    								    	var serviceBase = 'rest/v1.0/employees/'+auth.user.principal.id+'/records/';
+                    				    								    	var serviceBase = 'rest/v1.0/employees/';
                     				    								    	var obj = {};
                     				    								    	obj.list = function(queries) {
-                    				    								    		return $http.get(serviceBase, {params:queries});
+                    				    								    		var url  = serviceBase + auth.user.principal.id + '/records/';
+                    				    								    		return $http.get(url, {params:queries});
                     				    								    	};
 
                     				    								    	obj.get = function(id) {
-                    				    								    		return $http.get(serviceBase  + id);
+                    				    								    		var url  = serviceBase + auth.user.principal.id + '/records/';
+                    				    								    		return $http.get(url  + id);
                     				    								    	};
 
                     				    								    	obj.insert = function(record) {
-                    				    								    		return $http.post(serviceBase, record);
+                    				    								    		var url  = serviceBase + auth.user.principal.id + '/records/';
+                    				    								    		return $http.post(url, record);
                     				    								    	};
 
                     				    								    	obj.update = function(id, record) {
-                    				    								    		return $http.put(serviceBase  + id,
+                    				    								    		var url  = serviceBase + auth.user.principal.id + '/records/';
+                    				    								    		return $http.put(url  + id,
                     				    								    				record);
                     				    								    	};
 
                     				    								    	obj.remove = function(id) {
-                    				    								    		return $http.delete(serviceBase + id);
+                    				    								    		var url  = serviceBase + auth.user.principal.id + '/records/';
+                    				    								    		return $http.delete(url + id);
                     				    								    	};
 
                     				    								    	return obj;

@@ -210,7 +210,9 @@ public class EmployeeTransfer {
 	}
 
 	public void setDepartment(Department department) {
-		isDepartmentSet = true;
+		if (department != null) {
+			isDepartmentSet = true;
+		}
 		this.department = department;
 	}
 
@@ -266,7 +268,7 @@ public class EmployeeTransfer {
 
 	@XmlTransient
 	public boolean isDepartmentSet() {
-		return isDepartmentSet && department != null;
+		return isDepartmentSet;
 	}
 
 	@XmlTransient
@@ -307,7 +309,9 @@ public class EmployeeTransfer {
 	}
 
 	public void setEmployee(Employee employee) {
-		isEmployeeSet = true;
+		if (employee != null) {
+			isEmployeeSet = true;
+		}
 		this.employee = employee;
 	}
 

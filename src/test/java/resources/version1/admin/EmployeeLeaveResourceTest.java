@@ -43,7 +43,7 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 		Response response = target("employeeleaves").path("1")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
-		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
 	}
 
 	@Test

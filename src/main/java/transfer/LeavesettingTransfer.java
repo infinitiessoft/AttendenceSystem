@@ -81,7 +81,9 @@ public class LeavesettingTransfer implements Serializable {
 	}
 
 	public void setType(Type type) {
-		this.isTypeSet = true;
+		if (type != null) {
+			this.isTypeSet = true;
+		}
 		this.type = type;
 	}
 

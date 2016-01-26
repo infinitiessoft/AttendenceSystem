@@ -204,7 +204,9 @@ public class EventTransfer implements Serializable {
 	}
 
 	public void setRecord(AttendRecord record) {
-		isRecordSet = true;
+		if (record != null) {
+			isRecordSet = true;
+		}
 		this.record = record;
 	}
 
@@ -223,7 +225,9 @@ public class EventTransfer implements Serializable {
 	}
 
 	public void setApprover(Employee approver) {
-		isApproverSet = true;
+		if (approver != null) {
+			isApproverSet = true;
+		}
 		this.approver = approver;
 	}
 

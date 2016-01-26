@@ -159,7 +159,9 @@ public class EmployeeLeaveTransfer implements Serializable {
 	}
 
 	public void setEmployee(Employee employee) {
-		this.isEmployeeSet = true;
+		if (employee != null) {
+			this.isEmployeeSet = true;
+		}
 		this.employee = employee;
 	}
 
@@ -168,7 +170,9 @@ public class EmployeeLeaveTransfer implements Serializable {
 	}
 
 	public void setLeavesetting(Leavesetting leavesetting) {
-		this.isLeavesettingSet = true;
+		if (leavesetting != null) {
+			this.isLeavesettingSet = true;
+		}
 		this.leavesetting = leavesetting;
 	}
 

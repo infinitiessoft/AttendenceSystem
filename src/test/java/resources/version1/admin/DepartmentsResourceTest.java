@@ -42,7 +42,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 		Response response = target("departments").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
-		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
 	}
 
 	@Test

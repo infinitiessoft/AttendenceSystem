@@ -137,7 +137,9 @@ public class AttendRecordTransfer implements Serializable {
 	}
 
 	public void setApplicant(Employee applicant) {
-		this.isApplicantSet = true;
+		if (applicant != null) {
+			this.isApplicantSet = true;
+		}
 		this.applicant = applicant;
 	}
 
@@ -191,7 +193,9 @@ public class AttendRecordTransfer implements Serializable {
 	}
 
 	public void setType(Type type) {
-		this.isTypeSet = true;
+		if (type != null) {
+			this.isTypeSet = true;
+		}
 		this.type = type;
 	}
 
