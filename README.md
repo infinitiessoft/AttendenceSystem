@@ -58,7 +58,7 @@ The passwords are not stored in the database in plain text but in a digested for
 
 When you login as administrator you can find list of Records, Events, Employees, Roles, Department, RecordTypes, Leave-setting and EmployeeLeave where he can edit, delete or create new Entries. And he is the one who approves for the Events and Leave that the employee applies
 
- ***General Rule:*** When an Employee apply for a Leave based on days and reason first the Manager1 will recieve the notification by mail. And he is the one who permits and rejects the Events
+ ***General Rule:*** When an Employee apply for a Leave based on days and reason first the Manager1 will recieve the notification by mail. And he is the one who permits and rejects the Events.
   If the Manager1 permits for Events the Manager2 recieves the Event notification for permission else Manager2 will not be notified.
 
 `Events:` when an employee is willing to attend some events that are available he can book the date and wait for the reply from the admin. Once admin is ready with his answer he provides the action based on his decision.
