@@ -102,7 +102,7 @@ If the Admin wants to add any other extra Records he can use the `+` symbol on t
 
  ![Alt text](https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_10.png "Leave Setting")
   
-Admin can also assign the days allotment for AttendRecord
+Admin can also assign the days allotment for AttendRecord by giving the Name, selecting the type from the drop down menu, he can also mention to which corresponding year he's assigning the Record to and how many days has been alloted. 
 
 **Assigning the Record**
  
@@ -128,14 +128,14 @@ In this the Admin can also get the Record into the Excel sheet by clicking the E
                    By this the Employee can notify his activities to the Admin.
 
 
-#####Employee:
+####Employee:
 
 When you login in as employee you can give all your personal details and apply for Leaves  or events 
 
 **Employee Info**
  ![Alt text](https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160120_4.png "Employee Info")
   
-And the Employee can Create a new Event Clicking `+` on the right hand corner of the page.
+And the Employee can Create a new Event Clicking `+` on the right hand corner of the page.Employee can select the start date and the end date with timing,then he can select the type of Leave he wants to apply by using drop down menu and finally he can mention the Reason for applying.
 
 **Add AttendRecord of Employees**
 
