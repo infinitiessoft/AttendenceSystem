@@ -27,15 +27,18 @@
 						<th st-sort="endDate">end date</th>
 						<th>duration</th>
 						<th>reason</th>
+						<th></th>
 					</tr>
 					<tr>
 						<th></th>
-						<th><input st-search="typeName" /></th>
-						<th><input st-search="status" /></th>
-						<th><input st-search="startDate" /></th>
-						<th><input st-search="endDate" /></th>
+						<th><input st-search="typeName" class="input-sm form-control" /></th>
+						<th><input st-search="status" class="input-sm form-control" /></th>
+						<th><input st-search="startDate"
+							class="input-sm form-control" /></th>
+						<th><input st-search="endDate" class="input-sm form-control" /></th>
 						<th></th>
-						<th><input st-search="reason" /></th>
+						<th><input st-search="reason" class="input-sm form-control" /></th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody ng-show="!isLoading">
@@ -48,7 +51,8 @@
 						<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.duration}}</td>
 						<td>{{row.reason|limitTo:10}}</td>
-						<td><a ui-sref="dashboard.edit-memberrecord({id:row.id})"
+						<td class="input-sm"><a
+							ui-sref="dashboard.edit-memberrecord({id:row.id})"
 							class="btn btn-sm btn-primary"
 							ng-show="{{row.status == 'pending'}}"> <i
 								class="glyphicon glyphicon-pencil"> </i>

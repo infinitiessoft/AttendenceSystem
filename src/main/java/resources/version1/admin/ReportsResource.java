@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import resources.CSVMessageBodyWritter;
 import resources.specification.AttendRecordSpecification;
 import service.AttendRecordService;
 import transfer.AttendRecordReport;
@@ -23,7 +24,7 @@ public class ReportsResource {
 
 	@GET
 	@Path("records")
-	@Produces("text/csv")
+	@Produces(CSVMessageBodyWritter.TEXT_CSV)
 	public List<AttendRecordReport> exportAllAttendRecord(
 			@BeanParam AttendRecordSpecification spec) {
 		return attendRecordService.findAll(spec);

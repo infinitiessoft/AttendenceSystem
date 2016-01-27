@@ -57,6 +57,21 @@ angular
                     	   })
                     	   .state('dashboard.home',{
                     		   url:'/home',
+                    		   templateUrl:'views/dashboard/home.html',
+                    		   resolve: {
+                    		          loadMyFiles:function($ocLazyLoad) {
+                    		              return $ocLazyLoad.load({
+                    		                name:'sbAdminApp',
+                    		                files:[
+                    		                'scripts/controllers/main.js',
+                    		                'scripts/directives/dashboard/stats/stats.js'
+                    		                ]
+                    		              })
+                    		            }
+                    		          }
+                    	   })
+                    	   .state('dashboard.calendar',{
+                    		   url:'/calendar',
                     		   templateUrl:'partials/calendar.html'
                     	   })
                     	   .state('dashboard.edit-profile',{
@@ -471,7 +486,7 @@ angular
                     	   $httpProvider.interceptors.push('authHttpResponseInterceptor');
 
                        } ])
-                       .factory('authHttpResponseInterceptor',['$q','$location',function($q, $location) {
+                       .factory('authHttpResponseInterceptor',['$q','$rootScope','$location',function($q, $rootScope, $location) {
                     	   return {
                     		   response : function(response) {
                     			   if (response.status === 401) {
@@ -480,11 +495,22 @@ angular
                     			   return response || $q.when(response);
                     		   },
                     		   responseError : function(rejection) {
+                    			   var data = rejection.data;
+                   				   var status = rejection.status;
+                   				   var config = rejection.config;
+                   				   var method = config.method;
+                   				   var url = config.url;
                     			   if (rejection.status === 401) {
                     				   console.log("Response Error 401",
                     						   rejection);
                     				   $location.path('/login').search(
                     						   'returnTo', $location.path());
+                    			   }else{
+                    				   $rootScope.error = data.message;
+// method + " on "
+// + url
+// + " failed with status "
+// + status+", message: "+JSON.stringify(data);
                     			   }
                     			   return $q.reject(rejection);
                     		   }

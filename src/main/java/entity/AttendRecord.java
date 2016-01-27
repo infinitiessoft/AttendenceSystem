@@ -32,7 +32,7 @@ public class AttendRecord extends AbstractEntity {
 	@Column(name = "end_date", nullable = false)
 	private Date endDate;
 
-	@Column(name = "reason", nullable = false)
+	@Column(name = "reason", nullable = true)
 	private String reason;
 
 	@Column(name = "status", nullable = false)

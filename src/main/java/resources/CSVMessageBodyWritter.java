@@ -22,7 +22,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 public class CSVMessageBodyWritter implements MessageBodyWriter<List<?>> {
 
 	private static final Object FILENAME = "export.csv";
-	public static final String TEXT_CSV = "text/csv";
+	public static final String TEXT_CSV = "text/csv; charset=utf-8";
 	public static final String APPLICATION_EXCEL = "application/vnd.ms-excel";
 
 	// private static final Object FILENAME = "result.csv";
@@ -52,6 +52,8 @@ public class CSVMessageBodyWritter implements MessageBodyWriter<List<?>> {
 			Object o = t.get(0);
 			CsvMapper mapper = new CsvMapper();
 			CsvSchema schema = mapper.schemaFor(o.getClass()).withHeader();
+			// OutputStreamWriter writerOutputStream = new OutputStreamWriter(
+			// entityStream, "UTF_16BE");
 			mapper.writer(schema).writeValue(entityStream, t);
 		}
 

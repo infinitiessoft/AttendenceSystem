@@ -20,8 +20,10 @@
 					</tr>
 					<tr>
 						<th></th>
-						<th><input st-search="applicantName" /></th>
-						<th><input st-search="recordTypeName" /></th>
+						<th><input st-search="applicantName"
+							class="input-sm form-control" /></th>
+						<th><input st-search="recordTypeName"
+							class="input-sm form-control" /></th>
 						<th></th>
 						<th></th>
 						<th></th>
@@ -29,7 +31,9 @@
 					</tr>
 				</thead>
 				<tbody ng-show="!isLoading">
-					<tr ng-repeat="row in displayed"  popover="reason: {{row.record.reason}}" popover-placement="top" popover-trigger="click">
+					<tr ng-repeat="row in displayed"
+						popover="reason: {{row.record.reason}}" popover-placement="top"
+						popover-trigger="click">
 						<td>{{row.id}}</td>
 						<td>{{row.record.employee.name}}</td>
 						<td>{{row.record.type.name}}</td>

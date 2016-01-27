@@ -7,8 +7,8 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
-			<a class="btn btn-link" href="{{exportHref}}"> <span class="glyphicon glyphicon-share"></span>
-				Export
+			<a class="btn btn-link" href="{{exportHref}}"> <span
+				class="glyphicon glyphicon-share"></span> Export
 			</a>
 			<!-- <button class="btn btn-link" ng-click="exportToCsv()"
 				download="records.csv" filename="file.csv">
@@ -24,7 +24,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<table id="table" st-pipe="callServer" st-table="displayed"
-				class="table table-striped" stExport>
+				class="table table-striped">
 				<thead>
 					<tr>
 						<th st-sort="id" st-sort-default="reverse">id</th>
@@ -34,14 +34,18 @@
 						<th st-sort="startDate">start date</th>
 						<th st-sort="endDate">end date</th>
 						<th>duration</th>
+						<th></th>
 					</tr>
 					<tr>
 						<th></th>
-						<th><input st-search="applicantName" /></th>
-						<th><input st-search="typeName" /></th>
-						<th><input st-search="status" /></th>
-						<th><input st-search="startDate" /></th>
-						<th><input st-search="endDate" /></th>
+						<th><input st-search="applicantName"
+							class="input-sm form-control" /></th>
+						<th><input st-search="typeName" class="input-sm form-control" /></th>
+						<th><input st-search="status" class="input-sm form-control" /></th>
+						<th><input st-search="startDate"
+							class="input-sm form-control" /></th>
+						<th><input st-search="endDate" class="input-sm form-control" /></th>
+						<th></th>
 						<th></th>
 					</tr>
 				</thead>
