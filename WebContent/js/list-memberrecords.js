@@ -5,8 +5,15 @@ angular
 				[
 						'$scope',
 						'$http',
+						'$stateParams',
 						'memberRecordService',
-						function($scope, $http, memberRecordService) {
+						function($scope, $http, $stateParams, memberRecordService) {
+							$scope.applicantName = $stateParams.applicantName;
+							$scope.typeName = $stateParams.typeName;
+							$scope.statusName = $stateParams.status;
+							$scope.startDate = $stateParams.startDate;
+							$scope.endDate = $stateParams.endDate;
+							console.debug($scope.startDate+'  '+$scope.endDate);
 							var lastState = {
 								pagination : {
 									start : 0,

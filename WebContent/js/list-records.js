@@ -5,9 +5,15 @@ angular
 				[
 						'$scope',
 						'$http',
+						'$stateParams',
 						'recordService',
 						'reportService',
-						function($scope, $http, recordService, reportService) {
+						function($scope, $http, $stateParams, recordService, reportService) {
+							$scope.applicantName = $stateParams.applicantName;
+							$scope.typeName = $stateParams.typeName;
+							$scope.status = $stateParams.status;
+							$scope.startDate = $stateParams.startDate;
+							$scope.endDate = $stateParams.endDate;
 							var lastState = {
 								pagination : {
 									start : 0,
@@ -64,7 +70,6 @@ angular
 									lastState.search.predicateObject);
 
 							var queryParams = function(tableState) {
-								console.debug(tableState.pagination);
 								var pagination = tableState.pagination;
 								var start = pagination.start || 0;
 								var pageSize = pagination.number || 10;

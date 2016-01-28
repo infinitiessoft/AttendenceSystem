@@ -122,6 +122,12 @@ angular
                     		   templateUrl:'partials/list-memberrecords.html',
                     		   controller: 'list-memberrecords',
                     		   url:'/list-memberrecords',
+                    		   params: {
+                    			    startDate: null,
+                    			    endDate: null,
+                    			    typeName: null,
+                    			    status:null
+                    		   },
                     		   resolve: {
                     			   loadMyDirectives:function($ocLazyLoad){
                     				   return $ocLazyLoad.load(

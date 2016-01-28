@@ -9,13 +9,13 @@
 	<div class="row">
 
 		<stats number="6/10" comments="Annual leave used" colour="primary"
-			type="gamepad" goto="dashboard.home"></stats>
+			type="gamepad" goto="dashboard.list-memberrecords({typeName:'annual',status:'permit', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
 		<stats number="12/20" comments="Personal leave used" colour="green"
-			type="briefcase" goto="dashboard.home"></stats>
+			type="briefcase" goto="dashboard.list-memberrecords({ typeName: 'personal', status:'permit', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
 		<stats number="18/20" comments="Sick leave used!" colour="yellow"
-			type="ambulance" goto="dashboard.home"></stats>
+			type="ambulance" goto="dashboard.list-memberrecords({ typeName: 'sick', status:'permit', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
 		<stats number="24/30" comments="Other leave used!" colour="red"
-			type="shopping-cart" goto="dashboard.home"></stats>
+			type="shopping-cart" goto="dashboard.list-memberrecords({ typeName: 'others', status:'permit', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
 
 	</div>
 
@@ -80,7 +80,7 @@
 	<div class="row">
 		<div class="col-lg-6 col-sm-12" id="doughnut-chart">
 			<div class="panel panel-default">
-				<div class="panel-heading">Attend Record Type</div>
+				<div class="panel-heading">Attend Record</div>
 				<div class="panel-body">
 					<canvas id="doughnut" class="chart chart-doughnut chart-xs"
 						colours="donutRecord.colors" data="donutRecord.data"
@@ -90,7 +90,7 @@
 		</div>
 		<div class="col-lg-6 col-sm-12" id="doughnut-chart">
 			<div class="panel panel-default">
-				<div class="panel-heading">Event Type</div>
+				<div class="panel-heading">Event</div>
 				<div class="panel-body">
 					<canvas id="doughnut" class="chart chart-doughnut chart-xs"
 						colours="donutEvent.colors" data="donutEvent.data"

@@ -31,11 +31,14 @@
 					</tr>
 					<tr>
 						<th></th>
-						<th><input st-search="typeName" class="input-sm form-control" /></th>
-						<th><input st-search="status" class="input-sm form-control" /></th>
+						<th><input st-search="typeName" class="input-sm form-control"
+							st-search-default="{{typeName}}" /></th>
+						<th><input st-search="status" class="input-sm form-control"
+							st-search-default="{{statusName}}" /></th>
 						<th><input st-search="startDate"
-							class="input-sm form-control" /></th>
-						<th><input st-search="endDate" class="input-sm form-control" /></th>
+							class="input-sm form-control" st-search-default="{{startDate}}" /></th>
+						<th><input st-search="endDate" class="input-sm form-control"
+							st-search-default="{{endDate}}" /></th>
 						<th></th>
 						<th><input st-search="reason" class="input-sm form-control" /></th>
 						<th></th>
@@ -46,7 +49,8 @@
 						popover-placement="top" popover-trigger="click">
 						<td>{{row.id}}</td>
 						<td>{{row.type.name}}</td>
-						<td><span class="form-control {{row.status}}"> {{row.status}}</span></td>
+						<td><span class="form-control {{row.status}}">
+								{{row.status}}</span></td>
 						<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.duration}}</td>

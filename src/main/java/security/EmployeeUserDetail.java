@@ -1,6 +1,7 @@
 package security;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +10,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import entity.Employee;
 import entity.EmployeeRole;
@@ -22,6 +25,7 @@ public class EmployeeUserDetail implements UserDetails {
 	private Long id;
 	private String username;
 	private String password;
+	private Date dateofjoined;
 	private Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>(0);
 
 	public EmployeeUserDetail() {
@@ -32,6 +36,8 @@ public class EmployeeUserDetail implements UserDetails {
 		username = user.getUsername();
 		password = user.getPassword();
 		id = user.getId();
+		dateofjoined = user.getDateofjoined();
+		System.err.println("dateofjoint........"+dateofjoined);
 
 		Set<EmployeeRole> roles = user.getEmployeeRoles();
 		for (EmployeeRole role : roles) {
@@ -83,6 +89,15 @@ public class EmployeeUserDetail implements UserDetails {
 
 	public Long getId() {
 		return id;
+	}
+
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+	public Date getDateofjoined() {
+		return dateofjoined;
+	}
+
+	public void setDateofjoined(Date dateofjoined) {
+		this.dateofjoined = dateofjoined;
 	}
 
 	@Override

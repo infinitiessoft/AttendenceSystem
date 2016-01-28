@@ -39,12 +39,16 @@
 					<tr>
 						<th></th>
 						<th><input st-search="applicantName"
+							st-search-default="{{applicantName}}"
 							class="input-sm form-control" /></th>
-						<th><input st-search="typeName" class="input-sm form-control" /></th>
-						<th><input st-search="status" class="input-sm form-control" /></th>
+						<th><input st-search="typeName" class="input-sm form-control"
+							st-search-default="{{typeName}}" /></th>
+						<th><input st-search="status" class="input-sm form-control"
+							st-search-default="{{status}}" /></th>
 						<th><input st-search="startDate"
-							class="input-sm form-control" /></th>
-						<th><input st-search="endDate" class="input-sm form-control" /></th>
+							class="input-sm form-control" st-search-default="{{startDate}}" /></th>
+						<th><input st-search="endDate" class="input-sm form-control"
+							st-search-default="{{endDate}}" /></th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -55,7 +59,8 @@
 						<td>{{row.id}}</td>
 						<td>{{row.applicant.name}}</td>
 						<td>{{row.type.name}}</td>
-						<td><span class="form-control {{row.status}}"> {{row.status}}</span></td>
+						<td><span class="form-control {{row.status}}">
+								{{row.status}}</span></td>
 						<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.duration}}</td>

@@ -5,13 +5,36 @@ angular
 				[
 						'$scope',
 						'$http',
+						'auth',
 						'generalService',
 						'memberRecordService',
 						'memberEventService',
 						'$timeout',
-						function($scope, $http, generalService,
+						function($scope, $http, auth, generalService,
 								memberRecordService, memberEventService,
 								$timeout) {
+							var today = new Date();
+							var startDate = new Date(auth.user.principal.dateofjoined);
+							var endDate = new Date(auth.user.principal.dateofjoined);
+							var start = new Date(today.getFullYear(), 0, 0);
+							var diff = today - start;
+							var oneDay = 1000 * 60 * 60 * 24;
+							var todayofyear = Math.floor(diff / oneDay);
+							
+							diff = new Date(auth.user.principal.dateofjoined) - start;
+							var startdayofyear = Math.floor(diff / oneDay);
+							
+							endDate.setDate(endDate.getDate()-1);
+							if(startdayofyear< todayofyear){
+								startDate.setYear(today.getFullYear()-1);
+								endDate.setYear(today.getFullYear());
+							}else{
+								startDate.setYear(today.getFullYear());
+								endDate.setYear(today.getFullYear()+1);
+							}
+							$scope.startDate = startDate.toISOString();
+							$scope.endDate = endDate.toISOString();
+							
 							$scope.bar = {
 								labels : [ 'Records', 'Events' ],
 								series : [ 'Permit', 'Pending', 'Reject' ],
@@ -293,7 +316,6 @@ angular
 							};
 
 							var queryParams = function(tableState) {
-								console.debug(tableState.pagination);
 								var pagination = tableState.pagination;
 								var start = pagination.start || 0;
 								var pageSize = pagination.number || 4;
