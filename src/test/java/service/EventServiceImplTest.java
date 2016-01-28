@@ -14,13 +14,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.jpa.domain.Specification;
 
 import resources.specification.EventSpecification;
 import resources.specification.SimplePageRequest;
 import service.impl.EventServiceImpl;
 import transfer.AttendRecordTransfer;
 import transfer.EventTransfer;
+import transfer.Metadata;
 import util.MailWritter;
+import dao.AttendRecordTypeDao;
 import dao.EmployeeDao;
 import dao.EventDao;
 import entity.AttendRecord;
@@ -33,6 +36,7 @@ public class EventServiceImplTest extends ServiceTest {
 	private EventDao eventDao;
 	private AttendRecordService attendRecordService;
 	private EmployeeDao employeeDao;
+	private AttendRecordTypeDao typeDao;
 	private MailService mailService;
 	private MailWritter writter;
 	private EventServiceImpl eventService;
@@ -45,13 +49,14 @@ public class EventServiceImplTest extends ServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		typeDao = context.mock(AttendRecordTypeDao.class);
 		writter = context.mock(MailWritter.class);
 		eventDao = context.mock(EventDao.class);
 		attendRecordService = context.mock(AttendRecordService.class);
 		employeeDao = context.mock(EmployeeDao.class);
 		mailService = context.mock(MailService.class);
-		eventService = new EventServiceImpl(eventDao, attendRecordService,
-				employeeDao, mailService, writter);
+		eventService = new EventServiceImpl(eventDao, typeDao,
+				attendRecordService, employeeDao, mailService, writter);
 
 		approver = new Employee();
 		approver.setId(2L);
@@ -222,5 +227,33 @@ public class EventServiceImplTest extends ServiceTest {
 		assertEquals(event.getEmployee().getId(), ret.getApprover().getId());
 		assertEquals(event.getAttendRecord().getEmployee().getId(), ret
 				.getRecord().getEmployee().getId());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testetrieveMetadataByEmployeeId() {
+		final List<AttendRecordType> types = new ArrayList<AttendRecordType>();
+		types.add(type);
+		context.checking(new Expectations() {
+
+			{
+				exactly(3).of(eventDao).count(
+						with(any(EventSpecification.class)));
+				will(returnValue(1L));
+				
+				exactly(1).of(eventDao).count(
+						with(any(Specification.class)));
+				will(returnValue(1L));
+
+				exactly(1).of(typeDao).findAll();
+				will(returnValue(types));
+			}
+		});
+		Metadata metadata = eventService.retrieveMetadataByEmployeeId(1L);
+		assertEquals(4L, metadata.size());
+		assertEquals(1L, metadata.get("permit"));
+		assertEquals(1L, metadata.get("pending"));
+		assertEquals(1L, metadata.get("reject"));
+		assertEquals(1L, metadata.get(type.getName()));
 	}
 }

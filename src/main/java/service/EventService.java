@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import resources.specification.EventSpecification;
 import transfer.EventTransfer;
+import transfer.Metadata;
 
 public interface EventService {
 
@@ -18,4 +19,6 @@ public interface EventService {
 			Pageable pageable);
 
 	public EventTransfer update(long id, EventTransfer event);
+
+	Metadata retrieveMetadataByEmployeeId(long id);
 }

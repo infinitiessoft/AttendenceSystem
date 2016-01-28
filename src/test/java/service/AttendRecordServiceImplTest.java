@@ -20,6 +20,7 @@ import resources.specification.CalendarEventSpecification;
 import resources.specification.SimplePageRequest;
 import service.impl.AttendRecordServiceImpl;
 import transfer.AttendRecordTransfer;
+import transfer.Metadata;
 import util.MailWritter;
 
 import com.google.api.client.util.DateTime;
@@ -337,7 +338,7 @@ public class AttendRecordServiceImplTest extends ServiceTest {
 
 				exactly(1).of(writter).buildBody(record);
 				will(returnValue("body"));
-				
+
 				exactly(1).of(writter).buildSubject(record);
 				will(returnValue("header"));
 
@@ -611,5 +612,29 @@ public class AttendRecordServiceImplTest extends ServiceTest {
 			}
 		});
 		attendrecordService.permit(1l);
+	}
+
+	@Test
+	public void testetrieveMetadataByEmployeeId() {
+		final List<AttendRecordType> types = new ArrayList<AttendRecordType>();
+		types.add(type);
+		context.checking(new Expectations() {
+
+			{
+				exactly(4).of(attendRecordDao).count(
+						with(any(AttendRecordSpecification.class)));
+				will(returnValue(1L));
+
+				exactly(1).of(attendRecordTypeDao).findAll();
+				will(returnValue(types));
+			}
+		});
+		Metadata metadata = attendrecordService
+				.retrieveMetadataByEmployeeId(1L);
+		assertEquals(4, metadata.size());
+		assertEquals(1L, metadata.get("permit"));
+		assertEquals(1L, metadata.get("pending"));
+		assertEquals(1L, metadata.get("reject"));
+		assertEquals(1L, metadata.get(type.getName()));
 	}
 }

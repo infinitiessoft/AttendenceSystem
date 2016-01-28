@@ -57,6 +57,7 @@ angular
                     	   })
                     	   .state('dashboard.home',{
                     		   url:'/home',
+                    		   controller:'dashboard',
                     		   templateUrl:'views/dashboard/home.html',
                     		   resolve: {
                     		          loadMyFiles:function($ocLazyLoad) {
@@ -64,10 +65,27 @@ angular
                     		                name:'sbAdminApp',
                     		                files:[
                     		                'scripts/controllers/main.js',
+                    		                'scripts/directives/notifications/notifications.js',
+                    		                'scripts/controllers/chartContoller.js',
                     		                'scripts/directives/dashboard/stats/stats.js'
                     		                ]
-                    		              })
-                    		            }
+                    		              }),
+               						   	$ocLazyLoad.load(
+            								   {
+            									   name:'dashboard',
+            									   files:["js/dashboard.js"
+            									          ]
+            								   })
+                    		            },
+                           loadMyFile:function($ocLazyLoad) {
+                               return $ocLazyLoad.load({
+                                 name:'chart.js',
+                                 files:[
+                                   'lib/angular-chart.min.js',
+                                   'css/angular-chart.css'
+                                 ]
+                               })
+                           }
                     		          }
                     	   })
                     	   .state('dashboard.calendar',{
@@ -800,6 +818,11 @@ angular
                     				    								   var url  = serviceBase + auth.user.principal.id + '/events/';
                     				    								   return $http.put(url + id, record);
                     				    							   };
+                    				    							   
+                    				    							   obj.metadata = function() {
+           				    								    		var url  = serviceBase + auth.user.principal.id + '/events/metadata';
+           				    								    		return $http.get(url);
+           				    								    	};
 
                     				    							   return obj;
                     				    						   } ])
@@ -834,6 +857,11 @@ angular
                     				    								    	obj.remove = function(id) {
                     				    								    		var url  = serviceBase + auth.user.principal.id + '/records/';
                     				    								    		return $http.delete(url + id);
+                    				    								    	};
+                    				    								    	
+                    				    								    	obj.metadata = function() {
+                    				    								    		var url  = serviceBase + auth.user.principal.id + '/records/metadata';
+                    				    								    		return $http.get(url);
                     				    								    	};
 
                     				    								    	return obj;
@@ -1034,4 +1062,15 @@ angular
                     				    								    												    			};
 
                     				    								    												    			return obj;
-                    				    								    												    		} ]);
+                    				    								    												    		} ]) 
+                    				    								    												    		.factory(
+                            				    								    												    		'generalService',
+                            				    								    												    		['$http', function($http) {
+                            				    								    												    			var serviceBase = 'rest/v1.0/general/';
+                            				    								    												    			var obj = {};
+                            				    								    												    			obj.getRecordsToday = function(queries) {
+                            				    								    												    				return $http.get(serviceBase + 'records/today', {params:queries});
+                            				    								    												    			};
+
+                            				    								    												    			return obj;
+                            				    								    												    		} ]);

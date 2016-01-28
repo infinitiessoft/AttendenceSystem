@@ -10,12 +10,93 @@
 
 		<stats number="6/10" comments="Annual leave used" colour="primary"
 			type="gamepad" goto="dashboard.home"></stats>
-		<stats number="12/20" comments="Personal leave used" colour="green" type="briefcase"
-			goto="dashboard.home"></stats>
-		<stats number="18/20" comments="Sick leave used!" colour="yellow" type="ambulance"
-			goto="dashboard.home"></stats>
+		<stats number="12/20" comments="Personal leave used" colour="green"
+			type="briefcase" goto="dashboard.home"></stats>
+		<stats number="18/20" comments="Sick leave used!" colour="yellow"
+			type="ambulance" goto="dashboard.home"></stats>
 		<stats number="24/30" comments="Other leave used!" colour="red"
 			type="shopping-cart" goto="dashboard.home"></stats>
 
+	</div>
+
+	<!-- /.panel -->
+	<div class="row">
+		<div class="col-lg-6 col-sm-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Today's Leave</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<div class="table-responsive">
+						<table class="table table-hover" st-pipe="callServer"
+							st-table="displayed">
+							<thead>
+								<tr>
+									<th>Applicant</th>
+									<th>Type</th>
+									<th>Start Date</th>
+									<th>End Date</th>
+								</tr>
+							</thead>
+							<tbody ng-show="!isLoading">
+								<tr ng-repeat="row in displayed"
+									popover="reason: {{row.reason}}" popover-placement="top"
+									popover-trigger="click">
+									<td>{{row.applicant.name}}</td>
+									<td>{{row.type.name}}</td>
+									<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
+									<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
+								</tr>
+							</tbody>
+							<tbody ng-show="isLoading">
+								<tr>
+									<td colspan="4" class="text-center">Loading ...</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td class="text-center" st-pagination="" st-items-by-page="5"
+										colspan="4"></td>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
+					<!-- /.table-responsive -->
+				</div>
+				<!-- /.panel-body -->
+			</div>
+			<!-- /.panel -->
+		</div>
+		<div class="col-lg-6 col-sm-12" id="bar-chart">
+			<div class="panel panel-default">
+				<div class="panel-heading">Status</div>
+				<div class="panel-body">
+					<canvas id="bar" class="chart chart-bar" data="bar.data"
+						legend="true" labels="bar.labels" series="bar.series"
+						options="bar.options" colours="bar.colors"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-6 col-sm-12" id="doughnut-chart">
+			<div class="panel panel-default">
+				<div class="panel-heading">Attend Record Type</div>
+				<div class="panel-body">
+					<canvas id="doughnut" class="chart chart-doughnut chart-xs"
+						colours="donutRecord.colors" data="donutRecord.data"
+						labels="donutRecord.labels" legend="true"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 col-sm-12" id="doughnut-chart">
+			<div class="panel panel-default">
+				<div class="panel-heading">Event Type</div>
+				<div class="panel-body">
+					<canvas id="doughnut" class="chart chart-doughnut chart-xs"
+						colours="donutEvent.colors" data="donutEvent.data"
+						labels="donutEvent.labels" legend="true"></canvas>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

@@ -46,7 +46,7 @@
 						popover-placement="top" popover-trigger="click">
 						<td>{{row.id}}</td>
 						<td>{{row.type.name}}</td>
-						<td>{{row.status}}</td>
+						<td><span class="form-control {{row.status}}"> {{row.status}}</span></td>
 						<td>{{row.startDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.endDate| date:'yyyy-MM-dd HH:mm:ss' }}</td>
 						<td>{{row.duration}}</td>

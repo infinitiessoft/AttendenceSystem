@@ -19,6 +19,7 @@ import resources.specification.SimplePageRequest;
 import service.EmployeeService;
 import service.EventService;
 import transfer.EventTransfer;
+import transfer.Metadata;
 import exceptions.EventNotFoundException;
 
 @Component
@@ -64,5 +65,11 @@ public class MemberEventsResource {
 			@PathParam("eventid") long eventId, EventTransfer department) {
 		getEvent(id, eventId);
 		return eventService.update(eventId, department);
+	}
+
+	@GET
+	@Path("metadata")
+	public Metadata getMetadata(@PathParam("id") long id) {
+		return eventService.retrieveMetadataByEmployeeId(id);
 	}
 }

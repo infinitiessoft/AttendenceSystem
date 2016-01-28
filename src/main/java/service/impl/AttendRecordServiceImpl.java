@@ -3,6 +3,7 @@ package service.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.AttendRecordSpecification;
@@ -23,6 +25,7 @@ import service.MailService;
 import transfer.AttendRecordReport;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
+import transfer.Metadata;
 import util.CalendarUtils;
 import util.MailWritter;
 
@@ -82,6 +85,12 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		this.writter = writter;
 	}
 
+	// @Override
+	// public long count(Specification<AttendRecord> spec) {
+	// long count = attendRecordDao.count(spec);
+	// return count;
+	// }
+
 	@Transactional
 	@Override
 	public AttendRecordTransfer retrieve(long id) {
@@ -94,7 +103,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 	@Transactional
 	@Override
-	public AttendRecordTransfer retrieve(AttendRecordSpecification spec) {
+	public AttendRecordTransfer retrieve(Specification<AttendRecord> spec) {
 		AttendRecord record = attendRecordDao.findOne(spec);
 		if (record == null) {
 			throw new AttendRecordNotFoundException();
@@ -423,7 +432,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 	@Transactional
 	@Override
-	public Page<AttendRecordTransfer> findAll(AttendRecordSpecification spec,
+	public Page<AttendRecordTransfer> findAll(Specification<AttendRecord> spec,
 			Pageable pageable) {
 		List<AttendRecordTransfer> transfers = new ArrayList<AttendRecordTransfer>();
 		Page<AttendRecord> attendRecords = attendRecordDao.findAll(spec,
@@ -494,7 +503,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 	@Transactional
 	@Override
-	public List<AttendRecordReport> findAll(AttendRecordSpecification spec) {
+	public List<AttendRecordReport> findAll(Specification<AttendRecord> spec) {
 
 		List<AttendRecordReport> reports = new ArrayList<AttendRecordReport>();
 		List<AttendRecord> attendRecords = attendRecordDao.findAll(spec);
@@ -663,7 +672,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 	@Transactional
 	@Override
-	public void delete(AttendRecordSpecification spec) {
+	public void delete(Specification<AttendRecord> spec) {
 		AttendRecord record = attendRecordDao.findOne(spec);
 		if (record == null) {
 			throw new AttendRecordNotFoundException();
@@ -711,9 +720,35 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 	@Transactional
 	@Override
-	public AttendRecordTransfer update(AttendRecordSpecification spec,
+	public AttendRecordTransfer update(Specification<AttendRecord> spec,
 			AttendRecordTransfer updated) {
 		AttendRecord attendRecord = attendRecordDao.findOne(spec);
 		return update(attendRecord, updated, false);
+	}
+
+	@Override
+	@Transactional
+	public Metadata retrieveMetadataByEmployeeId(long id) {
+		AttendRecordSpecification spec = new AttendRecordSpecification();
+		spec.setApplicantId(id);
+		Metadata metadata = new Metadata();
+		for (transfer.AttendRecordTransfer.Status status : transfer.AttendRecordTransfer.Status
+				.values()) {
+			spec.setStatus(status.name());
+			long count = attendRecordDao.count(spec);
+			metadata.put(status.name(), count);
+		}
+
+		Iterable<AttendRecordType> types = attendRecordTypeDao.findAll();
+		Iterator<AttendRecordType> iterator = types.iterator();
+		spec = new AttendRecordSpecification();
+		spec.setApplicantId(id);
+		while (iterator.hasNext()) {
+			AttendRecordType type = iterator.next();
+			spec.setTypeName(type.getName());
+			long count = attendRecordDao.count(spec);
+			metadata.put(type.getName(), count);
+		}
+		return metadata;
 	}
 }

@@ -41,4 +41,8 @@ public class Version1_1Resource {
 		return resources.version1.member.MemberAttendRecordTypesResource.class;
 	}
 
+	@Path("general")
+	public Class<resources.version1.general.GeneralResource> getGeneralResource() {
+		return resources.version1.general.GeneralResource.class;
+	}
 }

@@ -2,13 +2,20 @@ package service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.EventSpecification;
@@ -20,10 +27,12 @@ import transfer.AttendRecordTransfer.Status;
 import transfer.AttendRecordTransfer.Type;
 import transfer.EventTransfer;
 import transfer.EventTransfer.Action;
+import transfer.Metadata;
 import util.MailWritter;
 
 import com.google.common.base.Strings;
 
+import dao.AttendRecordTypeDao;
 import dao.EmployeeDao;
 import dao.EventDao;
 import entity.AttendRecord;
@@ -41,14 +50,17 @@ public class EventServiceImpl implements EventService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(EventServiceImpl.class);
 	private EventDao eventDao;
+	private AttendRecordTypeDao attendRecordTypeDao;
 	private AttendRecordService attendRecordService;
 	private EmployeeDao employeeDao;
 	private MailService mailService;
 	private MailWritter mailWritter;
 
 	public EventServiceImpl(EventDao eventDao,
+			AttendRecordTypeDao attendRecordTypeDao,
 			AttendRecordService attendRecordService, EmployeeDao employeeDao,
 			MailService mailService, MailWritter mailWritter) {
+		this.attendRecordTypeDao = attendRecordTypeDao;
 		this.eventDao = eventDao;
 		this.attendRecordService = attendRecordService;
 		this.employeeDao = employeeDao;
@@ -243,5 +255,43 @@ public class EventServiceImpl implements EventService {
 		record.setEmployee(applicant);
 
 		return ret;
+	}
+
+	@Override
+	@Transactional
+	public Metadata retrieveMetadataByEmployeeId(final long id) {
+		EventSpecification spec = new EventSpecification();
+		spec.setApproverId(id);
+		Metadata metadata = new Metadata();
+		for (transfer.EventTransfer.Action action : transfer.EventTransfer.Action
+				.values()) {
+			spec.setAction(action.name());
+			long count = eventDao.count(spec);
+			metadata.put(action.name(), count);
+		}
+
+		Specification<Event> eventSpec = new Specification<Event>() {
+
+			@Override
+			public Predicate toPredicate(Root<Event> root,
+					CriteriaQuery<?> query, CriteriaBuilder cb) {
+				return cb.and(cb.equal(root.<Employee> get("employee")
+						.<Long> get("id"), id), cb.isNull(root
+						.<String> get("action")));
+			}
+		};
+		metadata.put("pending", eventDao.count(eventSpec));
+
+		Iterable<AttendRecordType> types = attendRecordTypeDao.findAll();
+		Iterator<AttendRecordType> iterator = types.iterator();
+		spec = new EventSpecification();
+		spec.setApproverId(id);
+		while (iterator.hasNext()) {
+			AttendRecordType type = iterator.next();
+			spec.setRecordTypeName(type.getName());
+			long count = eventDao.count(spec);
+			metadata.put(type.getName(), count);
+		}
+		return metadata;
 	}
 }

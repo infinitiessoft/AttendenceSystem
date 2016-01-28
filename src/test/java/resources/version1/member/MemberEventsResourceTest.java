@@ -13,6 +13,7 @@ import org.junit.Test;
 import resources.ResourceTest;
 import resources.version1.admin.EmployeesResource;
 import transfer.EventTransfer;
+import transfer.Metadata;
 import assertion.AssertUtils;
 import entity.PageModel;
 
@@ -82,6 +83,23 @@ public class MemberEventsResourceTest extends ResourceTest {
 				.path("1").register(JacksonFeature.class).request()
 				.header("user", "user").put(Entity.json(admin));
 		AssertUtils.assertNotFound(response);
+	}
+
+	@Test
+	public void testRetrieveMetadataByEmployeeId() {
+		Response response = target("employees").path("1").path("events")
+				.path("metadata").register(JacksonFeature.class).request()
+				.header("user", "demo").get();
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		Metadata rets = response.readEntity(Metadata.class);
+		assertEquals(7, rets.size());
+		assertEquals(0, rets.get("personal"));
+		assertEquals(0, rets.get("annual"));
+		assertEquals(1, rets.get("reject"));
+		assertEquals(0, rets.get("wedding"));
+		assertEquals(0, rets.get("permit"));
+		assertEquals(0, rets.get("pending"));
+		assertEquals(1, rets.get("sick"));
 	}
 
 	@Override

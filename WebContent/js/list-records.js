@@ -64,6 +64,7 @@ angular
 									lastState.search.predicateObject);
 
 							var queryParams = function(tableState) {
+								console.debug(tableState.pagination);
 								var pagination = tableState.pagination;
 								var start = pagination.start || 0;
 								var pageSize = pagination.number || 10;

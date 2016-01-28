@@ -18,7 +18,6 @@ angular.module('sbAdminApp').directive('sidebar', [ '$location', function() {
 			$scope.multiCollapseVar = 0;
 
 			$scope.check = function(x) {
-
 				if (x == $scope.collapseVar)
 					$scope.collapseVar = 0;
 				else

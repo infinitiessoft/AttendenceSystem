@@ -16,6 +16,7 @@ import org.junit.Test;
 import resources.ObjectMapperContextResolver;
 import resources.ResourceTest;
 import transfer.AttendRecordTransfer;
+import transfer.Metadata;
 import assertion.AssertUtils;
 import entity.PageModel;
 
@@ -334,6 +335,23 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 				.register(ObjectMapperContextResolver.class).request()
 				.header("user", "demo").post(Entity.json(record));
 		AssertUtils.assertBadRequest(response);
+	}
+
+	@Test
+	public void testRetrieveMetadataByEmployeeId() {
+		Response response = target("employees").path("1").path("records")
+				.path("metadata").register(JacksonFeature.class).request()
+				.header("user", "demo").get();
+		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		Metadata rets = response.readEntity(Metadata.class);
+		assertEquals(7, rets.size());
+		assertEquals(0, rets.get("personal"));
+		assertEquals(0, rets.get("annual"));
+		assertEquals(0, rets.get("reject"));
+		assertEquals(0, rets.get("wedding"));
+		assertEquals(0, rets.get("permit"));
+		assertEquals(0, rets.get("pending"));
+		assertEquals(0, rets.get("sick"));
 	}
 
 	@Override

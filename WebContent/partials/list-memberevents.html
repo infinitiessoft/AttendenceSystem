@@ -40,7 +40,7 @@
 						<td>{{row.record.startDate| date:'yyyy-MM-dd HH:mm' }}</td>
 						<td>{{row.record.endDate| date:'yyyy-MM-dd HH:mm' }}</td>
 						<td>{{row.record.duration}}</td>
-						<td>{{row.action}}</td>
+						<td><span class="form-control {{row.action}}"> {{row.action}}</span></td>
 						<td><button type="button" ng-click="permit(row)"
 								class="btn btn-sm btn-success" ng-show="!row.action">
 								<i class="glyphicon glyphicon-ok"> </i>

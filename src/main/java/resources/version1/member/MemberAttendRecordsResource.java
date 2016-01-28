@@ -23,6 +23,7 @@ import resources.specification.SimplePageRequest;
 import service.AttendRecordService;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Employee;
+import transfer.Metadata;
 import exceptions.AttendRecordNotFoundException;
 
 @Component
@@ -87,5 +88,11 @@ public class MemberAttendRecordsResource {
 		e.setId(id);
 		attendRecord.setApplicant(e);
 		return attendRecordService.save(attendRecord);
+	}
+
+	@GET
+	@Path("metadata")
+	public Metadata getMetadata(@PathParam("id") long id) {
+		return attendRecordService.retrieveMetadataByEmployeeId(id);
 	}
 }
