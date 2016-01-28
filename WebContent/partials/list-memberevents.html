@@ -42,11 +42,11 @@
 						<td>{{row.record.duration}}</td>
 						<td><span class="form-control {{row.action}}"> {{row.action}}</span></td>
 						<td><button type="button" ng-click="permit(row)"
-								class="btn btn-sm btn-success" ng-show="!row.action">
+								class="btn btn-sm btn-primary" ng-show="row.action == 'pending'">
 								<i class="glyphicon glyphicon-ok"> </i>
 							</button>
 							<button type="button" ng-click="reject(row)"
-								class="btn btn-sm btn-warning" ng-show="!row.action">
+								class="btn btn-sm btn-danger" ng-show="row.action == 'pending'">
 								<i class="glyphicon glyphicon-remove"> </i>
 							</button></td>
 					</tr>

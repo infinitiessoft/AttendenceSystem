@@ -19,6 +19,7 @@
 						<th st-sort="recordEndDate">end date</th>
 						<th>duration</th>
 						<th st-sort="action">action</th>
+						<th></th>
 					</tr>
 					<tr>
 						<th></th>
@@ -26,10 +27,12 @@
 							class="input-sm form-control" /></th>
 						<th><input st-search="approverName"
 							class="input-sm form-control" /></th>
+						<th><input st-search="recordTypeName"
+							class="input-sm form-control" /></th>
 						<th></th>
 						<th></th>
 						<th></th>
-						<th></th>
+						<th><input st-search="action" class="input-sm form-control" /></th>
 						<th></th>
 					</tr>
 				</thead>
@@ -44,13 +47,14 @@
 						<td>{{row.record.startDate| date:'yyyy-MM-dd HH:mm' }}</td>
 						<td>{{row.record.endDate| date:'yyyy-MM-dd HH:mm' }}</td>
 						<td>{{row.record.duration}}</td>
-						<td><span class="form-control {{row.action}}"> {{row.action}}</span></td>
+						<td><span class="form-control {{row.action}}">
+								{{row.action}}</span></td>
 						<td><button type="button" ng-click="permit(row)"
-								class="btn btn-sm btn-success" ng-show="!row.action">
+								class="btn btn-sm btn-primary" ng-show="row.action == 'pending'">
 								<i class="glyphicon glyphicon-ok"> </i>
 							</button>
 							<button type="button" ng-click="reject(row)"
-								class="btn btn-sm btn-warning" ng-show="!row.action">
+								class="btn btn-sm btn-danger" ng-show="row.action == 'pending'">
 								<i class="glyphicon glyphicon-remove"> </i>
 							</button></td>
 					</tr>

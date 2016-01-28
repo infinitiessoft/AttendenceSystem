@@ -17,8 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
-import entity.Employee;
-import exceptions.EmployeeLeaveNotFoundException;
 import resources.specification.EmployeeLeaveSpecification;
 import resources.specification.EmployeeSpecification;
 import resources.specification.SimplePageRequest;
@@ -27,6 +25,7 @@ import service.EmployeeService;
 import transfer.EmployeeLeaveTransfer;
 import transfer.EmployeeTransfer;
 import util.CalendarUtils;
+import exceptions.EmployeeLeaveNotFoundException;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
@@ -51,7 +50,8 @@ public class MembersResource {
 	@PUT
 	@Path(value = "{id}")
 	@PreAuthorize("isAuthenticated() and #id == principal.id")
-	public EmployeeTransfer updateEmployee(@PathParam("id") long id, EmployeeTransfer employee) {
+	public EmployeeTransfer updateEmployee(@PathParam("id") long id,
+			EmployeeTransfer employee) {
 		if (employee != null) {
 			employee.setDepartment(null);
 			employee.setDepartmentSet(false);
@@ -65,7 +65,8 @@ public class MembersResource {
 	// ** Method to find All the employees in the list
 	@GET
 	@PreAuthorize("isAuthenticated()")
-	public Page<EmployeeTransfer> findAllEmployee(@BeanParam SimplePageRequest pageRequest,
+	public Page<EmployeeTransfer> findAllEmployee(
+			@BeanParam SimplePageRequest pageRequest,
 			@BeanParam EmployeeSpecification spec) {
 		return employeeService.findAll(spec, pageRequest);
 	}
@@ -87,16 +88,18 @@ public class MembersResource {
 
 	@GET
 	@Path("{id}/employeeLeaves")
+	@PreAuthorize("isAuthenticated() and #id == principal.id")
 	public EmployeeLeaveTransfer findAllEmployeeLeave(@PathParam("id") long id,
 			@BeanParam EmployeeLeaveSpecification spec) {
 		EmployeeTransfer employee = employeeService.retrieve(id);
-		long year = CalendarUtils.getYearOfJoined(employee.getDateOfJoined(), new Date());
+		long year = CalendarUtils.getYearOfJoined(employee.getDateOfJoined(),
+				new Date());
 		if (spec == null) {
 			spec = new EmployeeLeaveSpecification();
 		}
 		spec.setEmployeeId(id);
 		spec.setYear(year);
-		
+
 		EmployeeLeaveTransfer employeeLeave;
 		try {
 			employeeLeave = employeeLeaveService.retrieve(spec);

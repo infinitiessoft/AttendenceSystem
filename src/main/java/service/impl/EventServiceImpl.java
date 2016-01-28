@@ -5,17 +5,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import resources.specification.EventSpecification;
@@ -159,7 +153,7 @@ public class EventServiceImpl implements EventService {
 		if (event == null) {
 			throw new EventNotFoundException(id);
 		}
-		if (!Strings.isNullOrEmpty(event.getAction())) {
+		if (!EventTransfer.Action.pending.name().equals(event.getAction())) {
 			throw new DuplicateApproveException();
 		}
 		Action action = null;
@@ -273,18 +267,6 @@ public class EventServiceImpl implements EventService {
 			long count = eventDao.count(spec);
 			metadata.put(action.name(), count);
 		}
-
-		Specification<Event> eventSpec = new Specification<Event>() {
-
-			@Override
-			public Predicate toPredicate(Root<Event> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
-				return cb.and(cb.equal(root.<Employee> get("employee")
-						.<Long> get("id"), id), cb.isNull(root
-						.<String> get("action")));
-			}
-		};
-		metadata.put("pending", eventDao.count(eventSpec));
 
 		Iterable<AttendRecordType> types = attendRecordTypeDao.findAll();
 		Iterator<AttendRecordType> iterator = types.iterator();

@@ -24,6 +24,7 @@ import service.MailService;
 import transfer.AttendRecordReport;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
+import transfer.EventTransfer.Action;
 import transfer.Metadata;
 import util.CalendarUtils;
 import util.MailWritter;
@@ -165,6 +166,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 			event.setEmployee(approver);
 			event.setAttendRecord(newEntry);
+			event.setAction(Action.pending.name());
 			event = eventDao.save(event);
 			try {
 				String subject = writter.buildSubject(newEntry);
@@ -560,12 +562,14 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			EmployeeLeave employeeLeave = employeeLeaveDao
 					.findByEmployeeIdAndLeavesettingId(employee.getId(),
 							leavesetting.getId());
-			double oldUsedDays = employeeLeave.getUsedDays();
-			double newUsedDays = oldUsedDays - duration;
-			logger.debug("oldUsedDays:{}, newUsedDays:{} ", new Object[] {
-					oldUsedDays, newUsedDays });
-			employeeLeave.setUsedDays(newUsedDays);
-			employeeLeaveDao.save(employeeLeave);
+			if (employeeLeave != null) {
+				double oldUsedDays = employeeLeave.getUsedDays();
+				double newUsedDays = oldUsedDays - duration;
+				logger.debug("oldUsedDays:{}, newUsedDays:{} ", new Object[] {
+						oldUsedDays, newUsedDays });
+				employeeLeave.setUsedDays(newUsedDays);
+				employeeLeaveDao.save(employeeLeave);
+			}
 		} else {
 			if (startC.get(Calendar.DAY_OF_MONTH) == joinC
 					.get(Calendar.DAY_OF_MONTH)) {
@@ -577,13 +581,14 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				EmployeeLeave employeeLeave = employeeLeaveDao
 						.findByEmployeeIdAndLeavesettingId(employee.getId(),
 								leavesetting.getId());
-				double oldUsedDays = employeeLeave.getUsedDays();
-				double newUsedDays = oldUsedDays - duration;
-				logger.debug("oldUsedDays:{}, newUsedDays:{} ", new Object[] {
-						oldUsedDays, newUsedDays });
-
-				employeeLeave.setUsedDays(newUsedDays);
-				employeeLeaveDao.save(employeeLeave);
+				if (employeeLeave != null) {
+					double oldUsedDays = employeeLeave.getUsedDays();
+					double newUsedDays = oldUsedDays - duration;
+					logger.debug("oldUsedDays:{}, newUsedDays:{} ",
+							new Object[] { oldUsedDays, newUsedDays });
+					employeeLeave.setUsedDays(newUsedDays);
+					employeeLeaveDao.save(employeeLeave);
+				}
 			} else if (endC.get(Calendar.DAY_OF_MONTH) == joinC
 					.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("End date is joined date");
@@ -596,24 +601,29 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 								leavesetting.getId());
 				double newDuration = countDuration(joinDay, endDate);
 				logger.debug("Next Year Duration : {}", newDuration);
-				double oldUsedDays = employeeLeave.getUsedDays();
-				double newUsedDays = oldUsedDays - (duration - newDuration);
-				logger.debug("last year oldUsedDays:{}, newUsedDays:{} ",
-						new Object[] { oldUsedDays, newUsedDays });
-				employeeLeave.setUsedDays(newUsedDays);
-				employeeLeaveDao.save(employeeLeave);
+				if (employeeLeave != null) {
+					double oldUsedDays = employeeLeave.getUsedDays();
+					double newUsedDays = oldUsedDays - (duration - newDuration);
+					logger.debug("last year oldUsedDays:{}, newUsedDays:{} ",
+							new Object[] { oldUsedDays, newUsedDays });
+					employeeLeave.setUsedDays(newUsedDays);
+					employeeLeaveDao.save(employeeLeave);
+				}
 				Leavesetting newLeavesetting = leavesettingDao
 						.findByTypeIdAndYear(record.getType().getId(),
 								(years + 1));
 				employeeLeave = employeeLeaveDao
 						.findByEmployeeIdAndLeavesettingId(employee.getId(),
 								newLeavesetting.getId());
-				oldUsedDays = employeeLeave.getUsedDays();
-				newUsedDays = employeeLeave.getUsedDays() - newDuration;
-				logger.debug("next year oldUsedDays:{}, newUsedDays:{} ",
-						new Object[] { oldUsedDays, newUsedDays });
-				employeeLeave.setUsedDays(newUsedDays);
-				employeeLeaveDao.save(employeeLeave);
+				if (employeeLeave != null) {
+					double oldUsedDays = employeeLeave.getUsedDays();
+					double newUsedDays = employeeLeave.getUsedDays()
+							- newDuration;
+					logger.debug("next year oldUsedDays:{}, newUsedDays:{} ",
+							new Object[] { oldUsedDays, newUsedDays });
+					employeeLeave.setUsedDays(newUsedDays);
+					employeeLeaveDao.save(employeeLeave);
+				}
 			} else {
 				Calendar calE = Calendar.getInstance();
 				calE.setTime(joinDay);
@@ -628,9 +638,11 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				EmployeeLeave employeeLeave = employeeLeaveDao
 						.findByEmployeeIdAndLeavesettingId(employee.getId(),
 								past.getId());
-				employeeLeave
-						.setUsedDays((employeeLeave.getUsedDays() - pastDuration));
-				employeeLeaveDao.save(employeeLeave);
+				if (employeeLeave != null) {
+					employeeLeave
+							.setUsedDays((employeeLeave.getUsedDays() - pastDuration));
+					employeeLeaveDao.save(employeeLeave);
+				}
 				double newDuration = countDuration(joinDay, endDate);
 				Leavesetting newLeavesetting = leavesettingDao
 						.findByTypeIdAndYear(record.getType().getId(),
@@ -638,12 +650,14 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				employeeLeave = employeeLeaveDao
 						.findByEmployeeIdAndLeavesettingId(employee.getId(),
 								newLeavesetting.getId());
-				double oldUsedDays = employeeLeave.getUsedDays();
-				double newUsedDays = oldUsedDays - newDuration;
-				logger.debug("last year oldUsedDays:{}, newUsedDays:{} ",
-						new Object[] { oldUsedDays, newUsedDays });
-				employeeLeave.setUsedDays(newUsedDays);
-				employeeLeaveDao.save(employeeLeave);
+				if (employeeLeave != null) {
+					double oldUsedDays = employeeLeave.getUsedDays();
+					double newUsedDays = oldUsedDays - newDuration;
+					logger.debug("last year oldUsedDays:{}, newUsedDays:{} ",
+							new Object[] { oldUsedDays, newUsedDays });
+					employeeLeave.setUsedDays(newUsedDays);
+					employeeLeaveDao.save(employeeLeave);
+				}
 			}
 		}
 	}
