@@ -1,17 +1,13 @@
 package service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import resources.specification.EmployeeLeaveSpecification;
-import service.EmployeeLeaveService;
-import transfer.EmployeeLeaveTransfer;
-import transfer.EmployeeLeaveTransfer.Employee;
-import transfer.EmployeeLeaveTransfer.Leavesetting;
 import dao.EmployeeDao;
 import dao.EmployeeLeaveDao;
 import dao.LeavesettingDao;
@@ -20,6 +16,12 @@ import exceptions.EmployeeLeaveNotFoundException;
 import exceptions.EmployeeNotFoundException;
 import exceptions.LeavesettingNotFoundException;
 import exceptions.RemovingIntegrityViolationException;
+import resources.specification.EmployeeLeaveSpecification;
+import service.EmployeeLeaveService;
+import transfer.EmployeeLeaveTransfer;
+import transfer.EmployeeLeaveTransfer.Employee;
+import transfer.EmployeeLeaveTransfer.Leavesetting;
+import util.CalendarUtils;
 
 public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
@@ -27,8 +29,8 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	private EmployeeDao employeeDao;
 	private LeavesettingDao leavesettingDao;
 
-	public EmployeeLeaveServiceImpl(EmployeeLeaveDao employeeLeaveDao,
-			EmployeeDao employeeDao, LeavesettingDao leavesettingDao) {
+	public EmployeeLeaveServiceImpl(EmployeeLeaveDao employeeLeaveDao, EmployeeDao employeeDao,
+			LeavesettingDao leavesettingDao) {
 		this.employeeLeaveDao = employeeLeaveDao;
 		this.employeeDao = employeeDao;
 		this.leavesettingDao = leavesettingDao;
@@ -39,6 +41,15 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		EmployeeLeave employeeLeave = employeeLeaveDao.findOne(id);
 		if (employeeLeave == null) {
 			throw new EmployeeLeaveNotFoundException(id);
+		}
+		return toEmployeeLeaveTransfer(employeeLeave);
+	}
+
+	@Override
+	public EmployeeLeaveTransfer retrieve(EmployeeLeaveSpecification spec) {
+		EmployeeLeave employeeLeave = employeeLeaveDao.findOne(spec);
+		if (employeeLeave == null) {
+			throw new EmployeeLeaveNotFoundException();
 		}
 		return toEmployeeLeaveTransfer(employeeLeave);
 	}
@@ -66,24 +77,20 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	}
 
 	@Override
-	public Page<EmployeeLeaveTransfer> findAll(EmployeeLeaveSpecification spec,
-			Pageable pageable) {
+	public Page<EmployeeLeaveTransfer> findAll(EmployeeLeaveSpecification spec, Pageable pageable) {
 		List<EmployeeLeaveTransfer> transfers = new ArrayList<EmployeeLeaveTransfer>();
-		Page<EmployeeLeave> employeeLeaves = employeeLeaveDao.findAll(spec,
-				pageable);
+		Page<EmployeeLeave> employeeLeaves = employeeLeaveDao.findAll(spec, pageable);
 		for (EmployeeLeave employeeLeave : employeeLeaves) {
 			transfers.add(toEmployeeLeaveTransfer(employeeLeave));
 		}
-		Page<EmployeeLeaveTransfer> rets = new PageImpl<EmployeeLeaveTransfer>(
-				transfers, pageable, employeeLeaves.getTotalElements());
+		Page<EmployeeLeaveTransfer> rets = new PageImpl<EmployeeLeaveTransfer>(transfers, pageable,
+				employeeLeaves.getTotalElements());
 		return rets;
 	}
 
 	@Override
-	public EmployeeLeaveTransfer findByEmployeeIdAndLeavesettingId(
-			long employeeId, long leavesettingId) {
-		EmployeeLeave employeeLeave = employeeLeaveDao
-				.findByEmployeeIdAndLeavesettingId(employeeId, leavesettingId);
+	public EmployeeLeaveTransfer findByEmployeeIdAndLeavesettingId(long employeeId, long leavesettingId) {
+		EmployeeLeave employeeLeave = employeeLeaveDao.findByEmployeeIdAndLeavesettingId(employeeId, leavesettingId);
 		if (employeeLeave == null) {
 			throw new EmployeeLeaveNotFoundException(employeeId, leavesettingId);
 		}
@@ -102,26 +109,21 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		return toEmployeeLeaveTransfer(employeeLeaveDao.save(employeeLeave));
 	}
 
-	private void setUpEmployeeLeave(EmployeeLeaveTransfer transfer,
-			EmployeeLeave newEntry) {
+	private void setUpEmployeeLeave(EmployeeLeaveTransfer transfer, EmployeeLeave newEntry) {
 		if (transfer.isEmployeeSet()) {
 			if (transfer.getEmployee().isIdSet()) {
-				entity.Employee employee = employeeDao.findOne(transfer
-						.getEmployee().getId());
+				entity.Employee employee = employeeDao.findOne(transfer.getEmployee().getId());
 				if (employee == null) {
-					throw new EmployeeNotFoundException(transfer.getEmployee()
-							.getId());
+					throw new EmployeeNotFoundException(transfer.getEmployee().getId());
 				}
 				newEntry.setEmployee(employee);
 			}
 		}
 		if (transfer.isLeavesettingSet()) {
 			if (transfer.getLeavesetting().isIdSet()) {
-				entity.Leavesetting leavesetting = leavesettingDao
-						.findOne(transfer.getLeavesetting().getId());
+				entity.Leavesetting leavesetting = leavesettingDao.findOne(transfer.getLeavesetting().getId());
 				if (leavesetting == null) {
-					throw new LeavesettingNotFoundException(transfer
-							.getLeavesetting().getId());
+					throw new LeavesettingNotFoundException(transfer.getLeavesetting().getId());
 				}
 				newEntry.setLeavesetting(leavesetting);
 			}
@@ -131,8 +133,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		}
 	}
 
-	private EmployeeLeaveTransfer toEmployeeLeaveTransfer(
-			EmployeeLeave employeeLeave) {
+	private EmployeeLeaveTransfer toEmployeeLeaveTransfer(EmployeeLeave employeeLeave) {
 		EmployeeLeaveTransfer ret = new EmployeeLeaveTransfer();
 		ret.setId(employeeLeave.getId());
 		ret.setUsedDays(employeeLeave.getUsedDays());

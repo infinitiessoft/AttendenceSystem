@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -236,6 +237,13 @@ public class CalendarUtils {
 			return true;
 		}
 		return false;
+	}
+	
+	public static long getYearOfJoined(Date joinedDate, Date startDate) {
+		org.joda.time.DateTime joined = new org.joda.time.DateTime(joinedDate);
+		org.joda.time.DateTime start = new org.joda.time.DateTime(startDate);
+		Period period = new Period(joined, start);
+		return period.getYears() + 1;
 	}
 
 }

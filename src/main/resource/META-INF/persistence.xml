@@ -7,7 +7,6 @@
 		<class>entity.Role</class>
 		<class>entity.EmployeeRole</class>
 		<class>entity.Department</class>
-		<class>entity.JobType</class>
 		<class>entity.AttendRecordType</class>
 		<class>entity.AttendRecord</class>
 		<class>entity.Leavesetting</class>
