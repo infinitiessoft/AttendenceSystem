@@ -220,7 +220,11 @@ public class EventServiceImpl implements EventService {
 		List<EventTransfer> transfers = new ArrayList<EventTransfer>();
 		Page<Event> events = eventDao.findAll(spec, pageable);
 		for (Event event : events) {
-			transfers.add(toEventTransfer(event));
+			EventTransfer transfer = toEventTransfer(event);
+			if(Strings.isNullOrEmpty(transfer.getAction())){
+				transfer.setAction(Status.pending.name());
+			}
+			transfers.add(transfer);
 		}
 		Page<EventTransfer> rets = new PageImpl<EventTransfer>(transfers,
 				pageable, events.getTotalElements());

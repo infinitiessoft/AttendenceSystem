@@ -9,9 +9,10 @@ angular
 						'generalService',
 						'memberRecordService',
 						'memberEventService',
+						'memberService',
 						'$timeout',
 						function($scope, $http, auth, generalService,
-								memberRecordService, memberEventService,
+								memberRecordService, memberEventService, memberService,
 								$timeout) {
 							var today = new Date();
 							var startDate = new Date(auth.user.principal.dateofjoined);
@@ -259,10 +260,52 @@ angular
 														$scope.donutEvent.labels
 																.push(k);
 														$scope.donutEvent.data
-																.push(status.data[k]);
+																.push(status.data[k]*10);
 													}
 												}
 											});
+							
+							var params = {'typeName':'annual'};
+					   		memberService
+					   			.list(params)
+					   			.then(
+					   					function(status) {
+					   						console.log(status.data);
+					   						var days = status.data.usedDays + "/" + status.data.leavesetting.days;
+					   						$scope.annual = days;
+					   					}
+					   			);
+					   		
+					   		var params = {'typeName':'personal'};
+					   		memberService
+					   			.list(params)
+					   			.then(
+					   					function(status) {
+					   						console.log(status.data);
+					   						var days = status.data.usedDays + "/" + status.data.leavesetting.days;
+					   						$scope.personal = days;
+					   					}
+					   			);
+					   		var params = {'typeName':'sick'};
+					   		memberService
+					   			.list(params)
+					   			.then(
+					   					function(status) {
+					   						console.log(status.data);
+					   						var days = status.data.usedDays + "/" + status.data.leavesetting.days;
+					   						$scope.sick = days;
+					   					}
+					   			);
+					   		var params = {'typeName':'others'};
+					   		memberService
+					   			.list(params)
+					   			.then(
+					   					function(status) {
+					   						console.log(status.data);
+					   						var days = status.data.usedDays + "/" + status.data.leavesetting.days;
+					   						$scope.others = days;
+					   					}
+					   			);
 
 							var lastState = {
 								pagination : {
