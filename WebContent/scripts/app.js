@@ -777,6 +777,23 @@ angular
                     				    					  return obj;
                     				    				  } ])
                     				    				  .factory(
+                    				    						  'memberService',
+                    				    						  [
+                    				    						   'auth',
+                    				    						   '$http',
+                    				    						   function(auth, $http) {				   
+                    				    							   var serviceBase = 'rest/v1.0/employees/';
+                    				    							   var obj = {};
+                    				    							   obj.list = function(queries) {
+                    				    								   var url  = serviceBase + auth.user.principal.id + '/employeeLeaves';
+                    				    								   return $http.get(url, {
+                    				    									   params : queries
+                    				    								   });
+                    				    							   };
+
+                    				    							   return obj;
+                    				    						   } ])
+                    				    				  .factory(
                     				    						  'memberEventService',
                     				    						  [
                     				    						   'auth',

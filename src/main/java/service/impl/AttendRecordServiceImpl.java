@@ -250,7 +250,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 		if (!CalendarUtils.overDateOfJoined(startDate, endDate, joinDate)) {
 			logger.debug("Time Range is not over dateOfJoined");
-			long years = getYearOfJoined(joinDate, startDate);
+			long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 			logger.debug("Employee joined years : {}", years);
 			Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(
 					attendRecord.getType().getId(), years);
@@ -276,7 +276,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			if (startC.get(Calendar.DAY_OF_MONTH) == joinC
 					.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("Start date is joined date");
-				long years = getYearOfJoined(joinDate, startDate);
+				long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
 				Leavesetting leavesetting = leavesettingDao
 						.findByTypeIdAndYear(attendRecord.getType().getId(),
@@ -302,7 +302,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			} else if (endC.get(Calendar.DAY_OF_MONTH) == joinC
 					.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("End date is joined date");
-				long years = getYearOfJoined(joinDate, startDate);
+				long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
 				Leavesetting past = leavesettingDao.findByTypeIdAndYear(
 						attendRecord.getType().getId(), years);
@@ -351,7 +351,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				calE.add(Calendar.DATE, -1);
 				calE.set(Calendar.HOUR_OF_DAY, 18);
 				double pastDuration = countDuration(startDate, calE.getTime());
-				long years = getYearOfJoined(joinDate, startDate);
+				long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 				logger.debug(
 						"year:{}, pastDuration:{}, startDate:{}, endDate:{}",
 						new Object[] { years, pastDuration, startDate,
@@ -412,13 +412,6 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			employeeLeave = employeeLeaveDao.save(employeeLeave);
 		}
 		return employeeLeave;
-	}
-
-	private long getYearOfJoined(Date joinedDate, Date startDate) {
-		DateTime joined = new DateTime(joinedDate);
-		DateTime start = new DateTime(startDate);
-		Period period = new Period(joined, start);
-		return period.getYears() + 1;
 	}
 
 	@Transactional
@@ -552,7 +545,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 
 		if (!CalendarUtils.overDateOfJoined(startDate, endDate, joinDate)) {
 			logger.debug("Time Range is not over dateOfJoined");
-			long years = getYearOfJoined(joinDate, startDate);
+			long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 			logger.debug("Employee joined years : {}", years);
 			Leavesetting leavesetting = leavesettingDao.findByTypeIdAndYear(
 					record.getType().getId(), years);
@@ -569,7 +562,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			if (startC.get(Calendar.DAY_OF_MONTH) == joinC
 					.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("Start date is joined date");
-				long years = getYearOfJoined(joinDate, startDate);
+				long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
 				Leavesetting leavesetting = leavesettingDao
 						.findByTypeIdAndYear(record.getType().getId(), years);
@@ -586,7 +579,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			} else if (endC.get(Calendar.DAY_OF_MONTH) == joinC
 					.get(Calendar.DAY_OF_MONTH)) {
 				logger.debug("End date is joined date");
-				long years = getYearOfJoined(joinDate, startDate);
+				long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 				logger.debug("Employee joined years : {}", years);
 				Leavesetting leavesetting = leavesettingDao
 						.findByTypeIdAndYear(record.getType().getId(), years);
@@ -621,7 +614,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				calE.set(Calendar.HOUR, 6);
 				double pastDuration = countDuration(startDate, calE.getTime());
 
-				long years = getYearOfJoined(joinDate, startDate);
+				long years = CalendarUtils.getYearOfJoined(joinDate, startDate);
 				Leavesetting past = leavesettingDao.findByTypeIdAndYear(record
 						.getType().getId(), years);
 				EmployeeLeave employeeLeave = employeeLeaveDao

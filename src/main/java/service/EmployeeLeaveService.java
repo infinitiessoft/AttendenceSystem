@@ -19,4 +19,6 @@ public interface EmployeeLeaveService {
 	public EmployeeLeaveTransfer update(long id, EmployeeLeaveTransfer employeeLeave);
 	
 	public EmployeeLeaveTransfer findByEmployeeIdAndLeavesettingId(long employeeId, long leavesettingId);
+	
+	public EmployeeLeaveTransfer retrieve(EmployeeLeaveSpecification spec);
 }
