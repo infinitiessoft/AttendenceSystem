@@ -18,6 +18,8 @@ import service.CalendarEventService;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -98,8 +100,21 @@ public class CalendarEventServiceImpl implements CalendarEventService {
 			throws IOException, GeneralSecurityException {
 		Credential credential = authorize();
 		return new com.google.api.services.calendar.Calendar.Builder(
-				HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-				applicationName).build();
+				HTTP_TRANSPORT, JSON_FACTORY, setHttpTimeout(credential))
+				.setApplicationName(applicationName).build();
+	}
+
+	private HttpRequestInitializer setHttpTimeout(
+			final HttpRequestInitializer requestInitializer) {
+		return new HttpRequestInitializer() {
+			@Override
+			public void initialize(HttpRequest httpRequest) throws IOException {
+				requestInitializer.initialize(httpRequest);
+				httpRequest.setConnectTimeout(5000); // 3 minutes connect
+															// timeout
+				httpRequest.setReadTimeout(5000); // 3 minutes read timeout
+			}
+		};
 	}
 
 	/*

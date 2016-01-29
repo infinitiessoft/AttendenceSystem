@@ -39,16 +39,14 @@
 		<property name="retryOperations">
 			<bean class="org.springframework.retry.support.RetryTemplate">
 				<property name="backOffPolicy">
-					<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
-						<property name="initialInterval" value="1000" />
-						<property name="multiplier" value="30" />
-						<property name="maxInterval" value="600000" />
+					<bean class="org.springframework.retry.backoff.FixedBackOffPolicy">
+						<property name="backOffPeriod" value="10000" />
 					</bean>
 				</property>
 				<property name="retryPolicy">
 					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
 						<!-- maxAttempts -->
-						<constructor-arg index="0" value="5" />
+						<constructor-arg index="0" value="3" />
 						<constructor-arg index="1">
 							<util:map>
 								<!-- true means will retry, false means won't -->
@@ -85,7 +83,9 @@
 						<constructor-arg index="1">
 							<util:map>
 								<!-- true means will retry, false means won't -->
-								<entry key="exceptions.CalendarInsertionException" value="true" />
+								<entry key="java.io.IOException" value="true" />
+								<entry key="java.net.UnknownHostException" value="true" />
+								<entry key="java.lang.RuntimeException" value="true" />
 							</util:map>
 						</constructor-arg>
 					</bean>
@@ -175,7 +175,7 @@
 
 	<aop:config>
 		<aop:advisor
-			pointcut="execution(public * com.google.api.client.googleapis.services.AbstractGoogleClientRequest.execute(..))"
+			pointcut="execution(public * service.impl.CalendarEventServiceImpl.*(..))"
 			advice-ref="calendarRetryAdvice" />
 	</aop:config>
 

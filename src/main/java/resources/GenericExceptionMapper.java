@@ -29,7 +29,8 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 		if (root == null) {
 			root = ex;
 		}
-		String msg = root.getMessage();
+		String msg = root.getClass().getSimpleName().replace("Exception", "")
+				+ ": " + root.getMessage();
 		errorMessage.setMessage(msg);
 		setHttpStatus(ex, errorMessage);
 		return Response.status(errorMessage.getCode()).entity(errorMessage)
