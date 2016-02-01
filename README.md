@@ -6,7 +6,7 @@ A sample project to demonstrate how a web app can be built using a Spring / Angu
 
 ##Table of Contents
    * *[OVERVIEW](#overview)*
-   * *[TECHNOLOGIES](#technologies used)*
+   * *[TECHNOLOGIES USED](#technologies-used)*
    * *[FRONTEND](#frontend)*
    * *[BACKEND](#backend)*
    * *[SECURITY](#security)*
@@ -15,7 +15,7 @@ A sample project to demonstrate how a web app can be built using a Spring / Angu
    
 ###OVERVIEW
 
-This project is meant to create an advanced *attendance* tacking of the Employees. It is designed keeping scalable and code-reusability, i.e, the same project can be altered by changing few variables to get the result as expected. Furthermore, there's scope of adding more functionality without disturbing the existing one. This was made possible by using Object Oriented Programming(JAVA) and  Frameworks(Jersey and Spring).
+This project is meant to create an advanced *attendance* tracking of the Employees. It is designed keeping scalable and code-reusability, i.e, the same project can be altered by changing few variables to get the result as expected. Furthermore, there's scope of adding more functionality without disturbing the existing one. This was made possible by using Object Oriented Programming(JAVA) and  Frameworks(Jersey and Spring).
 
 ###TECHNOLOGIES USED
 
@@ -24,6 +24,10 @@ This project is meant to create an advanced *attendance* tacking of the Employee
 <li>Angularjs</li>
 <li>Bootstrap</li>
 <li>Hibernate / JPA</li>
+<li>Spring DI</li>
+<li>Spring Retry</li>
+<li>Spring Data</li>
+<li>Spring Security</li>
 <li>JAVA</li>
 <li>Jersey</li>
 <li>Postgresql</li>
@@ -31,11 +35,11 @@ This project is meant to create an advanced *attendance* tacking of the Employee
 
 ###FRONTEND OVERVIEW
 
-The sample project is a web application with an AngularJs-based frontend for form validation
+The project is a web application made by AngularJs framework and integrate with Smart-table and Angular-formly. Smart-table plugin is a  use to display data in a table with filtering and sorting feature. Angular-formly plugin is use to render form by JSON data. The UI Style of this project is adapte from SB admin angularJS theme. 
 
 ###BACKEND OVERVIEW
 
-The backend is based on Java 8, Spring 4, JPA 2/ Hibernate 4. The Spring configuration is based on Java. The main Spring modules used where Spring MVC and Spring Security. The backend was built using the DDD approach, which includes a domain model, services, resources and transfer for frontend/backend data transfer.
+The backend is based on Java 7, Jesery, Spring 4, JPA 2/ Hibernate 4. The Spring configuration is based on Java. The main Spring modules used where Spring MVC and Spring Security. The backend was built using the DDD approach, which includes a domain model, services, resources and transfer for frontend/backend data transfer.
 
 The REST web services are based on Spring MVC and JSON. The unit tests are made with spring test and the REST API.
 
