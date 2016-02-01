@@ -35,7 +35,7 @@ This project is meant to create an advanced *attendance* tracking of the Employe
 
 ###FRONTEND OVERVIEW
 
-The project is a web application made by AngularJs framework and integrate with Smart-table and Angular-formly. Smart-table plugin is a  use to display data in a table with filtering and sorting feature. Angular-formly plugin is use to render form by JSON data. The UI Style of this project is adapte from SB admin angularJS theme. 
+The project is a web application made by AngularJs framework integrated with Smart-table and Angular-formly plugins. Smart-table plugin is a  use to display data in a table with filtering and sorting feature. Angular-formly plugin is use to render form by JSON data. The UI Style of this project is adapte from SB admin angularJS theme. 
 
 ###BACKEND OVERVIEW
 
