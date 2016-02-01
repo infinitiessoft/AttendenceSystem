@@ -11,6 +11,7 @@ A sample project to demonstrate how a web app can be built using a Spring / Angu
    * *[BACKEND](#backend)*
    * *[SECURITY](#security)*
    * *[USAGE](#usage)*
+   * *[ACKNOWLEDGEMENTS](#acknowledgements)
    
 ###OVERVIEW
 
@@ -141,8 +142,26 @@ And the Employee can Create a new Event Clicking `+` on the right hand corner of
 **After Adding the Record he can edit or delete it before getting the Permission from the Admin**
 ![Alt text](https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_2.png "Employee Info")
   
+  
+###ACKNOWLEDGEMENTS
+The Attendance system relies upon these free and openly available projects:
 
+##BACKEND
+- [Jersey](https://jersey.java.net/)
+- [Spring security](http://projects.spring.io/spring-security/)
+- [Spring framework](https://projects.spring.io/spring-framework/)
+- [Spring data jpa](http://projects.spring.io/spring-data-jpa/)
+- [Hibernate](http://hibernate.org/orm/)
+- [Spring retry](https://github.com/spring-projects/spring-retry)
+- [Google client api](https://developers.google.com/api-client-library/java/)
 
+##FRONTEND
+- [Angularjs](https://angularjs.org/)
+- [Angular-formly](http://angular-formly.com/)
+- [Smart-table](http://lorenzofox3.github.io/smart-table-website/)
+- [SB Amdin Angular](http://startangular.com/product/sb-admin-angular-theme/)
 
-
+##REFERENCE
+- [Spring Security and Angular JS](https://spring.io/guides/tutorials/spring-security-and-angular-js/)
+- [angular-rest-springsecurity](https://github.com/philipsorst/angular-rest-springsecurity)
 
