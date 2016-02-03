@@ -13,7 +13,7 @@ angular
 							$scope.statusName = $stateParams.status;
 							$scope.startDate = $stateParams.startDate;
 							$scope.endDate = $stateParams.endDate;
-							console.debug($scope.startDate+'  '+$scope.endDate);
+							
 							var lastState = {
 								pagination : {
 									start : 0,
