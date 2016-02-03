@@ -286,23 +286,7 @@
 			<groupId>org.jmock</groupId>
 			<artifactId>jmock-junit4</artifactId>
 			<version>2.6.0</version>
-			<exclusions>
-				<exclusion> <!-- Excluded as already a transitive dep of jmock -->
-					<groupId>org.jmock</groupId>
-					<artifactId>jmock</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>junit</groupId>
-					<artifactId>junit-dep</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-legacy</artifactId>
-			<version>2.6.0</version>
-		</dependency>
+					</dependency>
 
 		<dependency>
 			<groupId>pl.pragmatists</groupId>
