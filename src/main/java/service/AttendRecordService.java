@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import transfer.AttendRecordReport;
 import transfer.AttendRecordTransfer;
 import transfer.Metadata;
+import transfer.PermittedAttendRecord;
 import entity.AttendRecord;
 
 /**
@@ -33,6 +34,8 @@ public interface AttendRecordService {
 			AttendRecordTransfer attendRecord);
 
 	public List<AttendRecordReport> findAll(Specification<AttendRecord> spec);
+	
+	public List<PermittedAttendRecord> findAllPermittedAttendRecords(Specification<AttendRecord> spec);
 
 	public AttendRecordTransfer reject(long id);
 

@@ -26,6 +26,7 @@ import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
 import transfer.EventTransfer.Action;
 import transfer.Metadata;
+import transfer.PermittedAttendRecord;
 import util.CalendarUtils;
 import util.MailWritter;
 
@@ -756,5 +757,18 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 			metadata.put(type.getName(), count);
 		}
 		return metadata;
+	}
+
+	@Transactional
+	@Override
+	public List<PermittedAttendRecord> findAllPermittedAttendRecords(
+			Specification<AttendRecord> spec) {
+		List<PermittedAttendRecord> transfers = new ArrayList<PermittedAttendRecord>();
+		List<AttendRecord> attendRecords = attendRecordDao.findAll(spec);
+		for (AttendRecord attendRecord : attendRecords) {
+			transfers.add(PermittedAttendRecord
+					.toPermittedAttendRecord(attendRecord));
+		}
+		return transfers;
 	}
 }
