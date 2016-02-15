@@ -134,10 +134,10 @@
 			value="2ggudoou" /> <property name="driverClassName" value="org.postgresql.Driver" 
 			/> <property name="url" value="jdbc:postgresql://localhost:5432/demo/attendance" 
 			/> -->
-		<property name="username" value="postgres" />
-		<property name="password" value="2ggudoou" />
-		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="jdbc:postgresql://localhost:5432/demo2" />
+		<property name="username" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="driverClassName" value="${db.driver}" />
+		<property name="url" value="${db.url}" />
 	</bean>
 
 
@@ -301,6 +301,8 @@
 			access="permitAll" />
 		<security:intercept-url method="GET"
 			pattern="/rest/v1.0/auth" access="permitAll" />
+		<security:intercept-url method="GET"
+			pattern="/rest/v1.0/admin/records/permitedrecord" access="permitAll" />
 		<!-- <security:intercept-url method="GET" pattern="/rest/news/**" access="hasRole('user')" 
 			/> <security:intercept-url method="PUT" pattern="/rest/news/**" access="hasRole('admin')" 
 			/> <security:intercept-url method="POST" pattern="/rest/news/**" access="hasRole('admin')" 
