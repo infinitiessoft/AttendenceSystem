@@ -276,6 +276,7 @@ public class EmployeeTransfer {
 		this.isDepartmentSet = isDepartmentSet;
 	}
 
+	@XmlTransient
 	public String getPassword() {
 		return password;
 	}

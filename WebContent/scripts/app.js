@@ -541,7 +541,7 @@ angular
                     	   }
                        } ])
                        .run(
-                    		   function($rootScope, $http,
+                    		   function($rootScope, $http, $parse,
                     				   auth, formlyConfig, formlyValidationMessages) {
 
                     			   formlyConfig.extras.removeChromeAutoComplete = true;
@@ -550,6 +550,53 @@ angular
 
                     			   formlyValidationMessages.addStringMessage('required',
                     			   'This field is required');
+                    			   
+                    			   formlyConfig.extras.fieldTransform = formlyConfig.extras.fieldTransform || [];
+                    			   formlyConfig.extras.fieldTransform.push(removeOnHideTransformer);
+                    			    
+                    			    function removeOnHideTransformer(fields) {
+                    			      return fields.map(function(field) {
+                    			        field.data = field.data || {};
+                    			        if (field.key && !field.noFormControl && field.hideExpression && !field.data.dontRemoveOnHidden) {
+                    			          addFieldRemoveOnHideWatcher(field);
+                    			        }
+                    			        return field;
+                    			      });
+                    			    };
+                    			    
+                    			    function addFieldRemoveOnHideWatcher(field) {
+                    			      var watcher = getWatcher();
+                    			      if (field.watcher) {
+                    			        if (!angular.isArray(field.watcher)) {
+                    			          field.watcher = [field.watcher];
+                    			        }
+                    			        field.watcher.push(watcher);
+                    			      } else {
+                    			        field.watcher = watcher;
+                    			      }
+                    			    };
+                    			    
+                    			    function getWatcher() {
+                    			        return {
+                    			          expression: function(field) {
+                    			            return field.hide;
+                    			          },
+                    			          listener: function(field, newHide, oldHide, scope) {
+                    			            var model = field.model || scope.model; // default to the field's model
+                    			            /* istanbul ignore else */
+                    			            if (field.hide) {
+                    			              var getter = $parse(field.key);
+                    			              field.data.preHiddenValue = getter(model);
+                    			              getter.assign(model, undefined);
+                    			            } else if (field.data.preHiddenValue !== undefined) {
+                    			              $parse(field.key).assign(model, field.data.preHiddenValue);
+                    			            } else {
+                    			              // do nothing.
+                    			            }
+                    			          }
+                    			        };
+                    			      };
+
 
                     			   auth.init('/home', '/login', 'logout');
 

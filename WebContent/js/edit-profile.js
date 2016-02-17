@@ -116,31 +116,6 @@ angular
 							required : true
 						}
 					}, {
-						key : 'password',
-						type : 'input',
-						templateOptions : {
-							type : 'password',
-							label : 'Password',
-							placeholder : 'Must be at least 3 characters',
-							required : true,
-							minlength : 3
-						}
-					}, {
-						key : 'confirmPassword',
-						type : 'input',
-						optionsTypes : [ 'matchField' ],
-						model : vm.confirmationModel,
-						templateOptions : {
-							type : 'password',
-							label : 'Confirm Password',
-							placeholder : 'Please re-enter your password',
-							required : true
-						},
-						data : {
-							fieldToMatch : 'password',
-							modelToMatch : vm.model
-						}
-					}, {
 						key : 'email',
 						type : 'input',
 						templateOptions : {
@@ -164,7 +139,45 @@ angular
 								value : 'male'
 							} ]
 						}
-					} ];
+					} 
+					,
+					{template: '<hr />'},
+				    {
+				        key: 'hideExistingWatcher',
+				        model: 'formState',
+				        type: 'checkbox',
+				        templateOptions: {
+				          label: 'Change Password'
+				        }
+				    },
+					{
+						key : 'password',
+						type : 'input',
+						hideExpression: '!formState.hideExistingWatcher',
+						templateOptions : {
+							type : 'password',
+							label : 'Password',
+							placeholder : 'Must be at least 3 characters',
+							required : true,
+							minlength : 3
+						}
+					},{
+						key : 'confirmPassword',
+						type : 'input',
+						optionsTypes : [ 'matchField' ],
+						model : vm.confirmationModel,
+						hideExpression: '!formState.hideExistingWatcher',
+						templateOptions : {
+							type : 'password',
+							label : 'Confirm Password',
+							placeholder : 'Please re-enter your password',
+							required : true
+						},
+						data : {
+							fieldToMatch : 'password',
+							modelToMatch : vm.model
+						}
+					}];
 					function onSubmit() {
 						if (vm.form.$valid) {
 							memberService.update(id, vm.model).then(

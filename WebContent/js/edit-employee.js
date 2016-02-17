@@ -146,33 +146,6 @@ angular
 								}
 							},
 							{
-								key : 'password',
-								type : 'input',
-								templateOptions : {
-									type : 'password',
-									label : 'Password',
-									placeholder : 'Must be at least 3 characters',
-									required : true,
-									minlength : 3
-								}
-							},
-							{
-								key : 'confirmPassword',
-								type : 'input',
-								optionsTypes : [ 'matchField' ],
-								model : vm.confirmationModel,
-								templateOptions : {
-									type : 'password',
-									label : 'Confirm Password',
-									placeholder : 'Please re-enter your password',
-									required : true
-								},
-								data : {
-									fieldToMatch : 'password',
-									modelToMatch : vm.model
-								}
-							},
-							{
 								key : 'dateOfJoined',
 								type : 'datepicker',
 								templateOptions : {
@@ -258,7 +231,44 @@ angular
 										options : $scope.roles
 									}
 								} ]
-							} ];
+							},
+							{template: '<hr />'},
+						    {
+						        key: 'hideExistingWatcher',
+						        model: 'formState',
+						        type: 'checkbox',
+						        templateOptions: {
+						          label: 'Change Password'
+						        }
+						    },
+							{
+								key : 'password',
+								type : 'input',
+								hideExpression: '!formState.hideExistingWatcher',
+								templateOptions : {
+									type : 'password',
+									label : 'Password',
+									placeholder : 'Must be at least 3 characters',
+									required : true,
+									minlength : 3
+								}
+							},{
+								key : 'confirmPassword',
+								type : 'input',
+								optionsTypes : [ 'matchField' ],
+								model : vm.confirmationModel,
+								hideExpression: '!formState.hideExistingWatcher',
+								templateOptions : {
+									type : 'password',
+									label : 'Confirm Password',
+									placeholder : 'Please re-enter your password',
+									required : true
+								},
+								data : {
+									fieldToMatch : 'password',
+									modelToMatch : vm.model
+								}
+							}];
 
 					function refreshDepartments(name, field) {
 						var promise;
