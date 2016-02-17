@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Attendencesystem by infinitiessoft</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Attendencesystem</h1>
+      <h2 class="project-tagline"></h2>
+      <a href="https://github.com/infinitiessoft/AttendenceSystem" class="btn">View on GitHub</a>
+      <a href="https://github.com/infinitiessoft/AttendenceSystem/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/infinitiessoft/AttendenceSystem/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><img src="https://github.com/infinitiessoft/AttendenceSystem/blob/master/image/Snip20160120_1.png" alt="TEST"></p>
+
+<h1>
+<a id="attendancesystem" class="anchor" href="#attendancesystem" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AttendanceSystem</h1>
+
+<hr>
+
+<p>A sample project to demonstrate how a web app can be built using a Spring / AngularJs stack. The frontend is based on Angular and the backend is composed of JSON REST web services based on Spring / JPA, secured with Spring Security.</p>
+
+<h2>
+<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Table of Contents</h2>
+
+<ul>
+<li><em><a href="#overview">OVERVIEW</a></em></li>
+<li><em><a href="#technologies-used">TECHNOLOGIES USED</a></em></li>
+<li><em><a href="#frontend">FRONTEND</a></em></li>
+<li><em><a href="#backend">BACKEND</a></em></li>
+<li><em><a href="#security">SECURITY</a></em></li>
+<li><em><a href="#usage">USAGE</a></em></li>
+<li><em><a href="#acknowledgements">ACKNOWLEDGEMENTS</a></em></li>
+</ul>
+
+<h3>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>OVERVIEW</h3>
+
+<p>This project is meant to create an advanced <em>attendance</em> tracking of the Employees. It is designed keeping scalable and code-reusability, i.e, the same project can be altered by changing few variables to get the result as expected. Furthermore, there's scope of adding more functionality without disturbing the existing one. This was made possible by using Object Oriented Programming(JAVA) and  Frameworks(Jersey and Spring).</p>
+
+<h3>
+<a id="technologies-used" class="anchor" href="#technologies-used" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TECHNOLOGIES USED</h3>
+
+<ol>
+
+<li>Angularjs</li>
+<li>Bootstrap</li>
+<li>Hibernate / JPA</li>
+<li>Spring DI</li>
+<li>Spring Retry</li>
+<li>Spring Data</li>
+<li>Spring Security</li>
+<li>JAVA</li>
+<li>Jersey</li>
+<li>Postgresql</li>
+</ol>
+
+<h3>
+<a id="frontend-overview" class="anchor" href="#frontend-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FRONTEND OVERVIEW</h3>
+
+<p>The project is a web application made by AngularJs framework integrated with Smart-table and Angular-formly plugins. Smart-table plugin is a  use to display data in a table with filtering and sorting feature. Angular-formly plugin is use to render form by JSON data. The UI Style of this project is adapte from SB admin angularJS theme. </p>
+
+<h3>
+<a id="backend-overview" class="anchor" href="#backend-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BACKEND OVERVIEW</h3>
+
+<p>The backend is based on Java 7, Jesery, Spring 4, JPA 2/ Hibernate 4. The Spring configuration is based on Java. The main Spring modules used where Spring MVC and Spring Security. The backend was built using the DDD approach, which includes a domain model, services, resources and transfer for frontend/backend data transfer.</p>
+
+<p>The REST web services are based on Spring MVC and JSON. The unit tests are made with spring test and the REST API.</p>
+
+<h3>
+<a id="security" class="anchor" href="#security" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SECURITY</h3>
+
+<p>The Spring Security module was used to secure the REST backend (these guidelines are in general applied). The application can be made to run in HTTPS-only mode via a server parameter, meaning no pages will be served if the user tries to access it via HTTP.</p>
+
+<p>The Spring Security Form Login mode was used, with fallback to HTTP-Basic Authentication for non-browser based HTTP clients. Protection is in-place against CSRF (cross-site request forgery).</p>
+
+<p>The passwords are not stored in the database in plain text but in a digested form, using the Spring Security SHA1 password encoder </p>
+
+<h3>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>USAGE</h3>
+
+<p>Usually the Roles are divided into three types there are:</p>
+
+<pre><code>  1.Administrator - Manager Level2
+  2.Administrator - Manager Level1
+  3.Employees
+</code></pre>
+
+<h4>
+<a id="administrator" class="anchor" href="#administrator" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Administrator:</h4>
+
+<p>When you login as administrator you can find list of Records, Events, Employees, Roles, Department, RecordTypes, Leave-setting and EmployeeLeave where he can edit, delete or create new Entries. And he is the one who approves for the Events and Leave that the employee applies</p>
+
+<p><strong><em>General Rule:</em></strong> When an Employee apply for a Leave based on days and reason first the Manager1 will recieve the notification by mail. And he is the one who permits and rejects the Events.
+  If the Manager1 permits for Events the Manager2 recieves the Event notification for permission else Manager2 will not be notified.</p>
+
+<p><code>Events:</code> when an employee is willing to attend some events that are available he can book the date and wait for the reply from the admin. Once admin is ready with his answer he provides the action based on his decision.</p>
+
+<p><strong>Event Requested by the Employee</strong>
+<img src="https://github.com/infinitiessoft/AttendenceSystem/tree/master/image/Snip20160126_3.png" alt="Alt text" title="Event"></p>
+
+<p><strong>The Decision of the Manager1</strong>
+<img src="https://github.com/infinitiessoft/AttendenceSystem/blob/master/image/Snip20160126_4.png" alt="Alt text" title="Event"></p>
+
+<p><strong>Event if the Manager whats to know the reason for Leave he can just click on corresponding row and see the reason</strong>
+<img src="https://github.com/infinitiessoft/AttendenceSystem/blob/master/image/Snip20160126_7.png" alt="Alt text" title="Event"></p>
+
+<p><strong>Event to Manager2 if Manager1 is Permitted</strong>
+<img src="https://github.com/infinitiessoft/AttendenceSystem/blob/master/image/Snip20160126_6.png" alt="Alt text" title="Event"></p>
+
+<p><code>Leave-setting:</code> Mainly there are two types <strong>official and unofficial leaves</strong></p>
+
+<p><strong>Leave Setting</strong>
+ <img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_8.png" alt="Alt text" title="Leave Setting"></p>
+
+<p>If the Admin wants to add any other extra Records he can use the <code>+</code> symbol on the right end corner to Create</p>
+
+<p><strong>Create AttendRecord Type</strong>
+ <img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_9.png" alt="Alt text" title="Leave Setting"></p>
+
+<p><strong>After Adding the New Record</strong>
+<img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_10.png" alt="Alt text" title="Leave Setting"></p>
+
+<p>Admin can also assign the days allotment for AttendRecord by giving the Name, selecting the type from the drop down menu, he can also mention to which corresponding year he's assigning the Record to and how many days has been alloted. </p>
+
+<p><strong>Assigning the Record</strong>
+<img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_17.png" alt="Alt text" title="Leave Setting"></p>
+
+<p><strong>Can view the Record based on Year</strong>
+<img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_13.png" alt="Alt text" title="Leave Setting"></p>
+
+<p><strong><em>Official</em></strong>- where the employee can apply in the Annual leave provided by the company, so he can keep the record of used and unused days of leave from Annual Leave.</p>
+
+<p><strong><em>UnOfficial</em></strong>- are the Employees Personal or Sick Leave. </p>
+
+<p><strong>Complete Records of Employees to Admin</strong>
+<img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_14.png" alt="Alt text" title="Leave Setting"></p>
+
+<p>In this the Admin can also get the Record into the Excel sheet by clicking the Export Button on Left hand corner of the Page</p>
+
+<pre><code>               By this the Employee can notify his activities to the Admin.
+</code></pre>
+
+<h4>
+<a id="employee" class="anchor" href="#employee" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Employee:</h4>
+
+<p>When you login in as employee you can give all your personal details and apply for Leaves  or events </p>
+
+<p><strong>Employee Info</strong>
+ <img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160120_4.png" alt="Alt text" title="Employee Info"></p>
+
+<p>And the Employee can Create a new Event Clicking <code>+</code> on the right hand corner of the page.Employee can select the start date and the end date with timing,then he can select the type of Leave he wants to apply by using drop down menu and finally he can mention the Reason for applying.</p>
+
+<p><strong>Add AttendRecord of Employees</strong>
+<img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_1.png" alt="Alt text" title="Employee Info"></p>
+
+<p><strong>After Adding the Record he can edit or delete it before getting the Permission from the Admin</strong>
+<img src="https://github.com/pohsun-huang/AttendenceSystem/blob/master/image/Snip20160126_2.png" alt="Alt text" title="Employee Info"></p>
+
+<h3>
+<a id="acknowledgements" class="anchor" href="#acknowledgements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ACKNOWLEDGEMENTS</h3>
+
+<p>The Attendance system relies upon these free and openly available projects:</p>
+
+<h4>
+<a id="reference" class="anchor" href="#reference" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>REFERENCE</h4>
+
+<ul>
+<li><a href="https://spring.io/guides/tutorials/spring-security-and-angular-js/">Spring Security and Angular JS</a></li>
+<li><a href="https://github.com/philipsorst/angular-rest-springsecurity">angular-rest-springsecurity</a></li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/infinitiessoft/AttendenceSystem">Attendencesystem</a> is maintained by <a href="https://github.com/infinitiessoft">infinitiessoft</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
