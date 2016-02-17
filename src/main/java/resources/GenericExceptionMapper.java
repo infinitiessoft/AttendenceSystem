@@ -22,7 +22,7 @@ public class GenericExceptionMapper implements ExceptionMapper<Throwable> {
 
 	@Override
 	public Response toResponse(Throwable ex) {
-		logger.warn("catch exception", ex);
+		logger.error("catch exception", ex);
 		ErrorMessage errorMessage = new ErrorMessage();
 		errorMessage.setCode(Response.Status.BAD_REQUEST.getStatusCode());
 		Throwable root = ExceptionUtils.getRootCause(ex);
