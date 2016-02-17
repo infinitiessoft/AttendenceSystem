@@ -151,7 +151,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				applicant.getDateofjoined());
 		assetEndDateAfterStartDate(newEntry.getStartDate(),
 				newEntry.getEndDate());
-		assertStartDateNotOver30DaysFromNow(newEntry.getStartDate());
+		// assertStartDateNotOver30DaysFromNow(newEntry.getStartDate());
 		assertIsBusinessDays(newEntry.getType(), newEntry.getStartDate(),
 				newEntry.getEndDate());
 		assertEnoughAvailableLeaveDays(newEntry);
@@ -194,16 +194,16 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 		}
 	}
 
-	private void assertStartDateNotOver30DaysFromNow(Date startDate) {
-		Calendar startC = Calendar.getInstance();
-		startC.setTime(startDate);
-		Calendar now = Calendar.getInstance();
-		now.add(Calendar.DAY_OF_YEAR, 30);
-		if (startC.after(now)) {
-			throw new InvalidStartAndEndDateException(
-					"startDate cannot over 30 days from now");
-		}
-	}
+	// private void assertStartDateNotOver30DaysFromNow(Date startDate) {
+	// Calendar startC = Calendar.getInstance();
+	// startC.setTime(startDate);
+	// Calendar now = Calendar.getInstance();
+	// now.add(Calendar.DAY_OF_YEAR, 30);
+	// if (startC.after(now)) {
+	// throw new InvalidStartAndEndDateException(
+	// "startDate cannot over 30 days from now");
+	// }
+	// }
 
 	private void assetEndDateAfterStartDate(Date startDate, Date endDate) {
 		if (!endDate.after(startDate)) {
@@ -717,7 +717,7 @@ public class AttendRecordServiceImpl implements AttendRecordService {
 				applicant.getDateofjoined());
 		assetEndDateAfterStartDate(attendRecord.getStartDate(),
 				attendRecord.getEndDate());
-		assertStartDateNotOver30DaysFromNow(attendRecord.getStartDate());
+		// assertStartDateNotOver30DaysFromNow(attendRecord.getStartDate());
 		assertIsBusinessDays(attendRecord.getType(),
 				attendRecord.getStartDate(), attendRecord.getEndDate());
 		attendRecordDao.save(attendRecord);
