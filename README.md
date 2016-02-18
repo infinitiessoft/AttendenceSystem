@@ -3,8 +3,10 @@
 
 A sample project to demonstrate how a web app can be built using a Spring / AngularJs stack. The frontend is based on Angular and the backend is composed of JSON REST web services based on Spring / JPA, secured with Spring Security.
 
-###USAGE
+### Release notes
+Check them here: [Release notes](https://github.com/infinitiessoft/AttendanceSystem/blob/master/RELEASENOTES.md)
 
+###USAGE
 The Complete instructions for using AttendenceSystem is found [here](http://infinitiessoft.github.io/AttendenceSystem/)
 
 ###ACKNOWLEDGEMENTS
