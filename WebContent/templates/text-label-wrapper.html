@@ -1,0 +1,8 @@
+<div>
+	<label for="{{id}}" class="control-label"
+		ng-class="formState.horizontalLabelClass"> {{to.label}}
+		{{to.required ? '*' : ''}} </label>
+	<div ng-class="formState.horizontalFieldClass">
+		<formly-transclude></formly-transclude>
+	</div>
+</div>

@@ -4,6 +4,19 @@ angular
 		.constant('formlyExampleApiCheck', apiCheck())
 		.config(
 				function config(formlyConfigProvider, formlyExampleApiCheck) {
+
+					formlyConfigProvider.setWrapper({
+						name : 'textLabelWrapper',
+						templateUrl : 'templates/text-label-wrapper.html'
+					});
+
+					formlyConfigProvider.setType({
+						name : 'text',
+						templateUrl : 'templates/text-template.html',
+						wrapper : [ 'textLabelWrapper', 'bootstrapHasError' ],
+						overwriteOk : true
+					});
+
 					formlyConfigProvider
 							.setType({
 								name : 'afterField',
@@ -71,7 +84,8 @@ angular
 		.controller(
 				'edit-memberrecord',
 				function($rootScope, $scope, $stateParams, $state,
-						formlyVersion, record, recordtypeService, memberRecordService) {
+						formlyVersion, record, recordtypeService,
+						memberRecordService, generalService) {
 					var id = ($stateParams.id) ? parseInt($stateParams.id) : 0;
 					$rootScope.title = (id > 0) ? 'Edit AttendRecord'
 							: 'Add AttendRecord';
@@ -101,78 +115,119 @@ angular
 						});
 					});
 
-					vm.fields = [ {
-						className : 'row',
-						fieldGroup : [ {
-							className : 'col-xs-3',
-							key : 'startDate',
-							type : 'datepicker',
-							templateOptions : {
-								label : 'Start date',
+					vm.fields = [
+							{
+								className : 'row',
+								fieldGroup : [ {
+									className : 'col-xs-3',
+									key : 'startDate',
+									type : 'datepicker',
+									templateOptions : {
+										label : 'Start date',
+										type : 'text',
+										datepickerPopup : 'dd-MMMM-yyyy',
+										required : true
+									},
+									parsers : [ toStartTime ]
+								}, {
+									className : 'col-xs-3',
+									key : 'startDate',
+									type : 'timepicker',
+									defaultValue : new Date(),
+									templateOptions : {
+										label : 'Start time',
+										required : true
+									}
+								}, {
+									className : 'col-xs-3',
+									key : 'endDate',
+									optionsTypes : [ 'afterField' ],
+									type : 'datepicker',
+									templateOptions : {
+										label : 'End date',
+										type : 'text',
+										datepickerPopup : 'dd-MMMM-yyyy',
+										required : true
+									},
+									data : {
+										fieldToMatch : 'startDate',
+										modelToMatch : vm.model
+									},
+									parsers : [ toEndTime ]
+								}, {
+									className : 'col-xs-3',
+									key : 'endDate',
+									optionsTypes : [ 'afterField' ],
+									type : 'timepicker',
+									defaultValue : new Date(),
+									templateOptions : {
+										label : 'End time',
+										required : true
+									},
+									data : {
+										fieldToMatch : 'startDate',
+										modelToMatch : vm.model
+									}
+								} ]
+							},
+							{
+								noFormControl : true,
 								type : 'text',
-								datepickerPopup : 'dd-MMMM-yyyy',
-								required : true
-							},
-							parsers : [ toStartTime ]
-						}, {
-							className : 'col-xs-3',
-							key : 'startDate',
-							type : 'timepicker',
-							defaultValue: new Date(),
-							templateOptions : {
-								label : 'Start time',
-								required : true
-							}
-						}, {
-							className : 'col-xs-3',
-							key : 'endDate',
-							optionsTypes : [ 'afterField' ],
-							type : 'datepicker',
-							templateOptions : {
-								label : 'End date',
-								type : 'text',
-								datepickerPopup : 'dd-MMMM-yyyy',
-								required : true
-							},
-							data : {
-								fieldToMatch : 'startDate',
-								modelToMatch : vm.model
-							},
-							parsers : [ toEndTime ]
-						}, {
-							className : 'col-xs-3',
-							key : 'endDate',
-							optionsTypes : [ 'afterField' ],
-							type : 'timepicker',
-							defaultValue: new Date(),
-							templateOptions : {
-								label : 'End time',
-								required : true
-							},
-							data : {
-								fieldToMatch : 'startDate',
-								modelToMatch : vm.model
-							}
-						} ]
-					}, {
-						key : 'type',
-						fieldGroup : [ {
-							key : 'id',
-							type : 'select',
-							templateOptions : {
-								required : true,
-								label : 'Type',
-								options : $scope.types
-							}
-						} ],
-					}, {
-						key : 'reason',
-						type : 'textarea',
-						templateOptions : {
-							label : 'Reason',
-							placeholder : 'Reason',
-						}
-					} ];
+								key : 'duration',
+								templateOptions:{
+							          label: 'Duration',
+							    },
+								controller : /* @ngInject */function($scope,
+										generalService) {
+									$scope
+											.$watchCollection(
+													'[model.startDate, model.endDate]',
+													function(newValues,
+															oldValues, theScope) {
+														console.debug('watch:'
+																+ newValues);
+														if (newValues[0]
+																&& newValues[1]
+																&& newValues[1] > newValues[0]) {
+															generalService
+																	.countDuration(
+																			{
+																				startDate : newValues[0],
+																				endDate : newValues[1]
+																			})
+																	.then(
+																			function(
+																					response) {
+																				$scope.model[$scope.options.key] = response.data.days;
+																			},
+																			function(
+																					response) {
+																				$scope.model[$scope.options.key] = 0;
+																			});
+														} else {
+															$scope.model[$scope.options.key] = 0;
+														}
+													});
+								}
+							}, {
+								key : 'type',
+								fieldGroup : [ {
+									key : 'id',
+									type : 'select',
+									templateOptions : {
+										required : true,
+										label : 'Type',
+										options : $scope.types
+									}
+								} ],
+							}, {
+								key : 'reason',
+								type : 'textarea',
+								templateOptions : {
+									label : 'Reason',
+									placeholder : 'Reason',
+								}
+							} ];
 
 					function toStartTime(value) {
 						if (value) {
@@ -193,15 +248,21 @@ angular
 					function onSubmit() {
 						if (vm.form.$valid) {
 							if (id > 0) {
-								memberRecordService.update(id, vm.model).then(
-										function(status) {
-											$state.go('dashboard.list-memberrecords');
-										});
+								memberRecordService
+										.update(id, vm.model)
+										.then(
+												function(status) {
+													$state
+															.go('dashboard.list-memberrecords');
+												});
 							} else {
-								memberRecordService.insert(vm.model).then(
-										function(status) {
-											$state.go('dashboard.list-memberrecords');
-										});
+								memberRecordService
+										.insert(vm.model)
+										.then(
+												function(status) {
+													$state
+															.go('dashboard.list-memberrecords');
+												});
 							}
 
 						}

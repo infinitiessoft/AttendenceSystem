@@ -11,6 +11,7 @@ import javax.persistence.criteria.Root;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -25,7 +26,13 @@ import resources.specification.SimplePageRequest;
 import service.AttendRecordService;
 import transfer.AttendRecordTransfer;
 import transfer.AttendRecordTransfer.Status;
+import transfer.DurationTransfer;
+import util.CalendarUtils;
+
+import com.google.common.base.Preconditions;
+
 import entity.AttendRecord;
+import exceptions.InvalidEndDateException;
 
 @Component
 @Produces(MediaType.APPLICATION_JSON)
@@ -64,5 +71,20 @@ public class GeneralResource {
 			}
 		};
 		return attendRecordService.findAll(spec, pageRequest);
+	}
+
+	@POST
+	@Path("/duration")
+	@PreAuthorize("isAuthenticated()")
+	public DurationTransfer countDuration(DurationTransfer duration) {
+		Preconditions.checkNotNull(duration.getStartDate());
+		Preconditions.checkNotNull(duration.getEndDate());
+		if (!duration.getEndDate().after(duration.getStartDate())) {
+			throw new InvalidEndDateException();
+		}
+		double d = CalendarUtils.countDuration(duration.getStartDate(),
+				duration.getEndDate());
+		duration.setDays(d);
+		return duration;
 	}
 }

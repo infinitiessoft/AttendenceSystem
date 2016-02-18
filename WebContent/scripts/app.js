@@ -1141,6 +1141,10 @@ angular
                             				    								    												    			obj.getRecordsToday = function(queries) {
                             				    								    												    				return $http.get(serviceBase + 'records/today', {params:queries});
                             				    								    												    			};
+                            				    								    												    			
+                            				    								    												    			obj.countDuration = function(duration) {
+                            				    								    												    				return $http.post(serviceBase + 'duration', duration);
+                            				    								    												    			};
 
                             				    								    												    			return obj;
                             				    								    												    		} ]);
