@@ -2,7 +2,7 @@
 
 ## Version 1.2.1
 
-* Tag: [1.2.0](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.1)
+* Tag: [1.2.1](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.1)
 
 ### Changes
 
