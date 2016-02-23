@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 public class EmployeeTransfer {
@@ -281,6 +282,7 @@ public class EmployeeTransfer {
 		return password;
 	}
 
+	@XmlElement(name = "password")
 	public void setPassword(String password) {
 		isPasswordSet = true;
 		this.password = password;

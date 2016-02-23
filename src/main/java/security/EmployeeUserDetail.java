@@ -37,8 +37,6 @@ public class EmployeeUserDetail implements UserDetails {
 		password = user.getPassword();
 		id = user.getId();
 		dateofjoined = user.getDateofjoined();
-		System.err.println("dateofjoint........"+dateofjoined);
-
 		Set<EmployeeRole> roles = user.getEmployeeRoles();
 		for (EmployeeRole role : roles) {
 			authorities
