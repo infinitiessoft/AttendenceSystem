@@ -115,7 +115,7 @@
 	<bean id="mailWritter" class="util.MailWritterImpl">
 		<property name="header" value="${mail.header}" />
 		<property name="footer" value="${mail.footer}" />
-		<property name="systemUrl" value="${mail.footer}" />
+		<property name="systemUrl" value="${mail.url}" />
 	</bean>
 
 	<bean id="mailService" class="service.impl.MailServiceImpl">

@@ -185,6 +185,7 @@ public class EventServiceImpl implements EventService {
 				entity.Event newEvent = new entity.Event();
 				newEvent.setAttendRecord(record);
 				newEvent.setEmployee(employee);
+				newEvent.setAction(Action.pending.name());
 				save(newEvent);
 			} else { // duration less than or equal to 1 day
 				AttendRecordTransfer recordTransfer = attendRecordService

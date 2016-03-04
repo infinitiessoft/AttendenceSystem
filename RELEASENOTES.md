@@ -1,5 +1,13 @@
 # Release notes of Attendance System
 
+## Version 1.2.2
+
+* Tag: [1.2.2](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.2)
+
+### Changes
+
+* Fix the bug that event action is null when the attend record pass to 2nd manager that result in that the manager cannot permit or reject the attend record.
+
 ## Version 1.2.1
 
 * Tag: [1.2.1](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.1)
