@@ -7,12 +7,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.AttendRecordTypeTransfer;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MemberAttendRecordTypeResourceTest extends ResourceTest {
 
 	@Test
@@ -28,7 +31,7 @@ public class MemberAttendRecordTypeResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetAttendRecordTypeWithNotFoundException() {
+	public void test1GetAttendRecordTypeWithNotFoundException() {
 		Response response = target("recordtypes").path("5")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();

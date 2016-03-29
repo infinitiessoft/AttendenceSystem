@@ -7,12 +7,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.RoleTransfer;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MemberRolesResourceTest extends ResourceTest {
 
 	@Test
@@ -39,7 +42,7 @@ public class MemberRolesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testFindRoleWithNotFoundException() {
+	public void test1FindRoleWithNotFoundException() {
 		Response response = target("employees").path("2").path("roles")
 				.path("4").register(JacksonFeature.class).request()
 				.header("user", "user").get();

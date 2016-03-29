@@ -6,6 +6,7 @@
 .settings_backup/*
 .checkstyle
 .metadata
+.externalToolBuilders/
 
 
 ### Maven ###
@@ -18,3 +19,4 @@ logs/
 
 /Attendence/
 /target/
+*.p12

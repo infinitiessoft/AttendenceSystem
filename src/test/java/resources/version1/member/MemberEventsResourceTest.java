@@ -8,7 +8,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import resources.version1.admin.EmployeesResource;
@@ -17,6 +19,7 @@ import transfer.Metadata;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MemberEventsResourceTest extends ResourceTest {
 
 	@Test
@@ -42,7 +45,7 @@ public class MemberEventsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetEventWithNotFoundException() {
+	public void test1GetEventWithNotFoundException() {
 		Response response = target("employees").path("2").path("events")
 				.path("1").register(JacksonFeature.class).request()
 				.header("user", "user").get();
@@ -66,17 +69,14 @@ public class MemberEventsResourceTest extends ResourceTest {
 	public void testUpdateEventWithDuplicateApprove() {
 		EventTransfer admin = new EventTransfer();
 		admin.setAction("permit");
-		Response response = target("employees").path("2").path("events")
-				.path("2").register(JacksonFeature.class).request()
-				.header("user", "user").put(Entity.json(admin));
-		response = target("employees").path("2").path("events").path("2")
+		Response response = target("employees").path("2").path("events").path("2")
 				.register(JacksonFeature.class).request()
 				.header("user", "user").put(Entity.json(admin));
 		AssertUtils.assertBadRequest(response);
 	}
 
 	@Test
-	public void testUpdateEventWithNotFoundException() {
+	public void test1UpdateEventWithNotFoundException() {
 		EventTransfer admin = new EventTransfer();
 		admin.setAction("permit");
 		Response response = target("employees").path("2").path("events")

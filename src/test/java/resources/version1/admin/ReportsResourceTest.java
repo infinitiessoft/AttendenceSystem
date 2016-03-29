@@ -5,11 +5,14 @@ import static org.junit.Assert.assertEquals;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.CSVMessageBodyWritter;
 import resources.ResourceTest;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ReportsResourceTest extends ResourceTest {
 
 	@Test

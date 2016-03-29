@@ -8,13 +8,16 @@ import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.RoleTransfer;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmployeeRolesResourceTest extends ResourceTest {
 
 	@Test
@@ -41,7 +44,7 @@ public class EmployeeRolesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testFindRoleWithNotFoundException() {
+	public void test1FindRoleWithNotFoundException() {
 		Response response = target("employees").path("2").path("roles")
 				.path("4").register(JacksonFeature.class).request()
 				.header("user", "user").get();
@@ -49,7 +52,7 @@ public class EmployeeRolesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testAssignRoleToEmployee() {
+	public void testZAssignRoleToEmployee() {
 		Response response = target("employees")
 				.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION,
 						true).path("2").path("roles").path("1")
@@ -59,7 +62,7 @@ public class EmployeeRolesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testAssignRoleToEmployeeWithRoleNotFound() {
+	public void test1AssignRoleToEmployeeWithRoleNotFound() {
 		Response response = target("employees")
 				.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION,
 						true).path("2").path("roles").path("4")
@@ -79,7 +82,7 @@ public class EmployeeRolesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testRevokeRoleToEmployeeWithRoleNotFound() {
+	public void test1RevokeRoleToEmployeeWithRoleNotFound() {
 		Response response = target("employees")
 				.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION,
 						true).path("2").path("roles").path("3")

@@ -11,13 +11,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.EmployeeTransfer;
 import entity.Gender;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MembersResourceTest extends ResourceTest {
 
 	@Test

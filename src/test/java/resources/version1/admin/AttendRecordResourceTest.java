@@ -1,6 +1,7 @@
 package resources.version1.admin;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -11,7 +12,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ObjectMapperContextResolver;
 import resources.ResourceTest;
@@ -20,6 +23,7 @@ import transfer.EmployeeLeaveTransfer;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AttendRecordResourceTest extends ResourceTest {
 
 	@Test
@@ -42,7 +46,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(5l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -72,7 +76,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(7l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -89,11 +93,11 @@ public class AttendRecordResourceTest extends ResourceTest {
 
 		for (EmployeeLeaveTransfer elt : rets.getContent()) {
 			if (elt.getLeavesetting().getYear().longValue() == 1l) {
-				assertEquals(3d, elt.getUsedDays().doubleValue(), 0.01);
+				assertEquals(5d, elt.getUsedDays().doubleValue(), 0.01);
 			}
 
 			if (elt.getLeavesetting().getYear().longValue() == 2l) {
-				assertEquals(3d, elt.getUsedDays().doubleValue(), 0.01);
+				assertEquals(6d, elt.getUsedDays().doubleValue(), 0.01);
 			}
 		}
 	}
@@ -119,7 +123,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(4l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -136,11 +140,11 @@ public class AttendRecordResourceTest extends ResourceTest {
 
 		for (EmployeeLeaveTransfer elt : rets.getContent()) {
 			if (elt.getLeavesetting().getYear().longValue() == 1l) {
-				assertEquals(2d, elt.getUsedDays().doubleValue(), 0.01);
+				assertEquals(6d, elt.getUsedDays().doubleValue(), 0.01);
 			}
 
 			if (elt.getLeavesetting().getYear().longValue() == 2l) {
-				assertEquals(5d, elt.getUsedDays().doubleValue(), 0.01);
+				assertEquals(9d, elt.getUsedDays().doubleValue(), 0.01);
 			}
 		}
 	}
@@ -165,7 +169,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(6l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -182,7 +186,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 
 		for (EmployeeLeaveTransfer elt : rets.getContent()) {
 			if (elt.getLeavesetting().getYear().longValue() == 1l) {
-				assertEquals(3d, elt.getUsedDays().doubleValue(), 0.01);
+				assertEquals(4d, elt.getUsedDays().doubleValue(), 0.01);
 			}
 
 			if (elt.getLeavesetting().getYear().longValue() == 2l) {
@@ -211,7 +215,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(3l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -291,7 +295,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateAttendRecordWithNotFoundException() {
+	public void test1UpdateAttendRecordWithNotFoundException() {
 		Calendar startDateC = Calendar.getInstance();
 		startDateC.set(2015, 1, 10, 10, 0);
 		Calendar endDateC = Calendar.getInstance();
@@ -325,7 +329,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetAttendRecordWithNotFoundException() {
+	public void test1GetAttendRecordWithNotFoundException() {
 		Response response = target("records").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();
@@ -333,7 +337,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteAttendRecord() {
+	public void testZDeleteAttendRecord() {
 		Response response = target("records").path("1")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -341,7 +345,7 @@ public class AttendRecordResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteAttendRecordWithNotFoundException() {
+	public void test1DeleteAttendRecordWithNotFoundException() {
 		Response response = target("records").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();

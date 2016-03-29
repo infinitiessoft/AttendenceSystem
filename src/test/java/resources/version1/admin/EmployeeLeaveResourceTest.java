@@ -8,7 +8,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.EmployeeLeaveTransfer;
@@ -17,6 +19,7 @@ import transfer.EmployeeLeaveTransfer.Leavesetting;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmployeeLeaveResourceTest extends ResourceTest {
 
 	@Test
@@ -31,7 +34,7 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetEmployeeLeaveWithNotFoundException() {
+	public void test1GetEmployeeLeaveWithNotFoundException() {
 		Response response = target("employeeleaves").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();
@@ -39,7 +42,7 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteEmployeeLeave() {
+	public void testZDeleteEmployeeLeave() {
 		Response response = target("employeeleaves").path("1")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -47,7 +50,7 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteEmployeeLeaveWithNotFoundException() {
+	public void test1DeleteEmployeeLeaveWithNotFoundException() {
 		Response response = target("employeeleaves").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -80,7 +83,7 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testSaveEmployeeLeaveWithDuplicateLeavesettingAndEmployee() {
+	public void test1SaveEmployeeLeaveWithDuplicateLeavesettingAndEmployee() {
 		EmployeeLeaveTransfer employeeLeave = new EmployeeLeaveTransfer();
 		employeeLeave.setUsedDays(3d);
 		Employee employee = new Employee();
@@ -111,7 +114,7 @@ public class EmployeeLeaveResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateEmployeeLeaveWithNotFoundException() {
+	public void test1UpdateEmployeeLeaveWithNotFoundException() {
 		EmployeeLeaveTransfer employeeLeave = new EmployeeLeaveTransfer();
 		employeeLeave.setUsedDays(5d);
 

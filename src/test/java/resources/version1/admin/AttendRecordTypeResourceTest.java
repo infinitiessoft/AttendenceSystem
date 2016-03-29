@@ -8,13 +8,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.AttendRecordTypeTransfer;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AttendRecordTypeResourceTest extends ResourceTest {
 
 	@Test
@@ -30,7 +33,7 @@ public class AttendRecordTypeResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetAttendRecordTypeWithNotFoundException() {
+	public void test1GetAttendRecordTypeWithNotFoundException() {
 		Response response = target("recordtypes").path("5")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();
@@ -38,7 +41,7 @@ public class AttendRecordTypeResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteAttendRecordType() {
+	public void testZDeleteAttendRecordType() {
 		Response response = target("recordtypes").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -46,7 +49,7 @@ public class AttendRecordTypeResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteAttendRecordTypeWithNotFoundException() {
+	public void test1ZDeleteAttendRecordTypeWithNotFoundException() {
 		Response response = target("recordtypes").path("5")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -80,19 +83,19 @@ public class AttendRecordTypeResourceTest extends ResourceTest {
 	@Test
 	public void testSaveAttendRecordType() {
 		AttendRecordTypeTransfer admin = new AttendRecordTypeTransfer();
-		admin.setName("official");
+		admin.setName("testing");
 		Response response = target("recordtypes")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").post(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTypeTransfer transfer = response
 				.readEntity(AttendRecordTypeTransfer.class);
-		assertEquals(5l, transfer.getId().longValue());
+		assertEquals(6l, transfer.getId().longValue());
 		assertEquals(admin.getName(), transfer.getName());
 	}
 
 	@Test
-	public void testSaveAttendRecordTypeWithDuplicateName() {
+	public void test1SaveAttendRecordTypeWithDuplicateName() {
 		AttendRecordTypeTransfer admin = new AttendRecordTypeTransfer();
 		admin.setName("sick");
 		Response response = target("recordtypes")

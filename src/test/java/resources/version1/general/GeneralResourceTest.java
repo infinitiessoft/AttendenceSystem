@@ -10,7 +10,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ObjectMapperContextResolver;
 import resources.ResourceTest;
@@ -18,6 +20,7 @@ import resources.version1.admin.AttendRecordsResource;
 import transfer.AttendRecordTransfer;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class GeneralResourceTest extends ResourceTest {
 
 	@Test
@@ -49,7 +52,7 @@ public class GeneralResourceTest extends ResourceTest {
 		PageModel<AttendRecordTransfer> rets = response
 				.readEntity(new GenericType<PageModel<AttendRecordTransfer>>() {
 				});
-		assertEquals(1, rets.getTotalElements());
+		assertEquals(3, rets.getTotalElements());
 	}
 
 	@Test
@@ -82,7 +85,7 @@ public class GeneralResourceTest extends ResourceTest {
 		PageModel<AttendRecordTransfer> rets = response
 				.readEntity(new GenericType<PageModel<AttendRecordTransfer>>() {
 				});
-		assertEquals(1, rets.getTotalElements());
+		assertEquals(2, rets.getTotalElements());
 	}
 
 	@Test

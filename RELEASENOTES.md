@@ -1,5 +1,13 @@
 # Release notes of Attendance System
 
+## Version 1.2.3
+
+* Tag: [1.2.3](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.3)
+
+### Changes
+
+* Replacing home page pics.
+
 ## Version 1.2.2
 
 * Tag: [1.2.2](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.2)

@@ -1,6 +1,7 @@
 package resources.version1.member;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -11,7 +12,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ObjectMapperContextResolver;
 import resources.ResourceTest;
@@ -20,6 +23,7 @@ import transfer.Metadata;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MemberAttendRecordsResourceTest extends ResourceTest {
 
 	@Test
@@ -46,7 +50,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetAttendRecordWithNotFoundException() {
+	public void test1GetAttendRecordWithNotFoundException() {
 		Response response = target("employees").path("1").path("records")
 				.path("4").register(JacksonFeature.class).request()
 				.header("user", "demo").get();
@@ -54,7 +58,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteAttendRecord() {
+	public void testZDeleteAttendRecord() {
 		Response response = target("employees").path("1").path("records")
 				.path("1").register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -62,7 +66,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteAttendRecordWithNotFoundException() {
+	public void test1DeleteAttendRecordWithNotFoundException() {
 		Response response = target("employees").path("1").path("records")
 				.path("4").register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -100,7 +104,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateAttendRecordWithModificationNotAllow() {
+	public void test1UpdateAttendRecordWithModificationNotAllow() {
 		Calendar startDateC = Calendar.getInstance();
 		startDateC.set(2015, 1, 10, 10, 0);
 		Calendar endDateC = Calendar.getInstance();
@@ -121,7 +125,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateAttendRecordWithNotFoundException() {
+	public void test1UpdateAttendRecordWithNotFoundException() {
 		Calendar startDateC = Calendar.getInstance();
 		startDateC.set(2015, 1, 10, 10, 0);
 		Calendar endDateC = Calendar.getInstance();
@@ -164,7 +168,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(5l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -195,7 +199,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(7l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -226,7 +230,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(4l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -256,7 +260,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(6l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -286,7 +290,7 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		AttendRecordTransfer transfer = response
 				.readEntity(AttendRecordTransfer.class);
-		assertEquals(3l, transfer.getId().longValue());
+		assertNotNull(transfer.getId());
 		assertEquals(record.getType().getId(), transfer.getType().getId());
 		assertEquals(record.getStartDate(), transfer.getStartDate());
 		assertEquals(record.getEndDate(), transfer.getEndDate());
@@ -349,9 +353,9 @@ public class MemberAttendRecordsResourceTest extends ResourceTest {
 		assertEquals(0, rets.get("annual"));
 		assertEquals(0, rets.get("reject"));
 		assertEquals(0, rets.get("wedding"));
-		assertEquals(0, rets.get("permit"));
-		assertEquals(0, rets.get("pending"));
-		assertEquals(0, rets.get("sick"));
+		assertEquals(1, rets.get("permit"));
+		assertEquals(1, rets.get("pending"));
+		assertEquals(2, rets.get("sick"));
 	}
 
 	@Override

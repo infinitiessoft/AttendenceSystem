@@ -7,12 +7,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.DepartmentTransfer;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MemberDepartmentsResourceTest extends ResourceTest {
 
 	@Test
@@ -28,7 +31,7 @@ public class MemberDepartmentsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetDepartmentWithNotFoundException() {
+	public void test1GetDepartmentWithNotFoundException() {
 		Response response = target("departments").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();

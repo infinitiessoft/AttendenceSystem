@@ -8,13 +8,13 @@
 	<!-- /.row -->
 	<div class="row">
 
-		<stats number="{{annual}}" comments="Annual leave used" colour="primary"
+		<stats number="{{annual}}" comments="Annual leave used" colour="primary" img="img/airplane.gif"
 			type="gamepad" goto="dashboard.list-memberrecords({typeName:'annual', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
-		<stats number="{{personal}}" comments="Personal leave used" colour="green"
+		<stats number="{{personal}}" comments="Personal leave used" colour="green" img="img/money.gif"
 			type="briefcase" goto="dashboard.list-memberrecords({ typeName: 'personal', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
-		<stats number="{{sick}}" comments="Sick leave used!" colour="yellow"
+		<stats number="{{sick}}" comments="Sick leave used!" colour="yellow" img="img/sick.gif"
 			type="ambulance" goto="dashboard.list-memberrecords({ typeName: 'sick', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
-		<stats number="{{others}}" comments="Other leave used!" colour="red"
+		<stats number="{{others}}" comments="Other leave used!" colour="red" img="img/playstation.gif"
 			type="shopping-cart" goto="dashboard.list-memberrecords({ typeName: 'others', startDate:'{{startDate}}', endDate:'{{endDate}}'})"></stats>
 
 	</div>

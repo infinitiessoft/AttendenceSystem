@@ -8,13 +8,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.RoleTransfer;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RolesResourceTest extends ResourceTest {
 
 	@Test
@@ -42,7 +45,7 @@ public class RolesResourceTest extends ResourceTest {
 		Response response = target("roles").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
-		assertEquals(Status.OK.getStatusCode(), response.getStatus());
+		assertEquals(Status.NO_CONTENT.getStatusCode(), response.getStatus());
 	}
 
 	@Test
@@ -70,7 +73,7 @@ public class RolesResourceTest extends ResourceTest {
 	public void testUpdateRoleWithNotFoundException() {
 		RoleTransfer admin = new RoleTransfer();
 		admin.setName("administrator");
-		Response response = target("roles").path("4")
+		Response response = target("roles").path("10")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").put(Entity.json(admin));
 		AssertUtils.assertNotFound(response);
@@ -105,7 +108,7 @@ public class RolesResourceTest extends ResourceTest {
 		PageModel<RoleTransfer> rets = response
 				.readEntity(new GenericType<PageModel<RoleTransfer>>() {
 				});
-		assertEquals(3, rets.getTotalElements());
+		assertEquals(2, rets.getTotalElements());
 	}
 
 	@Override

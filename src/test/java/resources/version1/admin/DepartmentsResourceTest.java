@@ -8,13 +8,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.DepartmentTransfer;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class DepartmentsResourceTest extends ResourceTest {
 
 	@Test
@@ -30,7 +33,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetDepartmentWithNotFoundException() {
+	public void test1GetDepartmentWithNotFoundException() {
 		Response response = target("departments").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();
@@ -38,7 +41,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteDepartment() {
+	public void testZDeleteleteDepartment() {
 		Response response = target("departments").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -46,7 +49,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteDepartmentWithNotFoundException() {
+	public void test1DeleteDepartmentWithNotFoundException() {
 		Response response = target("departments").path("4")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -68,7 +71,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateDepartmentWithNotFoundException() {
+	public void test1UpdateDepartmentWithNotFoundException() {
 		DepartmentTransfer admin = new DepartmentTransfer();
 		admin.setName("administrator");
 		Response response = target("departments").path("4")
@@ -80,7 +83,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 	@Test
 	public void testSaveDepartment() {
 		DepartmentTransfer admin = new DepartmentTransfer();
-		admin.setName("administrator");
+		admin.setName("testing");
 		Response response = target("departments")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").post(Entity.json(admin));
@@ -92,7 +95,7 @@ public class DepartmentsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testSaveDepartmentWithDuplicateName() {
+	public void test1SaveDepartmentWithDuplicateName() {
 		DepartmentTransfer admin = new DepartmentTransfer();
 		admin.setName("Sales");
 		Response response = target("departments")

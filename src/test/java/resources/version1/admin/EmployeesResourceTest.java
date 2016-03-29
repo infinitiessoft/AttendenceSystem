@@ -11,7 +11,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.EmployeeTransfer;
@@ -19,6 +21,7 @@ import assertion.AssertUtils;
 import entity.Gender;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EmployeesResourceTest extends ResourceTest {
 
 	@Test
@@ -33,7 +36,7 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetEmployeeWithNotFoundException() {
+	public void test1GetEmployeeWithNotFoundException() {
 		Response response = target("employees").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();
@@ -41,7 +44,7 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteEmployeeWithDeletionNotAllow() {
+	public void test1DeleteEmployeeWithDeletionNotAllow() {
 		Response response = target("employees").path("1")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -49,7 +52,7 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteEmployee() {
+	public void testZDeleteEmployee() {
 		Response response = target("employees").path("2")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -57,7 +60,7 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testDeleteEmployeeWithNotFoundException() {
+	public void test1DeleteEmployeeWithNotFoundException() {
 		Response response = target("employees").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").delete();
@@ -68,10 +71,10 @@ public class EmployeesResourceTest extends ResourceTest {
 	public void testUpdateEmployee() {
 		EmployeeTransfer admin = new EmployeeTransfer();
 		admin.setDateOfJoined(new Date());
-		admin.setEmail("admin@gmail.com");
-		admin.setName("administrator");
+		admin.setEmail("testing@gmail.com");
+		admin.setName("testing");
 		admin.setPassword("secret");
-		admin.setUsername("admin");
+		admin.setUsername("demo");
 		admin.setGender(Gender.male.name());
 		EmployeeTransfer.Department dep = new EmployeeTransfer.Department();
 		dep.setId(2L);
@@ -93,7 +96,7 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateEmployeeWithNotFoundException() {
+	public void test1UpdateEmployeeWithNotFoundException() {
 		EmployeeTransfer admin = new EmployeeTransfer();
 		admin.setDateOfJoined(new Date());
 		admin.setEmail("admin@gmail.com");
@@ -111,7 +114,7 @@ public class EmployeesResourceTest extends ResourceTest {
 		EmployeeTransfer admin = new EmployeeTransfer();
 		admin.setDateOfJoined(new Date());
 		admin.setEmail("admin@gmail.com");
-		admin.setName("administrator");
+		admin.setName("admin");
 		admin.setPassword("secret");
 		admin.setUsername("admin");
 		admin.setGender(Gender.male.name());
@@ -122,7 +125,7 @@ public class EmployeesResourceTest extends ResourceTest {
 				.request().header("user", "demo").post(Entity.json(admin));
 		assertEquals(Status.OK.getStatusCode(), response.getStatus());
 		EmployeeTransfer transfer = response.readEntity(EmployeeTransfer.class);
-		assertEquals(3l, transfer.getId().longValue());
+		assertEquals(4l, transfer.getId().longValue());
 		assertEquals(admin.getName(), transfer.getName());
 		assertEquals(admin.getDateOfJoined(), transfer.getDateOfJoined());
 		assertEquals(admin.getEmail(), transfer.getEmail());
@@ -134,7 +137,7 @@ public class EmployeesResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testSaveEmployeeWithDuplicateUsername() {
+	public void test1SaveEmployeeWithDuplicateUsername() {
 		EmployeeTransfer admin = new EmployeeTransfer();
 		admin.setDateOfJoined(new Date());
 		admin.setEmail("admin@gmail.com");

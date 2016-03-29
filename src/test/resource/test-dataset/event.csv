@@ -1,1 +1,1 @@
-"id","book_date","employee_id","record_id","action","version""1","2015-01-02 10:00:00","1","1","reject","1""2","2015-01-02 10:00:00","2","2",null,"1"
+"id","book_date","employee_id","record_id","action","version""1","2015-01-02 10:00:00","1","1","reject","1""2","2015-01-02 10:00:00","2","2","pending","1"

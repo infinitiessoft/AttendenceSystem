@@ -22,6 +22,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
 import org.hibernate.HibernateException;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,22 +53,25 @@ public abstract class ResourceTest extends JerseyTest {
 
 	@Autowired
 	protected DbUnitUtil dbUtil;
-	
+
+	private static boolean isLoad = false;
+
 	@Override
-    protected TestContainerFactory getTestContainerFactory() {
-        return new GrizzlyWebTestContainerFactory();
-    }
+	protected TestContainerFactory getTestContainerFactory() {
+		return new GrizzlyWebTestContainerFactory();
+	}
 
-    @Override
-    protected DeploymentContext configureDeployment(){
-        return ServletDeploymentContext
-                .forServlet(new ServletContainer(configure()))
-                .addListener(ContextLoaderListener.class)
-                .contextParam("contextConfigLocation", "file:src/test/resource/test_context.xml")
-                .addFilter(org.springframework.web.filter.DelegatingFilterProxy.class, "springSecurityFilterChain")
-                .build();
-    }
-
+	@Override
+	protected DeploymentContext configureDeployment() {
+		return ServletDeploymentContext
+				.forServlet(new ServletContainer(configure()))
+				.addListener(ContextLoaderListener.class)
+				.contextParam("contextConfigLocation",
+						"file:src/test/resource/test_context.xml")
+				.addFilter(
+						org.springframework.web.filter.DelegatingFilterProxy.class,
+						"springSecurityFilterChain").build();
+	}
 
 	@Override
 	protected ResourceConfig configure() {
@@ -78,7 +82,7 @@ public abstract class ResourceTest extends JerseyTest {
 		rc.register(SpringLifecycleListener.class);
 		rc.register(RequestContextFilter.class);
 		rc.register(JacksonFeature.class);
-//		rc.register(AuthenticationFilter.class);
+		// rc.register(AuthenticationFilter.class);
 		rc.property("contextConfigLocation",
 				"file:src/test/resource/test_context.xml");
 		return rc;
@@ -95,7 +99,15 @@ public abstract class ResourceTest extends JerseyTest {
 		// dbUtil.createTables(new Class[] { Employee.class });
 
 		// Different functional tests require different data sets
-		dbUtil.loadData();
+		if (!isLoad) {
+			isLoad = true;
+			dbUtil.loadData();
+		}
+	}
+
+	@AfterClass
+	public static void end() {
+		isLoad = false;
 	}
 
 	@Provider

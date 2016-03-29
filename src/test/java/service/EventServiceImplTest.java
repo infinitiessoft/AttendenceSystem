@@ -168,7 +168,7 @@ public class EventServiceImplTest extends ServiceTest {
 
 	@Test
 	public void testUpdateActionPermitAndNoFurtherAuditor() {
-		event.setAction(null);
+		event.setAction("pending");
 		final EventTransfer newEntry = new EventTransfer();
 		newEntry.setAction("permit");
 		context.checking(new Expectations() {

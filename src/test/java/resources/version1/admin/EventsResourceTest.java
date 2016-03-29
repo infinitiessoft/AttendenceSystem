@@ -8,13 +8,16 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import resources.ResourceTest;
 import transfer.EventTransfer;
 import assertion.AssertUtils;
 import entity.PageModel;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EventsResourceTest extends ResourceTest {
 
 	@Test
@@ -28,7 +31,7 @@ public class EventsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testGetEventWithNotFoundException() {
+	public void test1GetEventWithNotFoundException() {
 		Response response = target("events").path("3")
 				.register(JacksonFeature.class).request()
 				.header("user", "demo").get();
@@ -49,7 +52,7 @@ public class EventsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateEventWithDuplicateApprove() {
+	public void test1UpdateEventWithDuplicateApprove() {
 		EventTransfer admin = new EventTransfer();
 		admin.setAction("permit");
 		Response response = target("events").path("1")
@@ -59,7 +62,7 @@ public class EventsResourceTest extends ResourceTest {
 	}
 
 	@Test
-	public void testUpdateEventWithNotFoundException() {
+	public void test1UpdateEventWithNotFoundException() {
 		EventTransfer admin = new EventTransfer();
 		admin.setAction("permit");
 		Response response = target("events").path("3")
