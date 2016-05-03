@@ -1,6 +1,8 @@
 package util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,8 +12,6 @@ import org.joda.time.Interval;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import util.CalendarUtils;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
@@ -405,7 +405,7 @@ public class CalendarUtilTest {
 				endCalendar.getTime());
 		assertEquals(3.5d, duration, 0.01d);
 	}
-	
+
 	@Test
 	public void testCountDurationHalfAndThreeDay() {
 		Calendar startCalendar = Calendar.getInstance();
@@ -421,5 +421,38 @@ public class CalendarUtilTest {
 		double duration = CalendarUtils.countDuration(startCalendar.getTime(),
 				endCalendar.getTime());
 		assertEquals(3.5d, duration, 0.01d);
+	}
+
+	@Test
+	public void testOverDateOfJoinedFalse() {
+		Calendar joinCalendar = Calendar.getInstance();
+		joinCalendar.set(2011, 4, 5, 0, 0);
+
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(2016, 4, 4, 10, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.set(2016, 4, 4, 18, 0);
+
+		assertFalse(CalendarUtils.overDateOfJoined(startCalendar.getTime(),
+				endCalendar.getTime(), joinCalendar.getTime()));
+	}
+	
+	@Test
+	public void testOverDateOfJoinedTrue() {
+		Calendar joinCalendar = Calendar.getInstance();
+		joinCalendar.set(2011, 4, 5, 0, 0);
+
+		Calendar startCalendar = Calendar.getInstance();
+		startCalendar.set(2014, 12, 31, 10, 0);
+		Calendar endCalendar = Calendar.getInstance();
+		endCalendar.set(2015, 4, 6, 18, 0);
+
+		assertTrue(CalendarUtils.overDateOfJoined(startCalendar.getTime(),
+				endCalendar.getTime(), joinCalendar.getTime()));
+		
+		startCalendar.set(2014, 12, 29, 10, 0);
+		joinCalendar.set(2011, 12, 31, 0, 0);
+		assertTrue(CalendarUtils.overDateOfJoined(startCalendar.getTime(),
+				endCalendar.getTime(), joinCalendar.getTime()));
 	}
 }

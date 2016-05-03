@@ -1,5 +1,13 @@
 # Release notes of Attendance System
 
+## Version 1.2.4
+
+* Tag: [1.2.4](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.4)
+
+### Changes
+
+* Fix the bug that wrong dateofjoined because of leap year.
+
 ## Version 1.2.3
 
 * Tag: [1.2.3](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.3)

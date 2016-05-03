@@ -175,8 +175,9 @@ public class CalendarUtils {
 
 	private static long getDaysInvolve(Calendar startDate, Calendar endDate) {
 		if (startDate.after(endDate)) {
-			throw new IllegalArgumentException(
-					"End date should always greater than start date.");
+			throw new IllegalArgumentException("End date:" + endDate.getTime()
+					+ " should always greater than start date"
+					+ startDate.getTime());
 		}
 		Calendar date = (Calendar) startDate.clone();
 		date.set(Calendar.HOUR_OF_DAY, 0);
@@ -231,14 +232,32 @@ public class CalendarUtils {
 		endC.setTime(end);
 		Calendar joinC = Calendar.getInstance();
 		joinC.setTime(join);
-		if (joinC.get(Calendar.DAY_OF_YEAR) >= startC.get(Calendar.DAY_OF_YEAR)
-				&& joinC.get(Calendar.DAY_OF_YEAR) <= endC
-						.get(Calendar.DAY_OF_YEAR)) {
+		joinC.set(Calendar.YEAR, startC.get(Calendar.YEAR));
+
+		logger.debug(
+				"start:{}, end:{}, join:{}, startDayOfYear:{}, endDayOfYear:{}, joinDayOfYear:{}",
+				new Object[] { startC.getTime(), endC.getTime(),
+						joinC.getTime(), startC.get(Calendar.DAY_OF_YEAR),
+						endC.get(Calendar.DAY_OF_YEAR),
+						joinC.get(Calendar.DAY_OF_YEAR) });
+
+		Interval interval = new Interval(start.getTime(), end.getTime());
+		boolean overlap = interval.contains(joinC.getTimeInMillis());
+
+		if (overlap) {
 			return true;
 		}
+
+		joinC.set(Calendar.YEAR, endC.get(Calendar.YEAR));
+		overlap = interval.contains(joinC.getTimeInMillis());
+
+		if (overlap) {
+			return true;
+		}
+
 		return false;
 	}
-	
+
 	public static long getYearOfJoined(Date joinedDate, Date startDate) {
 		org.joda.time.DateTime joined = new org.joda.time.DateTime(joinedDate);
 		org.joda.time.DateTime start = new org.joda.time.DateTime(startDate);
