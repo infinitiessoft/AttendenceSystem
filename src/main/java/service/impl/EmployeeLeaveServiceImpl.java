@@ -3,6 +3,8 @@ package service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +29,8 @@ import exceptions.RemovingIntegrityViolationException;
 
 public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
-	// private final static Logger logger = LoggerFactory
-	// .getLogger(EmployeeLeaveServiceImpl.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(EmployeeLeaveServiceImpl.class);
 	private EmployeeLeaveDao employeeLeaveDao;
 	private EmployeeDao employeeDao;
 	private LeavesettingDao leavesettingDao;
@@ -53,10 +55,12 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	public EmployeeLeaveTransfer retrieve(EmployeeLeaveSpecification spec) {
 		EmployeeLeave employeeLeave = employeeLeaveDao.findOne(spec);
 		if (employeeLeave == null) {
+			logger.debug("employeeLeave no exist");
 			// add EmployeeLeave if no exist
 			if (spec != null && spec.getEmployeeId() != null
 					&& spec.getYear() != null
 					&& !Strings.isNullOrEmpty(spec.getTypeName())) {
+				logger.debug("insert a new EmployeeLeave start");
 				LeavesettingSpecification leavesettingSpec = new LeavesettingSpecification();
 				leavesettingSpec.setType(spec.getTypeName());
 				leavesettingSpec.setYear(spec.getYear());
@@ -78,6 +82,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 				employeeLeave.setLeavesetting(leavesetting);
 				employeeLeave.setUsedDays(0d);
 				employeeLeave = employeeLeaveDao.save(employeeLeave);
+				logger.debug("insert a new EmployeeLeave end:{}", employeeLeave);
 				return toEmployeeLeaveTransfer(employeeLeave);
 			}
 
