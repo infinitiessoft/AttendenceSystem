@@ -8,10 +8,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import resources.specification.EmployeeLeaveSpecification;
+import resources.specification.LeavesettingSpecification;
 import service.EmployeeLeaveService;
 import transfer.EmployeeLeaveTransfer;
 import transfer.EmployeeLeaveTransfer.Employee;
 import transfer.EmployeeLeaveTransfer.Leavesetting;
+
+import com.google.common.base.Strings;
+
 import dao.EmployeeDao;
 import dao.EmployeeLeaveDao;
 import dao.LeavesettingDao;
@@ -23,6 +27,8 @@ import exceptions.RemovingIntegrityViolationException;
 
 public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
+	// private final static Logger logger = LoggerFactory
+	// .getLogger(EmployeeLeaveServiceImpl.class);
 	private EmployeeLeaveDao employeeLeaveDao;
 	private EmployeeDao employeeDao;
 	private LeavesettingDao leavesettingDao;
@@ -47,6 +53,34 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	public EmployeeLeaveTransfer retrieve(EmployeeLeaveSpecification spec) {
 		EmployeeLeave employeeLeave = employeeLeaveDao.findOne(spec);
 		if (employeeLeave == null) {
+			// add EmployeeLeave if no exist
+			if (spec != null && spec.getEmployeeId() != null
+					&& spec.getYear() != null
+					&& !Strings.isNullOrEmpty(spec.getTypeName())) {
+				LeavesettingSpecification leavesettingSpec = new LeavesettingSpecification();
+				leavesettingSpec.setType(spec.getTypeName());
+				leavesettingSpec.setYear(spec.getYear());
+				entity.Leavesetting leavesetting = leavesettingDao
+						.findOne(leavesettingSpec);
+				entity.Employee employee = employeeDao.findOne(spec
+						.getEmployeeId());
+				if (employee == null) {
+					throw new EmployeeNotFoundException(spec.getEmployeeId());
+				}
+
+				if (leavesetting == null) {
+					throw new LeavesettingNotFoundException(spec.getTypeName(),
+							spec.getYear());
+				}
+
+				employeeLeave = new EmployeeLeave();
+				employeeLeave.setEmployee(employee);
+				employeeLeave.setLeavesetting(leavesetting);
+				employeeLeave.setUsedDays(0d);
+				employeeLeave = employeeLeaveDao.save(employeeLeave);
+				return toEmployeeLeaveTransfer(employeeLeave);
+			}
+
 			throw new EmployeeLeaveNotFoundException();
 		}
 		return toEmployeeLeaveTransfer(employeeLeave);
