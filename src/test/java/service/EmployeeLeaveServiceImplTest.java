@@ -5,6 +5,9 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.jmock.Expectations;
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 import resources.specification.EmployeeLeaveSpecification;
+import resources.specification.LeavesettingSpecification;
 import resources.specification.SimplePageRequest;
 import service.impl.EmployeeLeaveServiceImpl;
 import transfer.EmployeeLeaveTransfer;
@@ -68,6 +72,77 @@ public class EmployeeLeaveServiceImplTest extends ServiceTest {
 
 	@After
 	public void tearDown() throws Exception {
+	}
+
+	@Test
+	public void testRetrieveBySpec() {
+		final EmployeeLeaveSpecification spec = new EmployeeLeaveSpecification();
+		spec.setEmployeeId(employee.getId());
+		spec.setTypeName(sick.getName());
+		spec.setYear(leavesetting.getYear());
+
+		final Matcher<LeavesettingSpecification> specMatcher = new TypeSafeMatcher<LeavesettingSpecification>() {
+			@Override
+			public void describeTo(Description description) {
+
+			}
+
+			@Override
+			protected boolean matchesSafely(LeavesettingSpecification item) {
+				try {
+					assertEquals(spec.getTypeName(), item.getType());
+					assertEquals(spec.getYear(), item.getYear());
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			}
+
+		};
+
+		final Matcher<EmployeeLeave> leaveMatcher = new TypeSafeMatcher<EmployeeLeave>() {
+			@Override
+			public void describeTo(Description description) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			protected boolean matchesSafely(EmployeeLeave item) {
+				try {
+					assertEquals(employee, item.getEmployee());
+					assertEquals(leavesetting, item.getLeavesetting());
+					assertEquals(0, item.getUsedDays().intValue());
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			}
+
+		};
+
+		context.checking(new Expectations() {
+
+			{
+				exactly(1).of(employeeLeaveDao).findOne(spec);
+				will(returnValue(null));
+
+				exactly(1).of(employeeDao).findOne(employee.getId());
+				will(returnValue(employee));
+
+				exactly(1).of(leavesettingDao).findOne(with(specMatcher));
+				will(returnValue(leavesetting));
+
+				exactly(1).of(employeeLeaveDao).save(with(leaveMatcher));
+				will(returnValue(leave));
+			}
+		});
+
+		EmployeeLeaveTransfer ret = employeeLeaveService.retrieve(spec);
+		assertEquals(leave.getId(), ret.getId());
+		assertEquals(leave.getUsedDays(), ret.getUsedDays());
+		assertEquals(employee.getId(), ret.getEmployee().getId());
+		assertEquals(leavesetting.getId(), ret.getLeavesetting().getId());
 	}
 
 	@Test

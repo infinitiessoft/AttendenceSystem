@@ -1,5 +1,13 @@
 # Release notes of Attendance System
 
+## Version 1.2.5
+
+* Tag: [1.2.5](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.5)
+
+### Changes
+
+* Fix the bug that employee available leaves will display 0 when start a new working year.
+
 ## Version 1.2.4
 
 * Tag: [1.2.4](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.4)

@@ -89,7 +89,7 @@ public class MembersResource {
 	@GET
 	@Path("{id}/employeeLeaves")
 	@PreAuthorize("isAuthenticated() and #id == principal.id")
-	public EmployeeLeaveTransfer findAllEmployeeLeave(@PathParam("id") long id,
+	public EmployeeLeaveTransfer findEmployeeLeave(@PathParam("id") long id,
 			@BeanParam EmployeeLeaveSpecification spec) {
 		EmployeeTransfer employee = employeeService.retrieve(id);
 		long year = CalendarUtils.getYearOfJoined(employee.getDateOfJoined(),
