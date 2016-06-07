@@ -12,6 +12,7 @@ The Complete instructions for using AttendanceSystem is found [here](http://infi
 ###INSTALLATION
 1. The Attendance System can be downloaded from the [Release](https://github.com/infinitiessoft/AttendenceSystem/releases)
 2. Extracting the source from the Attendance System tarball is a simple matter of untarring:
+
   ```
   $ tar xvf attendance-X.X.X.tar
   ```
