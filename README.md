@@ -37,7 +37,8 @@ Attributes:
 - db.password: The database password.
 - db.driver: The driver used to connect to database.
 - db.url: database: The address point to the database to which you with to connect.
-4.Moving the Attendance System .war directory to `%CATALINA_HOME%\webapps`
+
+4. Moving the Attendance System .war directory to `%CATALINA_HOME%\webapps`
 ```
 $ mv attendance %CATALINA_HOME%\webapps.
 ```
