@@ -41,10 +41,59 @@ The Complete instructions for using AttendanceSystem is found [here](http://infi
 
 4. Moving the Attendance System .war directory to `%CATALINA_HOME%\webapps`
   ```
-  $ mv attendance %CATALINA_HOME%\webapps.
+  $ mv attendance.war %CATALINA_HOME%\webapps
   ```
 
+###BACKUP
+1. Shutdown tomcat:
 
+  ```
+  $ systemctl stop tomcat
+  ```
+2. Backup database `attendance2`:
+
+  ```
+  $ pg_dump -W -U postgres -h localhost attendance2 > attendance2.sql
+  ```
+The Complete instructions for backup database(Postgresql 9.1) can be found [here](https://www.postgresql.org/docs/9.1/static/backup.html)
+3. Backup attendance war directory:
+
+  ```
+  $ tar cvf attendance.tar %CATALINA_HOME%\webapps\attendance.war
+  ```
+4. Start tomcat:
+
+  ```
+  $ systemctl start tomcat
+  ```
+
+###RESTORE
+1. Shutdown tomcat:
+
+  ```
+  $ systemctl stop tomcat
+  ```
+2. Restore database `attendance2`:
+
+  ```
+  $ dropdb  -W -U postgres -h localhost attendance2 
+  $ createdb -W -U postgres -h localhost attendance2
+  $ psql  -W -U postgres -h localhost attendance2 < 20150304.sql
+  ```
+The Complete instructions for restore database(Postgresql 9.1) can be found [here](https://www.postgresql.org/docs/9.1/static/backup.html)
+3. Restore attendance war directory:
+
+  ```
+  $ tar xvf attendance.tar
+  $ rm -R -f %CATALINA_HOME%\webapps\attendance.war
+  $ mv attendance.war %CATALINA_HOME%\webapps
+  ```
+4. Start tomcat:
+
+  ```
+  $ systemctl start tomcat
+  ```
+  
 ###ACKNOWLEDGEMENTS
 The Attendance system relies upon these free and openly available projects:
 
