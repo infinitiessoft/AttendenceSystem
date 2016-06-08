@@ -5,56 +5,78 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 
+@Component
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @PreAuthorize("hasAuthority('admin')")
 public class AdminResource {
 
+	@Autowired
+	private EmployeesResource employeesResource;
+	@Autowired
+	private AttendRecordsResource attendRecordsResource;
+	@Autowired
+	private AttendRecordTypesResource attendRecordTypesResource;
+	@Autowired
+	private DepartmentsResource departmentsResource;
+	@Autowired
+	private EmployeeLeavesResource employeeLeavesResource;
+	@Autowired
+	private EventsResource eventsResource;
+	@Autowired
+	private LeavesettingsResource leavesettingsResource;
+	@Autowired
+	private RolesResource rolesResource;
+	@Autowired
+	private ReportsResource reportsResource;
+
 	@Path("records")
-	public Class<AttendRecordsResource> getAttendRecordsResource() {
-		return AttendRecordsResource.class;
+	public AttendRecordsResource getAttendRecordsResource() {
+		return attendRecordsResource;
 	}
 
 	@Path("recordtypes")
-	public Class<AttendRecordTypesResource> getAttendRecordTypesResource() {
-		return AttendRecordTypesResource.class;
+	public AttendRecordTypesResource getAttendRecordTypesResource() {
+		return attendRecordTypesResource;
 	}
 
 	@Path("departments")
-	public Class<DepartmentsResource> getDepartmentsResource() {
-		return DepartmentsResource.class;
+	public DepartmentsResource getDepartmentsResource() {
+		return departmentsResource;
 	}
 
 	@Path("employeeleaves")
-	public Class<EmployeeLeavesResource> getEmployeeLeavesResource() {
-		return EmployeeLeavesResource.class;
+	public EmployeeLeavesResource getEmployeeLeavesResource() {
+		return employeeLeavesResource;
 	}
 
 	@Path("employees")
-	public Class<EmployeesResource> getEmployeesResource() {
-		return EmployeesResource.class;
+	public EmployeesResource getEmployeesResource() {
+		return employeesResource;
 	}
 
 	@Path("events")
-	public Class<EventsResource> getEventsResource() {
-		return EventsResource.class;
+	public EventsResource getEventsResource() {
+		return eventsResource;
 	}
 
 	@Path("leavesettings")
-	public Class<LeavesettingsResource> getLeavesettingsResource() {
-		return LeavesettingsResource.class;
+	public LeavesettingsResource getLeavesettingsResource() {
+		return leavesettingsResource;
 	}
 
 	@Path("roles")
-	public Class<RolesResource> getRolesResource() {
-		return RolesResource.class;
+	public RolesResource getRolesResource() {
+		return rolesResource;
 	}
 
 	@Path("reports")
-	public Class<ReportsResource> getReportsResource() {
-		return ReportsResource.class;
+	public ReportsResource getReportsResource() {
+		return reportsResource;
 	}
 
 }

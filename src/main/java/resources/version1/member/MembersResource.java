@@ -39,6 +39,15 @@ public class MembersResource {
 	@Autowired
 	private EmployeeLeaveService employeeLeaveService;
 
+	@Autowired
+	private MemberRolesResource memberRolesResource;
+
+	@Autowired
+	private MemberAttendRecordsResource memberAttendRecordsResource;
+
+	@Autowired
+	private MemberEventsResource memberEventsResource;
+
 	@GET
 	@Path(value = "{id}")
 	@PreAuthorize("isAuthenticated() and #id == principal.id")
@@ -72,18 +81,18 @@ public class MembersResource {
 	}
 
 	@Path("{id}/roles")
-	public Class<MemberRolesResource> getEmployeeRolesResource() {
-		return MemberRolesResource.class;
+	public MemberRolesResource getEmployeeRolesResource() {
+		return memberRolesResource;
 	}
 
 	@Path("{id}/records")
-	public Class<MemberAttendRecordsResource> getEmployeeAttendRecordsResource() {
-		return MemberAttendRecordsResource.class;
+	public MemberAttendRecordsResource getEmployeeAttendRecordsResource() {
+		return memberAttendRecordsResource;
 	}
 
 	@Path("{id}/events")
-	public Class<MemberEventsResource> getEmployeeEventsResource() {
-		return MemberEventsResource.class;
+	public MemberEventsResource getEmployeeEventsResource() {
+		return memberEventsResource;
 	}
 
 	@GET
