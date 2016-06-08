@@ -11,10 +11,10 @@ angular.module('sbAdminApp')
 		  [
 		   	'$scope',
 		   	'$http',
-		   	'memberService',
-		   function($scope, $http, memberService) {
+		   	'memberLeaveService',
+		   function($scope, $http, memberLeaveService) {
 		   		var params = {'typeName':'annual'};
-		   		memberService
+		   		memberLeaveService
 		   			.list(params)
 		   			.then(
 		   					function(status) {
@@ -24,7 +24,7 @@ angular.module('sbAdminApp')
 		   					}
 		   			);
 		   		var params = {'typeName':'personal'};
-		   		memberService
+		   		memberLeaveService
 		   			.list(params)
 		   			.then(
 		   					function(status) {
@@ -34,7 +34,7 @@ angular.module('sbAdminApp')
 		   					}
 		   			);
 		   		var params = {'typeName':'sick'};
-		   		memberService
+		   		memberLeaveService
 		   			.list(params)
 		   			.then(
 		   					function(status) {
@@ -44,7 +44,7 @@ angular.module('sbAdminApp')
 		   					}
 		   			);
 		   		var params = {'typeName':'others'};
-		   		memberService
+		   		memberLeaveService
 		   			.list(params)
 		   			.then(
 		   					function(status) {

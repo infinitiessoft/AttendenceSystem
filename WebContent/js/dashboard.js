@@ -9,10 +9,10 @@ angular
 						'generalService',
 						'memberRecordService',
 						'memberEventService',
-						'memberService',
+						'memberLeaveService',
 						'$timeout',
 						function($scope, $http, auth, generalService,
-								memberRecordService, memberEventService, memberService,
+								memberRecordService, memberEventService, memberLeaveService,
 								$timeout) {
 							var today = new Date();
 							var startDate = new Date(auth.user.principal.dateofjoined);
@@ -266,7 +266,7 @@ angular
 											});
 							
 							var params = {'typeName':'annual'};
-					   		memberService
+					   		memberLeaveService
 					   			.list(params)
 					   			.then(
 					   					function(status) {
@@ -277,7 +277,7 @@ angular
 					   			);
 					   		
 					   		var params = {'typeName':'personal'};
-					   		memberService
+					   		memberLeaveService
 					   			.list(params)
 					   			.then(
 					   					function(status) {
@@ -287,7 +287,7 @@ angular
 					   					}
 					   			);
 					   		var params = {'typeName':'sick'};
-					   		memberService
+					   		memberLeaveService
 					   			.list(params)
 					   			.then(
 					   					function(status) {
@@ -297,7 +297,7 @@ angular
 					   					}
 					   			);
 					   		var params = {'typeName':'others'};
-					   		memberService
+					   		memberLeaveService
 					   			.list(params)
 					   			.then(
 					   					function(status) {

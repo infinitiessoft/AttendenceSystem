@@ -108,13 +108,13 @@ angular
                     			   },
                     			   employee : function(
                     					   auth,
-                    					   employeeService) {
+                    					   memberService) {
 
                     				   var id = auth.user.principal.id;
                     				   if(id == 0){
                     					   return {data:{}};
                     				   }
-                    				   return employeeService.get(id);
+                    				   return memberService.get(id);
                     			   }
                     		   }
                     	   })
@@ -848,7 +848,78 @@ angular
                     				    					  return obj;
                     				    				  } ])
                     				    				  .factory(
-                    				    						  'memberService',
+						'memberService',
+						[
+								'$http',
+								function($http) {
+									var serviceBase = 'rest/v1.0/employees/';
+									var obj = {};
+									obj.list = function(queries) {
+										return $http.get(serviceBase, {params:queries});
+									};
+
+									obj.get = function(id) {
+										return $http.get(serviceBase  + id);
+									};
+
+									obj.insert = function(employee) {
+										return $http.post(serviceBase, employee);
+									};
+
+									obj.update = function(id, employee) {
+										return $http.put(serviceBase  + id,
+												employee).then(function(results) {
+											return results;
+										});
+									};
+									
+									obj.remove = function(id) {
+										return $http.delete(serviceBase + id).then(function(status) {
+											return status;
+										});
+									};
+
+									return obj;
+								} ])
+								.factory(
+								'memberDepartmentService',
+								[
+										'$http',
+										function($http) {
+											var serviceBase = 'rest/v1.0/departments/';
+											var obj = {};
+											obj.list = function(queries) {
+												return $http.get(serviceBase, {params:queries});
+											};
+
+											obj.get = function(id) {
+												return $http.get(serviceBase  + id);
+											};
+
+											obj.insert = function(department) {
+												return $http.post(serviceBase, department).then(
+														function(results) {
+															return results;
+														});
+											};
+
+											obj.update = function(id, department) {
+												return $http.put(serviceBase  + id,
+														department).then(function(results) {
+													return results;
+												});
+											};
+											
+											obj.remove = function(id) {
+												return $http.delete(serviceBase + id).then(function(status) {
+													return status;
+												});
+											};
+
+											return obj;
+										} ])
+                    				    				  .factory(
+                    				    						  'memberLeaveService',
                     				    						  [
                     				    						   'auth',
                     				    						   '$http',
@@ -860,6 +931,8 @@ angular
                     				    								   return $http.get(url, {
                     				    									   params : queries
                     				    								   });
+                    				    								   
+                    				    								   
                     				    							   };
 
                     				    							   return obj;
