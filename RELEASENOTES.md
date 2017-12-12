@@ -1,5 +1,13 @@
 # Release notes of Attendance System
 
+## Version 1.2.6
+
+* Tag: [1.2.6](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.6)
+
+### Changes
+
+* Set default timezone to GMT+08:00.
+
 ## Version 1.2.5
 
 * Tag: [1.2.5](https://github.com/infinitiessoft/AttendenceSystem/tree/v1.2.5)
